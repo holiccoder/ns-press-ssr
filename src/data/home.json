@@ -1,0 +1,211 @@
+{
+  "hero": {
+    "brand": { "acronym": "ELSP", "subtitle": "elspublishing" },
+    "headline": "Welcome to ELSP!",
+    "tagline": "Build a globally integrated scholarly ecosystem and advance the cause of a wide range of scholars.",
+    "search": {
+      "action": "/search",
+      "label": "Search ELSP",
+      "placeholder": "Aliquip tenetur do e",
+      "submitLabel": "Search"
+    }
+  },
+  "ourJournals": {
+    "title": "Our Journals",
+    "moreHref": "/journals",
+    "moreLabel": "More",
+    "row1": [
+      { "id": "asymmetry",                  "title": "Asymmetry",                  "href": "/journals/asymmetry" },
+      { "id": "exrna",                      "title": "ExRNA",                      "href": "/journals/exrna" },
+      { "id": "neuroelectronics",           "title": "Neuroelectronics",           "href": "/journals/neuroelectronics" },
+      { "id": "robot-learning",             "title": "Robot Learning",             "href": "/journals/robot-learning", "highlighted": true },
+      { "id": "smart-construction",         "title": "Smart Construction",         "href": "/journals/smart-construction" },
+      { "id": "biofunctional-materials",    "title": "Biofunctional Materials",    "href": "/journals/biofunctional-materials" }
+    ],
+    "row2": [
+      { "id": "law-ethics-technology",       "title": "Law, Ethics & Technology",            "href": "/journals/law-ethics-technology" },
+      { "id": "renewable-sustainable-energy","title": "Renewable and Sustainable Energy",    "href": "/journals/renewable-sustainable-energy" },
+      { "id": "biomedical-informatics",      "title": "Biomedical Informatics",              "href": "/journals/biomedical-informatics" },
+      { "id": "advanced-manufacturing",      "title": "Advanced Manufacturing",              "href": "/journals/advanced-manufacturing" },
+      { "id": "electronics-signal",          "title": "Electronics and Signal Processing",   "href": "/journals/electronics-signal-processing" },
+      { "id": "mechatronics-technology",     "title": "Mechatronics Technology",             "href": "/journals/mechatronics-technology" }
+    ]
+  },
+  "specialIssues": {
+    "title": "Special Issues",
+    "moreHref": "/special-issues",
+    "moreLabel": "More",
+    "deadlineLabel": "Application Deadline:",
+    "items": [
+      {
+        "title": "Low-Altitude Embodied Intelligence",
+        "editors": ["Xiaoguang Ma", "Aihong Ji", "Bin Zhao", "Qing Wang", "Fanglong Yao"],
+        "deadline": "31 Dec 2026",
+        "href": "/special-issues/low-altitude-embodied-intelligence"
+      },
+      {
+        "title": "Intelligent Fault Diagnosis under Complex and Uncertain Environments",
+        "editors": ["Xiaoli Zhao", "Jingsong Xie", "Jiantao Lu"],
+        "deadline": "31 Dec 2026",
+        "href": "/special-issues/intelligent-fault-diagnosis"
+      },
+      {
+        "title": "Intelligent Additive Manufacturing",
+        "editors": ["Luca Quagliato", "Jinyang Xu", "Giulio Mattera"],
+        "deadline": "31 Dec 2026",
+        "href": "/special-issues/intelligent-additive-manufacturing"
+      },
+      {
+        "title": "Innovative Wearable Sensing Technologies and Integrated Systems for Personalized Health Monitoring",
+        "editors": ["Huanyu Cheng", "Changhao Xu"],
+        "deadline": "31 Dec 2026",
+        "href": "/special-issues/wearable-sensing-technologies"
+      }
+    ]
+  },
+  "articles": {
+    "title": "Articles",
+    "subtitle": "Latest Articles",
+    "moreHref": "/articles",
+    "moreLabel": "More",
+    "openAccessLabel": "OPEN ACCESS",
+    "doiLabel": "DOI:",
+    "items": [
+      {
+        "id": "ija20260002",
+        "type": "Review",
+        "date": "18 Jun 2026",
+        "title": "Electrochemiluminescence biosensing of biomarkers and bioimaging of cellular functional molecules",
+        "doi": "10.5502/ija20260002",
+        "authors": "Lele Li, Xue Dong, Qin Wei, Huangxian Ju",
+        "href": "/articles/ija20260002"
+      },
+      {
+        "id": "ir20260020",
+        "type": "Survey",
+        "date": "16 Jun 2026",
+        "title": "Deep learning for underwater object detection: a comprehensive survey of models, datasets, and challenges",
+        "doi": "10.5502/ir20260020",
+        "authors": "Hari Bhandari, Pengcheng Liu",
+        "href": "/articles/ir20260020"
+      },
+      {
+        "id": "sc20260011",
+        "type": "Article",
+        "date": "16 Jun 2026",
+        "title": "A multi-criteria decision framework for selecting preventive maintenance measures on asphalt pavement: a case study of the Liuzhou North Ring Expressway",
+        "doi": "10.5502/sc20260011",
+        "authors": "Zhen Wu, Mohd Rosli Mohd Hasan, Oumar Ozozi Sougui, Diyar Khan, Hainian Wang, Hui Wang",
+        "href": "/articles/sc20260011"
+      },
+      {
+        "id": "sc20260010",
+        "type": "Article",
+        "date": "16 Jun 2026",
+        "title": "Statistical evaluation of cementitious composites containing rice husk ash and recycled steel fibers",
+        "doi": "10.5502/sc20260010",
+        "authors": "Kaushal Kumar, Prawar Chaudhary, Anil Dhand, Preeti Rustagi, Roopsi Rathee, Rishabh Arora, Kara…",
+        "href": "/articles/sc20260010"
+      }
+    ]
+  },
+  "services": {
+    "items": [
+      {
+        "id": "journal-manuscript-platform",
+        "title": "Journal Manuscript Platform",
+        "description": "ELSP Journal Manuscript Platform provides manuscript tracking services for journal contributors and offers article management services for editors.",
+        "cta": { "label": "Submit manuscript", "href": "/submit" }
+      },
+      {
+        "id": "journal-partnership",
+        "title": "Journal Partnership",
+        "description": "ELSPublishing is an open platform that welcomes universities, research institutes, and scholars to create or deposit your journals. We will provide first-class open online publishing services."
+      },
+      {
+        "id": "conference-paper-platform",
+        "title": "Conference Paper Platform",
+        "description": "ELSP Conference Paper Platform aims to provide efficient and high-quality system for international conference organizers and participants."
+      },
+      {
+        "id": "conference-collaboration",
+        "title": "Conference Collaboration",
+        "description": "As an open communication platform, we welcome universities, research institutes, and scholars to establish your conference through the platform. We will provide a free conference submission system and excellent conference publishing services."
+      }
+    ]
+  },
+  "scholarTestimonials": {
+    "title": "Scholar Testimonials",
+    "moreHref": "/testimonials",
+    "moreLabel": "More",
+    "row1": [
+      { "kind": "portrait", "id": "grey-hair-checkered", "label": "Scholar — Asian man with grey hair and glasses, in red and white checkered shirt" },
+      { "kind": "portrait", "id": "white-beard-suit",    "label": "Scholar — older man with white beard in dark suit" },
+      { "kind": "quote",    "text": "It was a pleasure to work with you" },
+      { "kind": "portrait", "id": "vneck-sweater-tie",   "label": "Scholar — Asian man in grey v-neck sweater and tie" },
+      { "kind": "portrait", "id": "lab-coat",            "label": "Scholar — researcher in white lab coat" }
+    ],
+    "row2": [
+      { "kind": "portrait", "id": "goatee-green-wall",   "label": "Scholar — man with goatee and glasses in dark suit" },
+      { "kind": "quote",    "text": "Excellent support" },
+      { "kind": "portrait", "id": "dark-suit-black-bg",  "label": "Scholar — Asian man in dark suit and light blue shirt" },
+      { "kind": "quote",    "text": "A very positive publishing experience" },
+      { "kind": "portrait", "id": "woman-scarf-lab",     "label": "Scholar — woman with short hair and patterned scarf in a lab" }
+    ]
+  },
+  "news": {
+    "title": "News",
+    "moreHref": "/news",
+    "moreLabel": "More",
+    "publishedDateLabel": "Published Date:",
+    "featured": {
+      "href": "/news/ctesp-2026",
+      "bannerHeadline": "The 2026 International Conference on Communication Technology, Electronics and Signal Processing (CTESP 2026)",
+      "dates": [
+        "19-21 June, 2026, Changsha, China",
+        "12-14 June, 2026, Changsha, China"
+      ],
+      "headline": "CTESP 2026: International Conference on Communication Technology, Electronics and Signal Processing to be Held in Changsha, China",
+      "excerpt": "The 2026 International Conference on Communication Technology, Electronics and Signal Processing (CTESP 2026) will be held in Changsha, China, as the supporting academic conference of Electronics and Signal...",
+      "date": "12 May 2026"
+    },
+    "items": [
+      {
+        "id": "recruitment-esp",
+        "href": "/news/recruitment-youth-editorial-board-esp",
+        "title": "Recruitment Youth Editorial Board Members of Electronics and Signal...",
+        "date": "28 Apr 2026"
+      },
+      {
+        "id": "recruitment-biofunctional",
+        "href": "/news/recruitment-youth-editorial-board-biofunctional-materials",
+        "title": "Recruitment Youth Editorial Board Members for Biofunctional Materials",
+        "date": "27 Apr 2026"
+      },
+      {
+        "id": "china-us-cancer",
+        "href": "/news/12th-china-us-cancer-research",
+        "title": "The 12th China-US International Conference on Cancer Research And The...",
+        "date": "20 Apr 2026"
+      },
+      {
+        "id": "inaugural-issue",
+        "href": "/news/inaugural-issue-environmental-epidemiology",
+        "title": "Inaugural Issue Release of the International Journal of Environmental Epidemiology",
+        "date": "14 Apr 2026"
+      },
+      {
+        "id": "asymmetry-doaj",
+        "href": "/news/asymmetry-doaj-indexed",
+        "title": "Asymmetry Officially Indexed in DOAJ",
+        "date": "08 Apr 2026"
+      },
+      {
+        "id": "wireless-power",
+        "href": "/news/wireless-power-data-transfer-breakthroughs",
+        "title": "Breakthroughs in wireless power and data transfer systems pave the way for...",
+        "date": "25 Mar 2026"
+      }
+    ]
+  }
+}

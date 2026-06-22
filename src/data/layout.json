@@ -1,0 +1,60 @@
+{
+  "brand": {
+    "acronym": "ELSP",
+    "subtitle": "elspublishing"
+  },
+  "navbar": {
+    "items": [
+      { "label": "HOME", "href": "/" },
+      { "label": "JOURNALS", "href": "/journals" },
+      { "label": "CONFERENCES", "href": "/conferences" },
+      { "label": "BOOKS", "href": "/books" },
+      { "label": "ABOUT", "href": "/about", "hasDropdown": true }
+    ],
+    "aboutDropdown": [
+      { "label": "About ELSP", "href": "/about" },
+      { "label": "Contact Us", "href": "/about/contact" },
+      { "label": "Careers", "href": "/about/careers" }
+    ],
+    "searchLabel": "SEARCH",
+    "submitLabel": "SUBMIT",
+    "submitHref": "/submit"
+  },
+  "footer": {
+    "contact": [
+      { "type": "phone", "value": "+86-731-85363169", "href": "tel:+8673185363169" },
+      { "type": "email", "value": "contact@elspub.com", "href": "mailto:contact@elspub.com" },
+      { "type": "email", "value": "ritapublisher@elspub.com", "href": "mailto:ritapublisher@elspub.com" }
+    ],
+    "officeLocations": {
+      "heading": "Office Locations",
+      "addresses": [
+        ["Room 704, Cheuk Nang Centre, 9", "Hillwood Road, Tsim Sha Tsui,", "Kowloon, Hong Kong"],
+        ["ROOM C68, 19/F, YHC TOWER, 1", "SHEUNG YUET ROAD, KOWLOON BAY,", "HONG KONG"]
+      ]
+    },
+    "usefulLinks": {
+      "heading": "Useful Links",
+      "items": [
+        { "label": "Home", "href": "/" },
+        { "label": "Journals", "href": "/journals" },
+        { "label": "Conferences", "href": "/conferences" },
+        { "label": "Books", "href": "/books" },
+        { "label": "About", "href": "/about" }
+      ]
+    },
+    "about": {
+      "heading": "About",
+      "paragraphs": [
+        "ELSPublishing (ELSP) is an international publishing house dedicated to publishing high-quality journals, books, proceedings, and providing free conference system.",
+        "ELSP is committed to promote scholarly communication and sharing, to build a globally integrated scholarly ecosystem, and to advance the cause for a wide range of scholars."
+      ]
+    },
+    "backToTopLabel": "Back to top",
+    "copyright": {
+      "prefix": "Copyright © 2026",
+      "highlight": "ELSP",
+      "suffix": "unless otherwise stated"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "breadcrumb": [
+    { "label": "Home", "href": "/" },
+    { "label": "Books" }
+  ],
+  "editorLabel": "Editor-in-Chief: ",
+  "items": [
+    {
+      "id": "entrepreneurship",
+      "title": "The Foundation of Entrepreneurship for College Students",
+      "href": "/books/foundation-of-entrepreneurship-for-college-students",
+      "editors": "Liu Yue",
+      "description": "This textbook is divided into several chapters to introduce the various types of knowledge needed in the process of entrepreneurship for college students. Students are expected to learn to think from the perspective of entrepreneurs and understand the various aspects of the industry chain involved in their major, and then they are guided to try to consider how to solve the problem of the market with their professional advantages, and develop projects with more social and economic benefits to serve society and create value."
+    },
+    {
+      "id": "medical-computer-fundamentals",
+      "title": "Fundamentals of Medical Computer Applications",
+      "coverTitle": ["Fundamentals of", "Medical Computer", "Applications"],
+      "href": "/books/fundamentals-of-medical-computer-applications",
+      "editors": "Jianhui Deng, Ruiming Tang",
+      "description": "In order to meet the rapid development of computer science and technology and the teaching needs of the school, the textbook writing team design and write this textbook while carefully implementing the spirit of relevant documents of the Ministry of Education and adopting the advanced design concept of higher vocational education textbooks. The book is divided into 7 chapters, including: computer basics, Windows 7 operating system, computer network and mobile medical, word processing software Word 2010, spreadsheet making software Excel 2010, presentation making softwa…"
+    },
+    {
+      "id": "medical-computer-training",
+      "title": "Guidance of Basic Training in Medical Computer Applications",
+      "coverTitle": ["Guidance of Basic", "Training in Medical", "Computer Applications"],
+      "href": "/books/guidance-of-basic-training-in-medical-computer-applications",
+      "editors": "Jianhui Deng, Ruiming Tang",
+      "description": "This textbook is a companion textbook to Basic Medical Computer Applications. Based on the chapter setting of the main textbook and the practical applications of medical students, this textbook is a useful supplement to the theoretical teaching of basic computer courses, highlighting the cultivation of students' practical hands-on ability, and also combining medical knowledge, aiming to combine computer and medical knowledge organically, thus making it more suitable for basic computer education in medicine."
+    }
+  ]
+}

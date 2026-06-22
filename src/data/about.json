@@ -1,0 +1,135 @@
+{
+  "hero": {
+    "title": "About ELSP",
+    "breadcrumb": [
+      { "label": "Home", "href": "/" },
+      { "label": "About ELSP" }
+    ]
+  },
+  "companyProfile": {
+    "title": "Company Profile",
+    "paragraphs": [
+      "ELSP (formerly IET) was established in 2018 as an open-access publisher. From day one our team committed to a model rooted in transparency, accountability, and the rapid, cost-effective dissemination of research — believing that the faster trusted findings reach the people who can build on them, the faster society itself advances.",
+      "Our mission is to remove the traditional barriers that have long stood between authors and readers, to actively promote technological innovation across the publishing pipeline, and to provide a dependable platform on which researchers can share breakthrough discoveries with peers and policy-makers around the world.",
+      "Our ultimate vision is to help create an open, transparent, and innovative publishing ecosystem — one that advances human knowledge and contributes meaningfully to global well-being for the generations that follow."
+    ]
+  },
+  "openAccess": {
+    "title": "Open Access",
+    "intro": "Open access is a fundamental movement for sharing and circulating academic information — making peer-reviewed scholarship freely available to anyone, anywhere, without subscription or paywall.",
+    "points": [
+      {
+        "title": "Copyright",
+        "body": "Authors retain copyright of their work, which is published under a Creative Commons Attribution 4.0 International license (CC BY 4.0)."
+      },
+      {
+        "title": "Rights",
+        "body": "Users are permitted to copy, distribute, and adapt the work for non-commercial purposes, provided the original work is properly cited."
+      },
+      {
+        "title": "License Details",
+        "body": "The published work is free to read, copy, and distribute. Authors retain publishing rights without restrictions, but reuse of images, figures, or other content must credit the original source."
+      }
+    ]
+  },
+  "benefits": {
+    "title": "Benefits of Publishing Open Access",
+    "items": [
+      { "n": "01", "title": "High Visibility and High Impact", "body": "Extends the citation reach and global impact of academic articles." },
+      { "n": "02", "title": "Reuse with Proper Citation",      "body": "Allows others to reuse, circulate, and build upon the research." },
+      { "n": "03", "title": "Rigorous Peer Review",            "body": "Guarantees the academic quality of every article through peer review." },
+      { "n": "04", "title": "No Length Limitation",            "body": "Articles are published completely as written, with no artificial page limits." },
+      { "n": "05", "title": "Rapid Publication",               "body": "A continuous publication model ensures fast online availability." }
+    ]
+  },
+  "management": {
+    "title": "The Management Team",
+    "people": [
+      {
+        "id": "aixu-chen",
+        "name": "Aixu Chen",
+        "role": "Editor-in-Chief",
+        "initials": "AC",
+        "hue": "#3b82f6",
+        "bio": "A physicist by training with extensive academic experience across condensed-matter and applied optics, Aixu leads ELSP's editorial direction — shaping policy, recruiting subject editors, and ensuring every title upholds the rigor expected of a peer-reviewed open-access publisher."
+      },
+      {
+        "id": "ming-qi",
+        "name": "Ming Qi",
+        "role": "Managing Editor",
+        "initials": "MQ",
+        "hue": "#a855f7",
+        "bio": "With a background in mechanical engineering and several years of hands-on scientific research, Ming oversees day-to-day editorial operations across the journal portfolio, coordinating peer review, copyediting, and the production pipeline that brings accepted manuscripts online."
+      },
+      {
+        "id": "jiajie-liu",
+        "name": "Jiajie Liu",
+        "role": "Managing Editor",
+        "initials": "JL",
+        "hue": "#ec4899",
+        "bio": "Trained in physics and seasoned in academic publishing, Jiajie manages submissions, reviewer engagement, and author communications — keeping the path from submission to publication transparent, predictable, and as short as quality allows."
+      }
+    ]
+  },
+  "advisory": {
+    "title": "ELSP Advisory Committee",
+    "people": [
+      {
+        "id": "deping-zhang",
+        "name": "Deping Zhang",
+        "role": "Advisory Committee",
+        "initials": "DZ",
+        "hue": "#0ea5e9",
+        "bio": "Member of the European Academy of Sciences. Deping advises ELSP on long-range editorial strategy and the cultivation of cross-disciplinary research communities."
+      },
+      {
+        "id": "yue-kiat-soon",
+        "name": "Yue Kiat Soon",
+        "role": "Advisory Committee",
+        "initials": "YS",
+        "hue": "#10b981",
+        "bio": "Research Fellow in the Department of Engineering Science at the University of Oxford. Yue Kiat advises on engineering-domain journals and the integration of computational methods into our editorial workflow."
+      },
+      {
+        "id": "jiang-xie",
+        "name": "Jiang Xie",
+        "role": "Advisory Committee",
+        "initials": "JX",
+        "hue": "#f97316",
+        "bio": "Researcher in the International Research Center for Renewable Energy at Xi'an Jiaotong University. Jiang advises ELSP on renewable-energy and sustainability programs across our journal portfolio."
+      }
+    ]
+  },
+  "officeLocations": {
+    "title": "Office Locations",
+    "addressLabel": "Address:",
+    "offices": [
+      {
+        "id": "hong-kong",
+        "title": "Hong Kong Office",
+        "address": "Room 704, Cheuk Nang Centre, 9 Hillwood Road, Tsim Sha Tsui, Kowloon, Hong Kong",
+        "photos": [
+          { "variant": "tower",     "label": "HK Tower" },
+          { "variant": "street",    "label": "Street view" },
+          { "variant": "reception", "label": "Reception" }
+        ]
+      },
+      {
+        "id": "changsha",
+        "title": "Changsha Office",
+        "address": "8/F, FuJin Mansion, No. 88, Yuelu Street, Yuelu District, Changsha 410013, Hunan Province, China",
+        "photos": [
+          { "variant": "tower-tall",   "label": "Changsha Tower" },
+          { "variant": "workstations", "label": "Open workstations" },
+          { "variant": "meeting",      "label": "Meeting room" },
+          { "variant": "reception",    "label": "Office lobby" },
+          { "variant": "lounge",       "label": "Break room" }
+        ],
+        "extraPhotos": [
+          { "variant": "street",       "label": "Street view" },
+          { "variant": "workstations", "label": "Workstations" }
+        ]
+      }
+    ]
+  }
+}

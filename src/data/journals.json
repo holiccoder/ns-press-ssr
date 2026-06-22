@@ -1,0 +1,80 @@
+{
+  "breadcrumb": [
+    { "label": "Home", "href": "/" },
+    { "label": "Journals" }
+  ],
+  "search": {
+    "label": "Search journals",
+    "placeholder": "Please enter the keyword...",
+    "action": "/journals/search"
+  },
+  "carousel": {
+    "items": [
+      {
+        "id": "biofunctional-materials",
+        "title": "Biofunctional Materials",
+        "href": "/journals/biofunctional-materials",
+        "metadata": [
+          { "label": "ISSN",  "value": "2959-0574 (Print)" },
+          { "label": "ISSN",  "value": "2959-0582 (Online)" },
+          { "label": "CODEN", "value": "BMIAE5" }
+        ],
+        "description": "Biofunctional Materials is an online multidisciplinary open access journal aiming to provide a peer-reviewed forum for innovation, research and development related to bioactive materials,…"
+      },
+      {
+        "id": "exrna",
+        "title": "ExRNA",
+        "href": "/journals/exrna",
+        "metadata": [
+          { "label": "ISSN",  "value": "3005-5431 (Print)" },
+          { "label": "ISSN",  "value": "2398-0060 (Online)" },
+          { "label": "CODEN", "value": "EXRNAP" }
+        ],
+        "description": "ExRNA is a peer-reviewed, open access journal that provides a platform for innovative research in the field of extracellular RNA. The journal covers a wide variety of RNAs in the extracellular environment,…"
+      },
+      {
+        "id": "law-ethics-technology",
+        "title": "Law, Ethics & Technology",
+        "href": "/journals/law-ethics-technology",
+        "metadata": [
+          { "label": "ISSN",  "value": "2959-3077 (Print)" },
+          { "label": "ISSN",  "value": "2959-3085 (Online)" },
+          { "label": "CODEN", "value": "LETAA8" }
+        ],
+        "description": "Law, Ethics & Technology is an interdisciplinary journal focused on the ethical and legal issues of the environment, society, and humanity that arise from emerging technologies."
+      }
+    ]
+  },
+  "list": {
+    "items": [
+      {
+        "id": "advanced-cancer-research",
+        "title": "Advanced Cancer Research",
+        "href": "/journals/advanced-cancer-research",
+        "issns": [{ "label": "Online", "value": "3106-0382" }],
+        "description": "Advanced Cancer Research is an international, peer-reviewed, open-access journal dedicated to publishing cutting-edge and high-impact original cancer research, spanning from basic science to clinical translation. The journal invites studies that offer profound mechanistic insights, introduce innovative methodologies, or provide a system-level understanding of cancer, particularly those that bridge traditional disciplinary boundaries and accelerate the translation of discoveries into clinical applications."
+      },
+      {
+        "id": "advanced-equipment",
+        "title": "Advanced Equipment",
+        "href": "/journals/advanced-equipment",
+        "issns": [
+          { "label": "Print",  "value": "3007-5114" },
+          { "label": "Online", "value": "3007-5122" }
+        ],
+        "coden": "AEABF4",
+        "description": "Advanced Equipment is a journal aiming to provide a peer-reviewed forum and publication of innovative achievements related to advanced equipment, such as design methods, manufacturing theories, forming technologies, structural design, material engineering, intelligent transmission, intelligent perception, intelligent control, digital twin, etc."
+      },
+      {
+        "id": "advanced-info-comm",
+        "title": "Advanced Information and Communication",
+        "href": "/journals/advanced-information-communication",
+        "issns": [
+          { "label": "Print",  "value": "3106-1443" },
+          { "label": "Online", "value": "3106-1451" }
+        ],
+        "description": "Advanced Information and Communication is a peer reviewed, open access journal in the field of the integration of intelligence and communication technologies in pervasive environments. The journal provides an interdisciplinary platform for innovative theories, methodologies, and real-world applications across fields such as computer science, wireless communications, artificial intelligence, IoT, and cyber-physical systems. It serves a global community of researchers, practitioners, and policy-makers from academia, industry, and government, promoting academic exchange and…"
+      }
+    ]
+  }
+}
