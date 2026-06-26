@@ -9,7 +9,6 @@
     "items": [
       { "label": "HOME", "href": "/" },
       { "label": "JOURNALS", "href": "/journals" },
-      { "label": "CONFERENCES", "href": "/conferences" },
       { "label": "BOOKS", "href": "/books" },
       { "label": "ABOUT", "href": "/about", "hasDropdown": true }
     ],
