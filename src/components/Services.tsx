@@ -175,7 +175,7 @@ function ServiceCard({ service }: { service: Service }) {
           <div className="mt-8">
             <Link
               href={service.cta.href}
-              className="inline-flex items-center rounded-md bg-white px-6 py-2.5 text-sm font-semibold text-[#0b2545] shadow-sm transition-colors hover:bg-white/90"
+              className="inline-flex items-center rounded-md bg-[#0b2545] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#1e3a8a]"
             >
               {service.cta.label}
             </Link>
@@ -191,7 +191,7 @@ function ServiceCard({ service }: { service: Service }) {
 export default function Services() {
   return (
     <section className="bg-white py-16 sm:py-20">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 md:grid-cols-2">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-6 md:grid-cols-2">
         {services.items.map((s) => (
           <ServiceCard key={s.id} service={s} />
         ))}

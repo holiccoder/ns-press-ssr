@@ -1,26 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import layout from "@/data/layout.json";
 
 const { brand, footer } = layout;
 
 /* ---------- Icons ---------- */
-
-function DeerLogo({ className = "" }: { className?: string }) {
-  // Same stylized leaping deer used in Navbar/Hero — kept consistent.
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      fill="currentColor"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M52 8l-4 8-6-2-3 5 5 4-10 10-12-4-8 6 4 6-10 10 4 4 12-8 8 4 6-6-4-6 12-12 6 2 3-6-5-3 4-8-2-4z" />
-      <circle cx="50" cy="12" r="2" />
-    </svg>
-  );
-}
 
 function PhoneIcon({ className = "" }: { className?: string }) {
   return (
@@ -93,15 +79,14 @@ export default function Footer() {
             {/* Column 1 — Brand & Contact */}
             <div className="lg:pr-8">
               <Link href="/" className="inline-flex items-center gap-2">
-                <DeerLogo className="h-8 w-8 text-white" />
-                <span className="flex items-baseline gap-1.5 leading-none">
-                  <span className="text-xl font-bold tracking-wide">
-                    {brand.acronym}
-                  </span>
-                  <span className="text-sm font-light tracking-wide text-white/80">
-                    {brand.subtitle}
-                  </span>
-                </span>
+                <Image
+                  src={brand.logo}
+                  alt={`${brand.acronym} logo`}
+                  width={160}
+                  height={44}
+                  className="h-9 w-auto object-contain"
+                  priority
+                />
               </Link>
 
               <ul className="mt-8 space-y-4 text-sm text-white/90">
@@ -182,7 +167,7 @@ export default function Footer() {
           type="button"
           onClick={scrollToTop}
           aria-label={footer.backToTopLabel}
-          className="absolute left-1/2 top-0 z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#1e4ba8] text-white shadow-lg ring-4 ring-white transition-colors hover:bg-[#1d4ed8] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4ba8]/40"
+          className="absolute left-1/2 top-0 z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#0b2545] text-white shadow-lg ring-4 ring-white transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#0b2545]/40"
         >
           <ArrowUpIcon className="h-5 w-5" />
         </button>

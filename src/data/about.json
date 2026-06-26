@@ -1,17 +1,17 @@
 {
   "hero": {
-    "title": "About ELSP",
+    "title": "About NSP",
     "breadcrumb": [
       { "label": "Home", "href": "/" },
-      { "label": "About ELSP" }
+      { "label": "About NSP" }
     ]
   },
   "companyProfile": {
     "title": "Company Profile",
     "paragraphs": [
-      "ELSP (formerly IET) was established in 2018 as an open-access publisher. From day one our team committed to a model rooted in transparency, accountability, and the rapid, cost-effective dissemination of research — believing that the faster trusted findings reach the people who can build on them, the faster society itself advances.",
-      "Our mission is to remove the traditional barriers that have long stood between authors and readers, to actively promote technological innovation across the publishing pipeline, and to provide a dependable platform on which researchers can share breakthrough discoveries with peers and policy-makers around the world.",
-      "Our ultimate vision is to help create an open, transparent, and innovative publishing ecosystem — one that advances human knowledge and contributes meaningfully to global well-being for the generations that follow."
+      "Hong Kong Natural Science Press Limited (abbreviated as NSP) was established in 2025, headquartered in Hong Kong, China. We specialize in academic publishing, adopting the Open Access (OA) model, and are committed to providing high-quality academic publishing services for global researchers.",
+      "We fully leverage Hong Kong's international advantages to actively promote local research achievements to the world, while proactively introducing cutting-edge academic resources from overseas, building a publishing system covering life sciences, earth sciences, engineering technology, and other fields.",
+      "Through digital technology and multilingual channels, we break down geographical barriers, promote knowledge flow, and with a professional and rigorous attitude, promote deep connections within the global research community, injecting continuous momentum into international academic development."
     ]
   },
   "openAccess": {
@@ -51,7 +51,7 @@
         "role": "Editor-in-Chief",
         "initials": "AC",
         "hue": "#3b82f6",
-        "bio": "A physicist by training with extensive academic experience across condensed-matter and applied optics, Aixu leads ELSP's editorial direction — shaping policy, recruiting subject editors, and ensuring every title upholds the rigor expected of a peer-reviewed open-access publisher."
+        "bio": "A physicist by training with extensive academic experience across condensed-matter and applied optics, Aixu leads NSP's editorial direction — shaping policy, recruiting subject editors, and ensuring every title upholds the rigor expected of a peer-reviewed open-access publisher."
       },
       {
         "id": "ming-qi",
@@ -72,7 +72,7 @@
     ]
   },
   "advisory": {
-    "title": "ELSP Advisory Committee",
+    "title": "NSP Advisory Committee",
     "people": [
       {
         "id": "deping-zhang",
@@ -80,7 +80,7 @@
         "role": "Advisory Committee",
         "initials": "DZ",
         "hue": "#0ea5e9",
-        "bio": "Member of the European Academy of Sciences. Deping advises ELSP on long-range editorial strategy and the cultivation of cross-disciplinary research communities."
+        "bio": "Member of the European Academy of Sciences. Deping advises NSP on long-range editorial strategy and the cultivation of cross-disciplinary research communities."
       },
       {
         "id": "yue-kiat-soon",
@@ -96,7 +96,7 @@
         "role": "Advisory Committee",
         "initials": "JX",
         "hue": "#f97316",
-        "bio": "Researcher in the International Research Center for Renewable Energy at Xi'an Jiaotong University. Jiang advises ELSP on renewable-energy and sustainability programs across our journal portfolio."
+        "bio": "Researcher in the International Research Center for Renewable Energy at Xi'an Jiaotong University. Jiang advises NSP on renewable-energy and sustainability programs across our journal portfolio."
       }
     ]
   },
@@ -107,7 +107,7 @@
       {
         "id": "hong-kong",
         "title": "Hong Kong Office",
-        "address": "Room 704, Cheuk Nang Centre, 9 Hillwood Road, Tsim Sha Tsui, Kowloon, Hong Kong",
+        "address": "Unit 127, 7th Floor, Block B, New Mandarin Plaza, 14 Science Museum Road, Tsim Sha Tsui, Kowloon, Hong Kong",
         "photos": [
           { "variant": "tower",     "label": "HK Tower" },
           { "variant": "street",    "label": "Street view" },

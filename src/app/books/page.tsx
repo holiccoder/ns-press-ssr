@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import BooksList from "@/components/BooksList";
 
 export const metadata: Metadata = {
-  title: "Books — ELSP",
+  title: "Books — NSP",
   description:
-    "Browse ELSP's portfolio of published textbooks and academic books.",
+    "Browse NSP's portfolio of published textbooks and academic books.",
 };
 
 export default function BooksPage() {

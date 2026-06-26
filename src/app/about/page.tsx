@@ -3,9 +3,9 @@ import Link from "next/link";
 import about from "@/data/about.json";
 
 export const metadata: Metadata = {
-  title: "About ELSP — ELSP",
+  title: "About NSP — NSP",
   description:
-    "About ELSP — company profile, open access policy, leadership, advisory committee, and office locations.",
+    "About NSP — company profile, open access policy, leadership, advisory committee, and office locations.",
 };
 
 /* ---------- Hero banner geometric backdrop ---------- */

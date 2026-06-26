@@ -1,11 +1,11 @@
 {
   "hero": {
-    "brand": { "acronym": "ELSP", "subtitle": "elspublishing" },
-    "headline": "Welcome to ELSP!",
+    "brand": { "acronym": "NSP", "subtitle": "naturalsciencepress" },
+    "headline": "Welcome to NSP!",
     "tagline": "Build a globally integrated scholarly ecosystem and advance the cause of a wide range of scholars.",
     "search": {
       "action": "/search",
-      "label": "Search ELSP",
+      "label": "Search NSP",
       "placeholder": "Aliquip tenetur do e",
       "submitLabel": "Search"
     }
@@ -29,38 +29,6 @@
       { "id": "advanced-manufacturing",      "title": "Advanced Manufacturing",              "href": "/journals/advanced-manufacturing" },
       { "id": "electronics-signal",          "title": "Electronics and Signal Processing",   "href": "/journals/electronics-signal-processing" },
       { "id": "mechatronics-technology",     "title": "Mechatronics Technology",             "href": "/journals/mechatronics-technology" }
-    ]
-  },
-  "specialIssues": {
-    "title": "Special Issues",
-    "moreHref": "/special-issues",
-    "moreLabel": "More",
-    "deadlineLabel": "Application Deadline:",
-    "items": [
-      {
-        "title": "Low-Altitude Embodied Intelligence",
-        "editors": ["Xiaoguang Ma", "Aihong Ji", "Bin Zhao", "Qing Wang", "Fanglong Yao"],
-        "deadline": "31 Dec 2026",
-        "href": "/special-issues/low-altitude-embodied-intelligence"
-      },
-      {
-        "title": "Intelligent Fault Diagnosis under Complex and Uncertain Environments",
-        "editors": ["Xiaoli Zhao", "Jingsong Xie", "Jiantao Lu"],
-        "deadline": "31 Dec 2026",
-        "href": "/special-issues/intelligent-fault-diagnosis"
-      },
-      {
-        "title": "Intelligent Additive Manufacturing",
-        "editors": ["Luca Quagliato", "Jinyang Xu", "Giulio Mattera"],
-        "deadline": "31 Dec 2026",
-        "href": "/special-issues/intelligent-additive-manufacturing"
-      },
-      {
-        "title": "Innovative Wearable Sensing Technologies and Integrated Systems for Personalized Health Monitoring",
-        "editors": ["Huanyu Cheng", "Changhao Xu"],
-        "deadline": "31 Dec 2026",
-        "href": "/special-issues/wearable-sensing-technologies"
-      }
     ]
   },
   "articles": {
@@ -114,18 +82,18 @@
       {
         "id": "journal-manuscript-platform",
         "title": "Journal Manuscript Platform",
-        "description": "ELSP Journal Manuscript Platform provides manuscript tracking services for journal contributors and offers article management services for editors.",
+        "description": "NSP Journal Manuscript Platform provides manuscript tracking services for journal contributors and offers article management services for editors.",
         "cta": { "label": "Submit manuscript", "href": "/submit" }
       },
       {
         "id": "journal-partnership",
         "title": "Journal Partnership",
-        "description": "ELSPublishing is an open platform that welcomes universities, research institutes, and scholars to create or deposit your journals. We will provide first-class open online publishing services."
+        "description": "NSP is an open platform that welcomes universities, research institutes, and scholars to create or deposit your journals. We will provide first-class open online publishing services."
       },
       {
         "id": "conference-paper-platform",
         "title": "Conference Paper Platform",
-        "description": "ELSP Conference Paper Platform aims to provide efficient and high-quality system for international conference organizers and participants."
+        "description": "NSP Conference Paper Platform aims to provide efficient and high-quality system for international conference organizers and participants."
       },
       {
         "id": "conference-collaboration",

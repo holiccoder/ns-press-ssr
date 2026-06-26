@@ -1,26 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import layout from "@/data/layout.json";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const { brand, navbar } = layout;
-
-function DeerLogo({ className = "" }: { className?: string }) {
-  // Stylized leaping deer/antelope mark
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      fill="currentColor"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M52 8l-4 8-6-2-3 5 5 4-10 10-12-4-8 6 4 6-10 10 4 4 12-8 8 4 6-6-4-6 12-12 6 2 3-6-5-3 4-8-2-4z" />
-      <circle cx="50" cy="12" r="2" />
-    </svg>
-  );
-}
 
 function SearchIcon({ className = "" }: { className?: string }) {
   return (
@@ -69,15 +56,14 @@ export default function Navbar() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <DeerLogo className="h-7 w-7 text-white" />
-          <span className="flex items-baseline gap-1 leading-none">
-            <span className="text-lg font-bold tracking-wide">
-              {brand.acronym}
-            </span>
-            <span className="text-sm font-light tracking-wide text-white/80">
-              {brand.subtitle}
-            </span>
-          </span>
+          <Image
+            src={brand.logo}
+            alt={`${brand.acronym} logo`}
+            width={140}
+            height={40}
+            className="h-8 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Centered nav links */}
@@ -165,6 +151,7 @@ export default function Navbar() {
           >
             {navbar.submitLabel}
           </Link>
+          <LanguageSwitcher />
         </div>
       </nav>
     </header>

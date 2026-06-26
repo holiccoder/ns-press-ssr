@@ -1,0 +1,70 @@
+{
+  "asymmetry-2026-0003": {
+    "id": "asymmetry-2026-0003",
+    "journalSlug": "asymmetry",
+    "journalTitle": "Asymmetry",
+    "title": "Advances in asymmetric catalysis: from mechanisms to applications",
+    "articleType": "Editorial",
+    "openAccess": true,
+    "authors": [
+      {
+        "name": "Kazuaki Ishihara",
+        "affiliation": "Graduate School of Engineering, Nagoya University, Japan",
+        "email": "ishihara.kazuaki.s7@f.mail.nagoya-u.ac.jp"
+      }
+    ],
+    "abstract": "This Special Issue, entitled \"Advances in Asymmetric Catalysis: From Mechanisms to Applications\", has been launched to highlight the latest progress in asymmetric catalysis. The Guest Editors, Mario Waser and Shengcai Zheng, have assembled a collection of contributions covering a broad range of topics, including organocatalysis, transition-metal catalysis, and photocatalysis. Asymmetric catalysis has its roots in the pioneering work recognized by the 2001 Nobel Prize in Chemistry, awarded to K. Barry Sharpless for asymmetric oxidation catalysis and to Ryoji Noyori and William S. Knowles for asymmetric reduction catalysis. Their discoveries using transition-metal catalysts such as titanium, ruthenium, and rhodium laid the foundation for modern enantioselective synthesis and continue to inspire new catalytic strategies today.",
+    "keywords": [
+      "asymmetric catalysis",
+      "organocatalysis",
+      "chiral catalysis",
+      "photocatalysis",
+      "enantioselective synthesis"
+    ],
+    "references": [],
+    "year": 2026,
+    "volume": 3,
+    "issue": 1,
+    "volumeLabel": "Volume 3 Issue 1, 2026",
+    "citation": "Ishihara K. Advances in asymmetric catalysis: from mechanisms to applications. Asymmetry 2026(1):0003.",
+    "doi": "10.55092/asymmetry20260003",
+    "copyright": "Copyright © 2026 by the authors. Published by NSP.",
+    "specialIssue": {
+      "title": "Advances in Asymmetric Catalysis: From Mechanisms to Applications",
+      "href": "#special-issue"
+    },
+    "pdfUrl": "#pdf",
+    "metrics": {
+      "accesses": 11,
+      "downloads": 5
+    },
+    "dates": {
+      "received": "17 Jun 2026",
+      "accepted": "21 Jun 2026",
+      "published": "24 Jun 2026"
+    },
+    "recommendedArticles": [
+      {
+        "id": "rec-1",
+        "title": "On uneven ground: embracing the challenges of inter-limb asymmetries...",
+        "date": "20 May 2025",
+        "authors": "José Afonso, Adam Virgile, et al.",
+        "href": "#recommended-1"
+      },
+      {
+        "id": "rec-2",
+        "title": "Asymmetry of cross kinetic coefficients in the cell model of a...",
+        "date": "11 Apr 2025",
+        "authors": "Anatoly Filippov",
+        "href": "#recommended-2"
+      },
+      {
+        "id": "rec-3",
+        "title": "Polymethine dyes and J-aggregates: quantum-classical theory of the shap...",
+        "date": "14 Jan 2025",
+        "authors": "Vladimir Valentinovich Egorov",
+        "href": "#recommended-3"
+      }
+    ]
+  }
+}

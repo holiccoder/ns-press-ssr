@@ -172,7 +172,7 @@ export default function Hero() {
           <button
             type="submit"
             aria-label={hero.search.submitLabel}
-            className="flex shrink-0 items-center justify-center bg-orange-500 px-7 text-white transition-colors hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300"
+            className="flex shrink-0 items-center justify-center bg-[#0b2545] px-7 text-white transition-colors hover:bg-[#1e3a8a] focus:outline-none focus:ring-2 focus:ring-[#0b2545]/50"
           >
             <SearchIcon className="h-5 w-5" />
           </button>

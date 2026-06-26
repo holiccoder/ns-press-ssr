@@ -3,9 +3,9 @@ import JournalsCarousel from "@/components/JournalsCarousel";
 import JournalsList from "@/components/JournalsList";
 
 export const metadata: Metadata = {
-  title: "Journals — ELSP",
+  title: "Journals — NSP",
   description:
-    "Browse ELSP's portfolio of peer-reviewed open access academic journals.",
+    "Browse NSP's portfolio of peer-reviewed open access academic journals.",
 };
 
 export default function JournalsPage() {

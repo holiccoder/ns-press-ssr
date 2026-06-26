@@ -293,7 +293,7 @@ export default function ScholarTestimonials() {
           </h2>
           <Link
             href={scholarTestimonials.moreHref}
-            className="inline-flex items-center gap-1 rounded-sm border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-50"
+            className="inline-flex items-center gap-1 rounded-sm bg-[#0b2545] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1e3a8a]"
           >
             {scholarTestimonials.moreLabel} <span aria-hidden>&gt;</span>
           </Link>

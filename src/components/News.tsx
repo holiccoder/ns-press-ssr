@@ -1,5 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import home from "@/data/home.json";
+import { getArticleList, type ArticleListItem } from "@/lib/api";
+import { resolveNewsImage } from "@/lib/images";
 
 const { news } = home;
 
@@ -78,199 +81,40 @@ function CtespBannerArt({ className = "" }: { className?: string }) {
   );
 }
 
-/** Recruitment poster (blue → orange gradient, ELSP logo, October date). */
-function RecruitmentGradientArt({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 400 220"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-      className={className}
-    >
-      <defs>
-        <linearGradient id="recBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#1e3a8a" />
-          <stop offset="55%" stopColor="#2563eb" />
-          <stop offset="100%" stopColor="#f97316" />
-        </linearGradient>
-      </defs>
-      <rect width="400" height="220" fill="url(#recBg)" />
-      <g transform="translate(24 26)" fill="#ffffff" opacity="0.95">
-        <path d="M28 0l-2 4-3-1-2 3 3 2-5 5-6-2-4 3 2 3-5 5 2 2 6-4 4 2 3-3-2-3 6-6 3 1 2-3-3-2 2-4-1-2z" />
-      </g>
-      <text x="62" y="44" fill="#ffffff" fontSize="18" fontWeight={700} letterSpacing="1.5" fontFamily="Arial, Helvetica, sans-serif">ELSP</text>
-      <text x="24" y="104" fill="#ffffff" fontSize="20" fontWeight={800} fontFamily="Arial, Helvetica, sans-serif">Recruitment of Youth</text>
-      <text x="24" y="130" fill="#ffffff" fontSize="20" fontWeight={800} fontFamily="Arial, Helvetica, sans-serif">Editorial Board Members</text>
-      <text x="24" y="178" fill="rgba(255,255,255,0.9)" fontSize="13" fontFamily="Arial, Helvetica, sans-serif">Deadline: October 1, 2026</text>
-    </svg>
-  );
-}
-
-/** Recruitment poster: white background with stylized 3D teal cubes. */
-function RecruitmentCubesArt({ className = "" }: { className?: string }) {
-  const Cube = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
-    <g transform={`translate(${x} ${y}) scale(${s})`}>
-      <polygon points="0,-14 16,-6 0,2 -16,-6" fill="#5eead4" />
-      <polygon points="-16,-6 0,2 0,20 -16,12" fill="#14b8a6" />
-      <polygon points="16,-6 0,2 0,20 16,12" fill="#0d9488" />
-    </g>
-  );
-  return (
-    <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className={className}>
-      <rect width="400" height="220" fill="#ffffff" />
-      <g transform="translate(24 24)" fill="#0b2545">
-        <path d="M28 0l-2 4-3-1-2 3 3 2-5 5-6-2-4 3 2 3-5 5 2 2 6-4 4 2 3-3-2-3 6-6 3 1 2-3-3-2 2-4-1-2z" />
-      </g>
-      <text x="62" y="42" fill="#0b2545" fontSize="16" fontWeight={700} letterSpacing="1.2" fontFamily="Arial, Helvetica, sans-serif">ELSP</text>
-      <text x="24" y="96" fill="#0b2545" fontSize="13" fontWeight={700} letterSpacing="2" fontFamily="Arial, Helvetica, sans-serif">RECRUITMENT</text>
-      <text x="24" y="120" fill="#0b2545" fontSize="18" fontWeight={800} letterSpacing="1" fontFamily="Arial, Helvetica, sans-serif">YOUTH EDITORIAL</text>
-      <text x="24" y="144" fill="#0b2545" fontSize="18" fontWeight={800} letterSpacing="1" fontFamily="Arial, Helvetica, sans-serif">BOARD MEMBERS</text>
-      <Cube x={300} y={70} s={1.1} />
-      <Cube x={340} y={130} s={0.85} />
-      <Cube x={270} y={160} s={0.95} />
-    </svg>
-  );
-}
-
-/** Conference-stage photo placeholder — silhouettes on stage with blue backdrop. */
-function ConferenceStageArt({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className={className}>
-      <defs>
-        <linearGradient id="stageBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1e3a8a" />
-          <stop offset="100%" stopColor="#0b2545" />
-        </linearGradient>
-      </defs>
-      <rect width="400" height="160" fill="url(#stageBg)" />
-      <text x="200" y="60" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="14" fontWeight={700} letterSpacing="1.5" fontFamily="Arial, Helvetica, sans-serif">
-        12th China-US Cancer Research Conference
-      </text>
-      <text x="200" y="84" textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="11" letterSpacing="1" fontFamily="Arial, Helvetica, sans-serif">
-        2026 • Joint Symposium
-      </text>
-      <rect y="160" width="400" height="60" fill="#111827" />
-      <g fill="#0b1023">
-        {[40, 90, 140, 200, 250, 300, 350].map((cx, i) => (
-          <g key={i} transform={`translate(${cx} 130)`}>
-            <circle cx="0" cy="0" r="8" />
-            <path d="M-10 30 C -10 14, 10 14, 10 30 L 10 36 L -10 36 Z" />
-          </g>
-        ))}
-      </g>
-    </svg>
-  );
-}
-
-/** Inaugural-issue dark graphic with a stylized portrait placeholder. */
-function InauguralIssueArt({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className={className}>
-      <rect width="400" height="220" fill="#0f172a" />
-      <circle cx="80" cy="40" r="120" fill="rgba(20,184,166,0.18)" />
-      <g transform="translate(60 60)">
-        <circle cx="60" cy="55" r="36" fill="#475569" />
-        <circle cx="60" cy="44" r="16" fill="#cbd5e1" />
-        <path d="M30 95 C 30 70, 90 70, 90 95 L 90 110 L 30 110 Z" fill="#cbd5e1" />
-      </g>
-      <text x="200" y="80" fill="#ffffff" fontSize="14" fontWeight={700} fontFamily="Arial, Helvetica, sans-serif">Inaugural Issue</text>
-      <text x="200" y="104" fill="rgba(255,255,255,0.75)" fontSize="12" fontFamily="Arial, Helvetica, sans-serif">Int. Journal of</text>
-      <text x="200" y="122" fill="rgba(255,255,255,0.75)" fontSize="12" fontFamily="Arial, Helvetica, sans-serif">Environmental</text>
-      <text x="200" y="140" fill="rgba(255,255,255,0.75)" fontSize="12" fontFamily="Arial, Helvetica, sans-serif">Epidemiology</text>
-    </svg>
-  );
-}
-
-/** Composite: "Asymmetry" journal cover + DOAJ seal. */
-function AsymmetryDoajArt({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className={className}>
-      <rect width="400" height="220" fill="#f1f5f9" />
-      <g transform="translate(30 26)">
-        <rect width="140" height="170" fill="#1e3a8a" rx="2" />
-        <rect x="10" y="14" width="120" height="60" fill="#3b82f6" opacity="0.6" />
-        <text x="10" y="100" fill="#ffffff" fontSize="18" fontWeight={800} fontFamily="Arial, Helvetica, sans-serif">Asymmetry</text>
-        <text x="10" y="120" fill="rgba(255,255,255,0.75)" fontSize="9" fontFamily="Arial, Helvetica, sans-serif">Open Access Journal</text>
-        <line x1="10" y1="148" x2="130" y2="148" stroke="#ffffff" strokeWidth="0.5" opacity="0.5" />
-        <text x="10" y="162" fill="rgba(255,255,255,0.6)" fontSize="8" fontFamily="Arial, Helvetica, sans-serif">Vol 3 • Issue 2 • 2026</text>
-      </g>
-      <g transform="translate(240 60)">
-        <circle cx="60" cy="60" r="58" fill="#ffffff" stroke="#0b2545" strokeWidth="2" />
-        <circle cx="60" cy="60" r="48" fill="none" stroke="#0b2545" strokeWidth="1" />
-        <text x="60" y="56" textAnchor="middle" fill="#0b2545" fontSize="22" fontWeight={800} fontFamily="Arial, Helvetica, sans-serif">DOAJ</text>
-        <text x="60" y="76" textAnchor="middle" fill="#0b2545" fontSize="7" letterSpacing="0.5" fontFamily="Arial, Helvetica, sans-serif">DIRECTORY OF OPEN</text>
-        <text x="60" y="86" textAnchor="middle" fill="#0b2545" fontSize="7" letterSpacing="0.5" fontFamily="Arial, Helvetica, sans-serif">ACCESS JOURNALS</text>
-      </g>
-    </svg>
-  );
-}
-
-/** Wireless-power technical diagram: schematic + waveform + formula. */
-function WirelessSchematicArt({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className={className}>
-      <rect width="400" height="220" fill="#ffffff" />
-      <g stroke="#e5e7eb" strokeWidth="0.5">
-        {Array.from({ length: 11 }).map((_, i) => (
-          <line key={`h${i}`} x1="0" y1={i * 20} x2="400" y2={i * 20} />
-        ))}
-        {Array.from({ length: 21 }).map((_, i) => (
-          <line key={`v${i}`} x1={i * 20} y1="0" x2={i * 20} y2="220" />
-        ))}
-      </g>
-      <path d="M 10 60 Q 30 20, 50 60 T 90 60 T 130 60 T 170 60 T 210 60" fill="none" stroke="#1d4ed8" strokeWidth="1.5" />
-      <path d="M 10 80 Q 30 100, 50 80 T 90 80 T 130 80 T 170 80 T 210 80" fill="none" stroke="#ef4444" strokeWidth="1.5" />
-      <g stroke="#0b2545" strokeWidth="1.5" fill="none">
-        <line x1="40" y1="160" x2="80" y2="160" />
-        <rect x="80" y="150" width="30" height="20" />
-        <line x1="110" y1="160" x2="160" y2="160" />
-        <path d="M 160 160 q 5 -10, 10 0 q 5 -10, 10 0 q 5 -10, 10 0 q 5 -10, 10 0" />
-        <line x1="200" y1="160" x2="240" y2="160" />
-        <line x1="240" y1="150" x2="240" y2="170" />
-        <line x1="248" y1="150" x2="248" y2="170" />
-        <line x1="248" y1="160" x2="290" y2="160" />
-        <line x1="290" y1="160" x2="290" y2="180" />
-        <line x1="280" y1="180" x2="300" y2="180" />
-        <line x1="284" y1="185" x2="296" y2="185" />
-      </g>
-      <text x="230" y="65" fill="#374151" fontSize="13" fontStyle="italic" fontFamily="Georgia, serif">η = P</text>
-      <text x="266" y="60" fill="#374151" fontSize="9" fontFamily="Georgia, serif">out</text>
-      <text x="280" y="65" fill="#374151" fontSize="13" fontStyle="italic" fontFamily="Georgia, serif">/ P</text>
-      <text x="306" y="60" fill="#374151" fontSize="9" fontFamily="Georgia, serif">in</text>
-    </svg>
-  );
-}
-
-/* ---------- id → visual lookup ---------- */
-
-const ART: Record<string, React.ReactNode> = {
-  "recruitment-esp":          <RecruitmentGradientArt className="h-full w-full" />,
-  "recruitment-biofunctional":<RecruitmentCubesArt    className="h-full w-full" />,
-  "china-us-cancer":          <ConferenceStageArt     className="h-full w-full" />,
-  "inaugural-issue":          <InauguralIssueArt      className="h-full w-full" />,
-  "asymmetry-doaj":           <AsymmetryDoajArt       className="h-full w-full" />,
-  "wireless-power":           <WirelessSchematicArt   className="h-full w-full" />,
-};
-
 /* ---------- Small card ---------- */
 
-type Item = (typeof news.items)[number];
+function formatDate(isoLike: string): string {
+  const date = new Date(isoLike.replace(/-/g, "/"));
+  if (Number.isNaN(date.getTime())) return isoLike;
+  const d = date.getDate().toString().padStart(2, "0");
+  const m = (date.getMonth() + 1).toString().padStart(2, "0");
+  const y = date.getFullYear();
+  return `${d} ${m} ${y}`;
+}
 
-function SmallNewsCard({ item }: { item: Item }) {
+function SmallNewsCard({ item }: { item: ArticleListItem }) {
+  const href = `/news/${item.id}`;
+  const image = resolveNewsImage(item.id, item.image);
   return (
     <Link
-      href={item.href}
-      className="group flex flex-col overflow-hidden rounded-lg ring-1 ring-slate-200 bg-white transition-shadow hover:shadow-md"
+      href={href}
+      className="group flex flex-col overflow-hidden rounded-lg bg-white ring-1 ring-slate-200 transition-shadow hover:shadow-md"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
-        {ART[item.id]}
+        <Image
+          src={image}
+          alt={item.title}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
       </div>
       <div className="flex flex-1 flex-col p-4">
         <h3 className="line-clamp-2 text-sm font-bold leading-snug text-[#0b2545] group-hover:text-[#1e4ba8]">
           {item.title}
         </h3>
         <p className="mt-auto pt-3 text-xs text-slate-500">
-          {news.publishedDateLabel} {item.date}
+          {news.publishedDateLabel} {formatDate(item.create_time)}
         </p>
       </div>
     </Link>
@@ -279,7 +123,15 @@ function SmallNewsCard({ item }: { item: Item }) {
 
 /* ---------- Section ---------- */
 
-export default function News() {
+export default async function News() {
+  let items: ArticleListItem[] = [];
+  try {
+    const data = await getArticleList({ pageNo: 1, pageSize: 5, sort: "new" });
+    items = data.lists;
+  } catch (err) {
+    console.error("[News] failed to load article list:", err);
+  }
+
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
@@ -290,7 +142,7 @@ export default function News() {
           </h2>
           <Link
             href={news.moreHref}
-            className="inline-flex items-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm transition-colors hover:bg-slate-50"
+            className="inline-flex items-center rounded-md bg-[#0b2545] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#1e3a8a]"
           >
             {news.moreLabel} &gt;
           </Link>
@@ -300,10 +152,7 @@ export default function News() {
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-5">
           {/* Featured */}
           <article className="relative isolate flex flex-col overflow-hidden rounded-lg bg-[#2a2a2e] text-white shadow-lg lg:col-span-2">
-            <Link
-              href={news.featured.href}
-              className="flex flex-1 flex-col"
-            >
+            <Link href={news.featured.href} className="flex flex-1 flex-col">
               {/* Banner */}
               <div className="relative aspect-[16/9] w-full overflow-hidden">
                 <CtespBannerArt className="absolute inset-0 h-full w-full" />
@@ -338,9 +187,13 @@ export default function News() {
 
           {/* 2x3 grid */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:col-span-3">
-            {news.items.map((item) => (
-              <SmallNewsCard key={item.id} item={item} />
-            ))}
+            {items.length === 0 ? (
+              <p className="text-sm text-slate-500">No news available.</p>
+            ) : (
+              items.map((item) => (
+                <SmallNewsCard key={item.id} item={item} />
+              ))
+            )}
           </div>
         </div>
       </div>

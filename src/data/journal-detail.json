@@ -1,0 +1,143 @@
+{
+  "exrna": {
+    "title": "ExRNA",
+    "issn": "3005-5431 (Print); 2398-0060 (Online)",
+    "coden": "EXRNAP",
+    "citeScore": "CiteScore 2025: 1.2",
+    "scope": "ExRNA is a peer-reviewed, open-access journal dedicated to the publication of innovative research in the field of extracellular RNA. The journal covers a wide variety of RNAs in the extracellular environment, including but not limited to miRNAs, siRNAs, piRNAs, lncRNAs, and circRNAs, and their roles in basic biology, disease mechanisms, and therapeutic development.",
+    "editorInChief": {
+      "name": "Chen-Yu Zhang",
+      "role": "Editor-in-Chief",
+      "portrait": "/images/journals/exrna/editor.jpg"
+    },
+    "contacts": [
+      {
+        "label": "Peer review inquiries",
+        "name": "Ms. Ada Gu",
+        "email": "routhpub@163.com"
+      },
+      {
+        "label": "Production and technical issues",
+        "name": "Mr. Jay Zhuang",
+        "email": "routhpub@163.com"
+      }
+    ],
+    "news": [
+      {
+        "id": "doaj-indexed",
+        "title": "ExRNA Officially Indexed in DOAJ",
+        "date": "28 Jul 2025",
+        "thumbnail": "/images/journals/exrna/news-doaj.jpg"
+      },
+      {
+        "id": "recruitment-ecb",
+        "title": "Recruitment Early-Career Editorial Board Members of ExRNA",
+        "date": "24 Jul 2025",
+        "thumbnail": "/images/journals/exrna/news-recruitment.jpg"
+      },
+      {
+        "id": "preanalytical-conditions",
+        "title": "ExRNA 2025(1):0005: Influence of pre-analytical conditions on cell-free...",
+        "date": "24 Mar 2025",
+        "thumbnail": "/images/journals/exrna/news-preanalytical.jpg"
+      }
+    ],
+    "latestArticles": [
+      {
+        "id": "exrna-2026-001",
+        "title": "MIR2911 is a potential inhibitor for Nipah virus",
+        "doi": "10.26599/exrna.2026.0001",
+        "authors": "Jieqiong Lei, Lijing Xia, et al.",
+        "type": "Letter",
+        "date": "22 Jan 2026",
+        "openAccess": true,
+        "links": [
+          { "label": "Abstract", "href": "#abstract" },
+          { "label": "PDF", "href": "#pdf" }
+        ],
+        "visualId": "virus-inhibitor"
+      },
+      {
+        "id": "exrna-2026-002",
+        "title": "RNA interference therapeutics for amyotrophic lateral sclerosis",
+        "doi": "10.26599/exrna.2026.0002",
+        "authors": "Qian Zheng, Xueni Li, Jingwei Guo",
+        "type": "Review",
+        "date": "11 Jan 2026",
+        "openAccess": true,
+        "links": [
+          { "label": "Abstract", "href": "#abstract" },
+          { "label": "PDF", "href": "#pdf" }
+        ],
+        "visualId": "rna-therapeutics"
+      },
+      {
+        "id": "exrna-2026-003",
+        "title": "From biomarkers to therapeutics: extracellular vesicle RNA as a pivotal player in inflammatory bowel disease management",
+        "doi": "10.26599/exrna.2026.0003",
+        "authors": "Ruizhe Ren, Mengyi Xu, et al.",
+        "type": "Review",
+        "date": "30 Mar 2026",
+        "openAccess": true,
+        "links": [
+          { "label": "Abstract", "href": "#abstract" },
+          { "label": "PDF", "href": "#pdf" }
+        ],
+        "visualId": "ev-rna-ibd"
+      }
+    ],
+    "topDownloaded": [
+      {
+        "id": "exrna-2024-010",
+        "title": "Profiling circulating microRNA and regulatory pathways in transfusion-dependent thalassemia and thalassemia trait compared to healthy controls: a preliminary study",
+        "doi": "10.26599/exrna.2024.0010",
+        "authors": "Lantip Rujito, et al.",
+        "type": "Article",
+        "date": "16 Aug 2024",
+        "openAccess": true,
+        "links": [
+          { "label": "Abstract", "href": "#abstract" },
+          { "label": "Full Text", "href": "#full-text" },
+          { "label": "PDF", "href": "#pdf" },
+          { "label": "References", "href": "#references" }
+        ],
+        "visualId": "thalassemia-mirna"
+      },
+      {
+        "id": "exrna-2024-011",
+        "title": "MiRNA expression in plasma extracellular vesicles of prostate cancer patients after radical prostatectomy",
+        "doi": "10.26599/exrna.2024.0011",
+        "authors": "Olga Bryzgunova, et al.",
+        "type": "Article",
+        "date": "18 Sep 2024",
+        "openAccess": true,
+        "links": [
+          { "label": "Abstract", "href": "#abstract" },
+          { "label": "Full Text", "href": "#full-text" },
+          { "label": "PDF", "href": "#pdf" },
+          { "label": "References", "href": "#references" }
+        ],
+        "visualId": "prostate-mirna"
+      },
+      {
+        "id": "exrna-2026-003",
+        "title": "From biomarkers to therapeutics: extracellular vesicle RNA as a pivotal player in inflammatory bowel disease management",
+        "doi": "10.26599/exrna.2026.0003",
+        "authors": "Ruizhe Ren, Mengyi Xu, et al.",
+        "type": "Review",
+        "date": "30 Mar 2026",
+        "openAccess": true,
+        "links": [
+          { "label": "Abstract", "href": "#abstract" },
+          { "label": "PDF", "href": "#pdf" }
+        ],
+        "visualId": "ev-rna-ibd"
+      }
+    ]
+  },
+  "asymmetry": {
+    "title": "Asymmetry",
+    "issn": "3042-5406 (Print); 3042-5414 (Online)",
+    "scope": "Asymmetry is a peer-reviewed, open-access journal that publishes high-quality research on all aspects of asymmetry, spanning chemistry, biology, physics, materials science, and related interdisciplinary fields. The journal welcomes fundamental and applied studies on chiral phenomena, asymmetric synthesis, asymmetric catalysis, and structural and functional asymmetry across natural and artificial systems."
+  }
+}

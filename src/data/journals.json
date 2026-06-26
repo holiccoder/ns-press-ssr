@@ -9,41 +9,7 @@
     "action": "/journals/search"
   },
   "carousel": {
-    "items": [
-      {
-        "id": "biofunctional-materials",
-        "title": "Biofunctional Materials",
-        "href": "/journals/biofunctional-materials",
-        "metadata": [
-          { "label": "ISSN",  "value": "2959-0574 (Print)" },
-          { "label": "ISSN",  "value": "2959-0582 (Online)" },
-          { "label": "CODEN", "value": "BMIAE5" }
-        ],
-        "description": "Biofunctional Materials is an online multidisciplinary open access journal aiming to provide a peer-reviewed forum for innovation, research and development related to bioactive materials,…"
-      },
-      {
-        "id": "exrna",
-        "title": "ExRNA",
-        "href": "/journals/exrna",
-        "metadata": [
-          { "label": "ISSN",  "value": "3005-5431 (Print)" },
-          { "label": "ISSN",  "value": "2398-0060 (Online)" },
-          { "label": "CODEN", "value": "EXRNAP" }
-        ],
-        "description": "ExRNA is a peer-reviewed, open access journal that provides a platform for innovative research in the field of extracellular RNA. The journal covers a wide variety of RNAs in the extracellular environment,…"
-      },
-      {
-        "id": "law-ethics-technology",
-        "title": "Law, Ethics & Technology",
-        "href": "/journals/law-ethics-technology",
-        "metadata": [
-          { "label": "ISSN",  "value": "2959-3077 (Print)" },
-          { "label": "ISSN",  "value": "2959-3085 (Online)" },
-          { "label": "CODEN", "value": "LETAA8" }
-        ],
-        "description": "Law, Ethics & Technology is an interdisciplinary journal focused on the ethical and legal issues of the environment, society, and humanity that arise from emerging technologies."
-      }
-    ]
+    "items": []
   },
   "list": {
     "items": [
