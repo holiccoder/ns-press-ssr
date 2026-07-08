@@ -54,7 +54,11 @@ export function buildArticleFromApi(
     copyright: "",
     pdfUrl: apiArticle.content,
     metrics: { accesses: 0, downloads: 0 },
-    dates: { received: "", accepted: "", published: "" },
+    dates: {
+      received: "",
+      accepted: "",
+      published: apiArticle.create_time ?? "",
+    },
     recommendedArticles: [],
   };
 }

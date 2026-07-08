@@ -68,59 +68,6 @@ function NetworkCubesArt({ className = "" }: { className?: string }) {
   );
 }
 
-function SkylineArt({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 400" preserveAspectRatio="xMaxYEnd slice" aria-hidden="true" className={className}>
-      <g fill="rgba(255,255,255,0.12)">
-        <rect x="180" y="220" width="34" height="180" />
-        <rect x="220" y="170" width="40" height="230" />
-        <rect x="266" y="120" width="28" height="280" />
-        <rect x="300" y="200" width="36" height="200" />
-        <rect x="342" y="150" width="44" height="250" />
-        <rect x="280" y="100" width="2" height="20" />
-        <rect x="360" y="130" width="2" height="20" />
-      </g>
-      <g fill="rgba(255,255,255,0.18)">
-        {Array.from({ length: 14 }).map((_, r) =>
-          Array.from({ length: 4 }).map((_, c) => (
-            <rect
-              key={`${r}-${c}`}
-              x={186 + c * 8}
-              y={230 + r * 12}
-              width="3"
-              height="4"
-            />
-          ))
-        )}
-      </g>
-    </svg>
-  );
-}
-
-function OrbitArt({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" className={className}>
-      <defs>
-        <radialGradient id="orbA" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="rgba(96,165,250,0.5)" />
-          <stop offset="100%" stopColor="rgba(96,165,250,0)" />
-        </radialGradient>
-        <radialGradient id="orbB" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="rgba(56,189,248,0.45)" />
-          <stop offset="100%" stopColor="rgba(56,189,248,0)" />
-        </radialGradient>
-      </defs>
-      <circle cx="320" cy="120" r="160" fill="url(#orbA)" />
-      <circle cx="380" cy="280" r="180" fill="url(#orbB)" />
-      <circle cx="240" cy="320" r="120" fill="url(#orbA)" />
-      <g fill="none" stroke="rgba(186,230,253,0.25)" strokeWidth="1">
-        <circle cx="320" cy="200" r="90" />
-        <circle cx="320" cy="200" r="140" />
-      </g>
-    </svg>
-  );
-}
-
 /* ---------- id → (background, art) lookup ---------- */
 
 const VISUALS: Record<
@@ -134,14 +81,6 @@ const VISUALS: Record<
   "journal-partnership": {
     background: "linear-gradient(135deg, #0d2d8a 0%, #1d4ed8 100%)",
     art: <NetworkCubesArt className="h-full w-full" />,
-  },
-  "conference-paper-platform": {
-    background: "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%)",
-    art: <SkylineArt className="h-full w-full" />,
-  },
-  "conference-collaboration": {
-    background: "linear-gradient(135deg, #050b1f 0%, #0b2545 60%, #122c5e 100%)",
-    art: <OrbitArt className="h-full w-full" />,
   },
 };
 

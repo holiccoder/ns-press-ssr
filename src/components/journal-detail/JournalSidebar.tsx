@@ -1,5 +1,6 @@
 import type {
   Contact,
+  EditorialBoardMember,
   EditorInChief,
   NewsItem,
 } from "@/lib/journal-slugs";
@@ -8,17 +9,22 @@ import EditorialBoardCard from "./EditorialBoardCard";
 import NewsList from "./NewsList";
 
 export default function JournalSidebar({
-  editor,
+  chiefEditors,
+  boardMembers,
   contacts,
   news,
 }: {
-  editor?: EditorInChief;
+  chiefEditors?: EditorInChief[];
+  boardMembers?: EditorialBoardMember[];
   contacts?: Contact[];
   news?: NewsItem[];
 }) {
   return (
     <aside className="space-y-8">
-      <EditorialBoardCard editor={editor} />
+      <EditorialBoardCard
+        chiefEditors={chiefEditors}
+        boardMembers={boardMembers}
+      />
       <ContactCard contacts={contacts} />
       <NewsList news={news} />
     </aside>

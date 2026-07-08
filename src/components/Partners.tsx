@@ -2,7 +2,6 @@ import Image from "next/image";
 
 const PARTNER_LOGOS = [
   { src: "/partners/01.jpg", alt: "Partner logo 1" },
-  { src: "/partners/02.png", alt: "Partner logo 2" },
   { src: "/partners/03.jpg", alt: "Partner logo 3" },
   { src: "/partners/04.png", alt: "Partner logo 4" },
   { src: "/partners/07.jpg", alt: "Partner logo 5" },
@@ -19,7 +18,7 @@ export default function Partners() {
           Our Partners
         </h2>
 
-        <div className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
           {PARTNER_LOGOS.map((logo) => (
             <div
               key={logo.src}

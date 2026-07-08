@@ -80,11 +80,11 @@ export default function Footer() {
             <div className="lg:pr-8">
               <Link href="/" className="inline-flex items-center gap-2">
                 <Image
-                  src={brand.logo}
+                  src="/images/logo-white.png"
                   alt={`${brand.acronym} logo`}
-                  width={160}
-                  height={44}
-                  className="h-9 w-auto object-contain"
+                  width={300}
+                  height={82}
+                  className="h-16 w-auto object-contain"
                   priority
                 />
               </Link>

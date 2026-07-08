@@ -46,8 +46,6 @@ export default function ArticleSidebar({
           Key Dates
         </h3>
         <ul className="mt-3 space-y-2 text-sm">
-          <DateItem label="Received" value={dates.received} />
-          <DateItem label="Accepted" value={dates.accepted} />
           <DateItem label="Published" value={dates.published} />
         </ul>
       </div>

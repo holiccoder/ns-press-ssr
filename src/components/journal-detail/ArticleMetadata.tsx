@@ -81,15 +81,15 @@ export default function ArticleMetadata({
 
   return (
     <div className="overflow-hidden rounded-sm border border-slate-200">
-      <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr]">
+      <div>
         {rows.map((row, index) => (
           <div
             key={row.label}
-            className={`flex flex-col sm:flex-row ${
+            className={`flex flex-row items-start ${
               index !== rows.length - 1 ? "border-b border-slate-200" : ""
             }`}
           >
-            <div className="bg-slate-50 px-4 py-3 text-sm font-semibold text-[#0b2545] sm:w-[140px] sm:border-r sm:border-slate-200">
+            <div className="w-[140px] shrink-0 border-r border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-[#0b2545]">
               {row.label}
             </div>
             <div className="px-4 py-3 text-sm text-slate-800">{row.value}</div>

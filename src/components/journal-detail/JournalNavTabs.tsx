@@ -1,13 +1,21 @@
 import Link from "next/link";
 
-const TABS = [
-  { label: "Home", href: "" },
-  { label: "Articles & Issues", href: "/articles" },
-  { label: "About", href: "/about" },
-  { label: "Publish", href: "/publish" },
+export type JournalTabKey = "home" | "articles" | "about" | "publish";
+
+const TABS: Array<{ key: JournalTabKey; label: string }> = [
+  { key: "home", label: "Home" },
+  { key: "articles", label: "Articles & Issues" },
+  { key: "about", label: "About" },
+  { key: "publish", label: "Publish" },
 ];
 
-export default function JournalNavTabs({ journalId }: { journalId: number }) {
+export default function JournalNavTabs({
+  journalId,
+  activeTab = "home",
+}: {
+  journalId: number;
+  activeTab?: JournalTabKey;
+}) {
   return (
     <nav
       aria-label="Journal sections"
@@ -15,13 +23,15 @@ export default function JournalNavTabs({ journalId }: { journalId: number }) {
     >
       <div className="mx-auto max-w-7xl px-6">
         <ul className="flex flex-wrap items-center gap-1">
-          {TABS.map((tab, idx) => {
+          {TABS.map((tab) => {
             const href =
-              idx === 0 ? `/journals/${journalId}` : `#${tab.href.slice(1)}`;
-            const active = idx === 0;
+              tab.key === "home"
+                ? `/journals/${journalId}`
+                : `/journals/${journalId}?tab=${tab.key}`;
+            const active = tab.key === activeTab;
 
             return (
-              <li key={tab.label}>
+              <li key={tab.key}>
                 <Link
                   href={href}
                   className={`inline-block px-4 py-3 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] focus-visible:ring-offset-2 ${

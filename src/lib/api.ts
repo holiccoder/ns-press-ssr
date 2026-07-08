@@ -40,6 +40,24 @@ export type JournalDetail = {
   introduction: string;
   scope: string;
   policy: string;
+  team?: JournalEditorialTeamGroup[];
+  author_notice?: string;
+  lang?: string;
+  initials?: string;
+  other_info?: string;
+  year?: number;
+  periods?: number;
+};
+
+export type JournalEditorialTeamMember = {
+  name: string;
+  title?: string;
+  region?: string;
+};
+
+export type JournalEditorialTeamGroup = {
+  job?: string;
+  member?: JournalEditorialTeamMember[];
 };
 
 export type JournalContentSummary = {
@@ -61,6 +79,8 @@ export type JournalContentDetail = {
   references: string[];
   doi?: string;
   content?: string;
+  create_time?: string;
+  update_time?: string;
   Journal?: {
     id: number;
     title: string;

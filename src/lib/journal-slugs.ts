@@ -34,6 +34,15 @@ export type EditorInChief = {
   name: string;
   role: string;
   portrait: string;
+  affiliation?: string;
+  region?: string;
+};
+
+export type EditorialBoardMember = {
+  name: string;
+  role?: string;
+  affiliation?: string;
+  region?: string;
 };
 
 export type JournalEnrichment = {
@@ -43,6 +52,7 @@ export type JournalEnrichment = {
   citeScore?: string;
   scope: string;
   editorInChief?: EditorInChief;
+  editorialBoardMembers?: EditorialBoardMember[];
   contacts?: Contact[];
   news?: NewsItem[];
   latestArticles?: EnrichedArticle[];

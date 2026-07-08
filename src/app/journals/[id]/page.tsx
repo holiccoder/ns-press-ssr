@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getJournalDetail,
@@ -10,6 +9,8 @@ import {
 } from "@/lib/api";
 import {
   getEnrichedSlugs,
+  type EditorialBoardMember,
+  type EditorInChief,
   getJournalEnrichment,
   getJournalEnrichmentBySlug,
   type JournalEnrichment,
@@ -18,16 +19,15 @@ import { resolveJournalCover } from "@/lib/images";
 import ExRNACover from "@/components/journal-detail/ExRNACover";
 import JournalBanner from "@/components/journal-detail/JournalBanner";
 import JournalMainColumn from "@/components/journal-detail/JournalMainColumn";
-import JournalNavTabs from "@/components/journal-detail/JournalNavTabs";
+import JournalNavTabs, {
+  type JournalTabKey,
+} from "@/components/journal-detail/JournalNavTabs";
 import JournalSidebar from "@/components/journal-detail/JournalSidebar";
 
 type RouteParams = { id: string };
+type RouteSearchParams = { tab?: string | string[] };
 
 const ENRICHED_SLUGS = getEnrichedSlugs();
-
-function isNumericId(id: string): boolean {
-  return /^\d+$/.test(id);
-}
 
 function isKnownSlug(id: string): boolean {
   return ENRICHED_SLUGS.includes(id);
@@ -47,6 +47,85 @@ function buildStaticJournal(slug: string): JournalDetail {
     scope: enrichment.scope,
     policy: "",
   };
+}
+
+function normalizeEditorialText(value?: string): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function dedupeByNameAndRole<T extends { name: string; role?: string }>(
+  items: T[],
+): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = `${item.name.toLowerCase()}|${(item.role ?? "").toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function extractEditorialTeam(team: JournalDetail["team"]): {
+  chiefEditors: EditorInChief[];
+  boardMembers: EditorialBoardMember[];
+} {
+  const chiefEditors: EditorInChief[] = [];
+  const boardMembers: EditorialBoardMember[] = [];
+
+  if (!Array.isArray(team)) {
+    return { chiefEditors, boardMembers };
+  }
+
+  for (const group of team) {
+    const members = group?.member;
+    if (!Array.isArray(members) || members.length === 0) continue;
+
+    const role = normalizeEditorialText(group.job) ?? "Editorial Board Member";
+    const isChiefEditorGroup = /chief\s*editor|editor[-\s]*in[-\s]*chief/i.test(
+      role,
+    );
+
+    for (const member of members) {
+      const name = normalizeEditorialText(member?.name);
+      if (!name) continue;
+
+      const affiliation = normalizeEditorialText(member.title);
+      const region = normalizeEditorialText(member.region);
+
+      if (isChiefEditorGroup) {
+        chiefEditors.push({
+          name,
+          role,
+          portrait: "",
+          affiliation,
+          region,
+        });
+        continue;
+      }
+
+      boardMembers.push({
+        name,
+        role,
+        affiliation,
+        region,
+      });
+    }
+  }
+
+  return { chiefEditors, boardMembers };
+}
+
+function resolveTab(tabParam?: string | string[]): JournalTabKey {
+  const value = Array.isArray(tabParam) ? tabParam[0] : tabParam;
+  switch (value) {
+    case "articles":
+    case "about":
+    case "publish":
+      return value;
+    default:
+      return "home";
+  }
 }
 
 export async function generateMetadata({
@@ -80,10 +159,14 @@ export async function generateMetadata({
 
 export default async function JournalDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<RouteParams>;
+  searchParams: Promise<RouteSearchParams>;
 }) {
   const { id } = await params;
+  const { tab } = await searchParams;
+  const activeTab = resolveTab(tab);
 
   let journal: JournalDetail;
   let apiArticles: JournalContentSummary[] | undefined;
@@ -123,7 +206,16 @@ export default async function JournalDetailPage({
     enrichment = getJournalEnrichment(journal.title);
   }
 
-  const scope = enrichment?.scope ?? journal.scope ?? journal.introduction ?? "";
+  const scope = journal.scope ?? journal.introduction ?? enrichment?.scope ?? "";
+  const editorialTeam = extractEditorialTeam(journal.team);
+  const chiefEditors = dedupeByNameAndRole([
+    ...(enrichment?.editorInChief ? [enrichment.editorInChief] : []),
+    ...editorialTeam.chiefEditors,
+  ]);
+  const boardMembers = dedupeByNameAndRole([
+    ...(enrichment?.editorialBoardMembers ?? []),
+    ...editorialTeam.boardMembers,
+  ]);
 
   return (
     <main className="flex flex-1 flex-col bg-white pb-12 sm:pb-16">
@@ -137,41 +229,13 @@ export default async function JournalDetailPage({
         coverSlot={coverSlot}
       />
 
-      <JournalNavTabs journalId={journal.id} />
+      <JournalNavTabs journalId={journal.id} activeTab={activeTab} />
 
       <section className="mx-auto w-full max-w-7xl px-6 py-8 sm:py-10">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-8 text-sm text-slate-500">
-          <ol className="flex items-center gap-1.5">
-            <li>
-              <Link
-                href="/"
-                className="hover:text-[#0b2545] hover:underline"
-              >
-                Home
-              </Link>
-            </li>
-            <li aria-hidden className="text-slate-400">
-              &gt;
-            </li>
-            <li>
-              <Link
-                href="/journals"
-                className="hover:text-[#0b2545] hover:underline"
-              >
-                Journals
-              </Link>
-            </li>
-            <li aria-hidden className="text-slate-400">
-              &gt;
-            </li>
-            <li className="font-medium text-slate-700">{journal.title}</li>
-          </ol>
-        </nav>
-
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr]">
           <JournalSidebar
-            editor={enrichment?.editorInChief}
+            chiefEditors={chiefEditors.length > 0 ? chiefEditors : undefined}
+            boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
             contacts={enrichment?.contacts}
             news={enrichment?.news}
           />
@@ -182,21 +246,10 @@ export default async function JournalDetailPage({
             topDownloaded={enrichment?.topDownloaded}
             apiArticles={apiArticles}
             journalId={journal.id}
+            activeTab={activeTab}
+            policy={journal.policy}
           />
         </div>
-
-        {/* Editorial policy (API-only content) */}
-        {journal.policy && (
-          <section className="mt-12">
-            <h2 className="text-lg font-bold text-[#0b2545]">
-              Editorial Policy
-            </h2>
-            <div
-              className="prose prose-sm mt-3 max-w-none text-slate-700 prose-strong:text-slate-900 sm:prose-base"
-              dangerouslySetInnerHTML={{ __html: journal.policy }}
-            />
-          </section>
-        )}
       </section>
     </main>
   );
