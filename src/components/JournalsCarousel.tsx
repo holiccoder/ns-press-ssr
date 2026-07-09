@@ -159,23 +159,8 @@ export default async function JournalsCarousel() {
           </form>
         </div>
 
-        {/* Carousel container with the soft blue/grey tinted background. */}
-        <div
-          className="relative mt-8 overflow-hidden rounded-3xl px-8 py-10 sm:px-12"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(219,234,254,0.85) 0%, rgba(191,219,254,0.65) 50%, rgba(186,230,253,0.75) 100%)",
-          }}
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -left-10 top-10 h-40 w-40 rounded-full bg-white/40 blur-2xl"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-12 bottom-0 h-48 w-48 rounded-full bg-sky-200/50 blur-3xl"
-          />
-
+        {/* Carousel container. */}
+        <div className="relative mt-8 overflow-hidden rounded-3xl px-8 py-10 sm:px-12">
           {lists.length === 0 ? (
             <p className="text-sm text-slate-600">
               No journals available right now.

@@ -3,8 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import layout from "@/data/layout.json";
+import { useLang } from "./LanguageSwitcher";
 
 const { brand, footer } = layout;
+
+const PUBLISHER_EN =
+  process.env.NEXT_PUBLIC_PUBLISHER_ENGLISH ?? "";
+const PUBLISHER_ZH =
+  process.env.NEXT_PUBLIC_PUBLISHER_CHINESE ?? "";
 
 /* ---------- Icons ---------- */
 
@@ -64,6 +70,8 @@ function ArrowUpIcon({ className = "" }: { className?: string }) {
 /* ---------- Component ---------- */
 
 export default function Footer() {
+  const lang = useLang();
+  const publisherName = lang === "zh" ? PUBLISHER_ZH : PUBLISHER_EN;
   // Back-to-top — `scrollTo` only runs in the click handler, so SSR
   // produces the same markup as the client.
   const scrollToTop = () => {
@@ -78,7 +86,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
             {/* Column 1 — Brand & Contact */}
             <div className="lg:pr-8">
-              <Link href="/" className="inline-flex items-center gap-2">
+              <Link href="/" className="inline-flex items-center gap-3">
                 <Image
                   src="/images/logo-white.png"
                   alt={`${brand.acronym} logo`}
@@ -87,6 +95,11 @@ export default function Footer() {
                   className="h-16 w-auto object-contain"
                   priority
                 />
+                {publisherName && (
+                  <span className="text-sm font-semibold leading-tight tracking-wide text-white">
+                    {publisherName}
+                  </span>
+                )}
               </Link>
 
               <ul className="mt-8 space-y-4 text-sm text-white/90">

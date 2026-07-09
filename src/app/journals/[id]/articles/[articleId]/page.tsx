@@ -14,16 +14,32 @@ export async function generateMetadata({
 }: {
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
-  const { articleId } = await params;
+  const { id, articleId } = await params;
+  const canonical = `/journals/${id}/articles/${articleId}`;
 
   try {
     const { article } = await resolveArticle(articleId);
+    const description = article.abstract?.slice(0, 200);
     return {
-      title: `${article.title} — NS Press`,
-      description: article.abstract?.slice(0, 200),
+      title: article.title,
+      description,
+      alternates: { canonical },
+      openGraph: {
+        title: article.title,
+        description,
+        url: canonical,
+        type: "article",
+        authors: article.authors.map((a) => a.name),
+        publishedTime: article.dates?.published || undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: article.title,
+        description,
+      },
     };
   } catch {
-    return { title: "Article — NS Press" };
+    return { title: "Article", alternates: { canonical } };
   }
 }
 
@@ -44,8 +60,48 @@ export default async function ArticleDetailPage({
     notFound();
   }
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    headline: article.title,
+    name: article.title,
+    abstract: article.abstract || undefined,
+    keywords: article.keywords.length ? article.keywords.join(", ") : undefined,
+    inLanguage: "en",
+    url: `${siteUrl}/articles/${articleId}`,
+    datePublished: article.dates?.published || undefined,
+    author: article.authors.map((a) => ({
+      "@type": "Person",
+      name: a.name,
+      affiliation: a.affiliation
+        ? { "@type": "Organization", name: a.affiliation }
+        : undefined,
+    })),
+    isPartOf: article.journalTitle
+      ? {
+          "@type": "Periodical",
+          name: article.journalTitle,
+          url: `${siteUrl}${volumeHref}`,
+        }
+      : undefined,
+    identifier: article.doi
+      ? { "@type": "PropertyValue", propertyID: "DOI", value: article.doi }
+      : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: "Hong Kong Natural Science Press Limited",
+      url: siteUrl,
+    },
+  };
+
   return (
     <main className="flex flex-1 flex-col bg-white py-12 sm:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="mx-auto w-full max-w-7xl px-6">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_300px]">
           <article className="space-y-8">

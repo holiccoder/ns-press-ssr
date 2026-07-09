@@ -3,9 +3,17 @@ import JournalsCarousel from "@/components/JournalsCarousel";
 import JournalsList from "@/components/JournalsList";
 
 export const metadata: Metadata = {
-  title: "Journals — NSP",
+  title: "Journals",
   description:
     "Browse NSP's portfolio of peer-reviewed open access academic journals.",
+  alternates: { canonical: "/journals" },
+  openGraph: {
+    title: "Journals",
+    description:
+      "Browse NSP's portfolio of peer-reviewed open access academic journals.",
+    url: "/journals",
+    type: "website",
+  },
 };
 
 export default function JournalsPage() {

@@ -134,26 +134,46 @@ export async function generateMetadata({
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { id } = await params;
+  const canonical = `/journals/${id}`;
 
   if (isKnownSlug(id)) {
     const enrichment = getJournalEnrichmentBySlug(id)!;
+    const description = enrichment.scope.slice(0, 200);
     return {
-      title: `${enrichment.title} — NS Press`,
-      description: enrichment.scope.slice(0, 200),
+      title: enrichment.title,
+      description,
+      alternates: { canonical },
+      openGraph: {
+        title: enrichment.title,
+        description,
+        url: canonical,
+        type: "website",
+      },
     };
   }
 
   const numericId = Number(id);
-  if (!Number.isFinite(numericId)) return { title: "Journal — NS Press" };
+  if (!Number.isFinite(numericId)) {
+    return { title: "Journal", alternates: { canonical } };
+  }
 
   try {
     const journal = await getJournalDetail(numericId, "中文");
+    const description = journal.introduction?.slice(0, 200);
     return {
-      title: `${journal.title} — NS Press`,
-      description: journal.introduction?.slice(0, 200),
+      title: journal.title,
+      description,
+      alternates: { canonical },
+      openGraph: {
+        title: journal.title,
+        description,
+        url: canonical,
+        type: "website",
+        images: journal.cover_image ? [journal.cover_image] : undefined,
+      },
     };
   } catch {
-    return { title: "Journal — NS Press" };
+    return { title: "Journal", alternates: { canonical } };
   }
 }
 
@@ -217,8 +237,28 @@ export default async function JournalDetailPage({
     ...editorialTeam.boardMembers,
   ]);
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Periodical",
+    name: journal.title,
+    issn: journal.issn || undefined,
+    description: scope || undefined,
+    url: `${siteUrl}/journals/${id}`,
+    publisher: {
+      "@type": "Organization",
+      name: "Hong Kong Natural Science Press Limited",
+      url: siteUrl,
+    },
+  };
+
   return (
     <main className="flex flex-1 flex-col bg-white pb-12 sm:pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <JournalBanner
         title={journal.title}
         issn={journal.issn}

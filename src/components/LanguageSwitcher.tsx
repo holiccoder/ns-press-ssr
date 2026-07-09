@@ -45,14 +45,14 @@ function subscribe(listener: () => void) {
 
 const SERVER_SNAPSHOT: LangCode = "en";
 
+export function useLang(): LangCode {
+  return useSyncExternalStore(subscribe, resolveLang, () => SERVER_SNAPSHOT);
+}
+
 export default function LanguageSwitcher() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const lang = useSyncExternalStore(
-    subscribe,
-    resolveLang,
-    () => SERVER_SNAPSHOT,
-  );
+  const lang = useLang();
 
   const choose = (next: LangCode) => {
     if (next === lang) return;

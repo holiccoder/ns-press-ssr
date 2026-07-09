@@ -14,6 +14,26 @@
       "Through digital technology and multilingual channels, we break down geographical barriers, promote knowledge flow, and with a professional and rigorous attitude, promote deep connections within the global research community, injecting continuous momentum into international academic development."
     ]
   },
+  "contact": {
+    "title": "Contact Information",
+    "intro": "Get in touch with our editorial and publishing team.",
+    "items": [
+      {
+        "label": "Address",
+        "value": "Unit 127, 7th Floor, Block B, New Mandarin Plaza, 14 Science Museum Road, Tsim Sha Tsui, Kowloon, Hong Kong"
+      },
+      {
+        "label": "Phone",
+        "value": "00852-30697751",
+        "href": "tel:00852-30697751"
+      },
+      {
+        "label": "Email",
+        "value": "routhpub@163.com",
+        "href": "mailto:routhpub@163.com"
+      }
+    ]
+  },
   "openAccess": {
     "title": "Open Access",
     "intro": "Open access is a fundamental movement for sharing and circulating academic information — making peer-reviewed scholarship freely available to anyone, anywhere, without subscription or paywall.",

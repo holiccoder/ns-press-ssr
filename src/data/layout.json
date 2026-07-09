@@ -10,16 +10,12 @@
       { "label": "HOME", "href": "/" },
       { "label": "JOURNALS", "href": "/journals" },
       { "label": "BOOKS", "href": "/books" },
-      { "label": "ABOUT", "href": "/about", "hasDropdown": true }
+      { "label": "ABOUT", "href": "/about" }
     ],
-    "aboutDropdown": [
-      { "label": "About NSP", "href": "/about" },
-      { "label": "Contact Us", "href": "/about/contact" },
-      { "label": "Careers", "href": "/about/careers" }
-    ],
+    "aboutDropdown": [],
     "searchLabel": "SEARCH",
     "submitLabel": "SUBMIT",
-    "submitHref": "/submit"
+    "submitHref": "/login"
   },
   "footer": {
     "contact": [
@@ -37,7 +33,6 @@
       "items": [
         { "label": "Home", "href": "/" },
         { "label": "Journals", "href": "/journals" },
-        { "label": "Conferences", "href": "/conferences" },
         { "label": "Books", "href": "/books" },
         { "label": "About", "href": "/about" }
       ]

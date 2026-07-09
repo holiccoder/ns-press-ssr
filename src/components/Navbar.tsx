@@ -5,9 +5,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import layout from "@/data/layout.json";
-import LanguageSwitcher from "./LanguageSwitcher";
+import LanguageSwitcher, { useLang } from "./LanguageSwitcher";
 
 const { brand, navbar } = layout;
+
+const PUBLISHER_EN =
+  process.env.NEXT_PUBLIC_PUBLISHER_ENGLISH ?? "";
+const PUBLISHER_ZH =
+  process.env.NEXT_PUBLIC_PUBLISHER_CHINESE ?? "";
 
 function SearchIcon({ className = "" }: { className?: string }) {
   return (
@@ -135,6 +140,8 @@ function SearchModal({
 
 export default function Navbar() {
   const pathname = usePathname();
+  const lang = useLang();
+  const publisherName = lang === "zh" ? PUBLISHER_ZH : PUBLISHER_EN;
   const [aboutOpen, setAboutOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -146,7 +153,7 @@ export default function Navbar() {
       <header className="w-full bg-[#0b2545] text-white">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Link href="/" className="flex shrink-0 items-center gap-3">
             <Image
               src={brand.logo}
               alt={`${brand.acronym} logo`}
@@ -155,6 +162,15 @@ export default function Navbar() {
               className="h-8 w-auto object-contain"
               priority
             />
+            {publisherName && (
+              <span
+                className={`hidden text-sm font-semibold tracking-wide text-white lg:inline ${
+                  lang === "zh" ? "" : "max-w-[16rem] leading-tight"
+                }`}
+              >
+                {publisherName}
+              </span>
+            )}
           </Link>
 
           {/* Centered nav links */}
@@ -232,7 +248,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="hidden items-center gap-1.5 text-sm font-semibold tracking-wide text-white hover:text-white/80 sm:flex"
+              className="hidden cursor-pointer items-center gap-1.5 text-sm font-semibold tracking-wide text-white hover:text-white/80 sm:flex"
             >
               <SearchIcon className="h-4 w-4" />
               {navbar.searchLabel}
