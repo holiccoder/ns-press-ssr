@@ -7,7 +7,19 @@ import { useEffect, useRef, useState } from "react";
 import layout from "@/data/layout.json";
 import LanguageSwitcher, { useLang } from "./LanguageSwitcher";
 
-const { brand, navbar } = layout;
+type NavItem = { label: string; href: string; hasDropdown?: boolean };
+type DropdownItem = { label: string; href: string };
+
+const { brand, navbar } = layout as {
+  brand: { acronym: string; subtitle: string; logo: string; favicon: string };
+  navbar: {
+    items: NavItem[];
+    aboutDropdown: DropdownItem[];
+    searchLabel: string;
+    submitLabel: string;
+    submitHref: string;
+  };
+};
 
 const PUBLISHER_EN =
   process.env.NEXT_PUBLIC_PUBLISHER_ENGLISH ?? "";
@@ -210,7 +222,7 @@ export default function Navbar() {
                         role="menu"
                         className="absolute left-1/2 top-full z-40 mt-1 w-48 -translate-x-1/2 overflow-hidden rounded-md bg-white py-1 text-sm text-[#0b2545] shadow-lg ring-1 ring-black/5"
                       >
-                        {(navbar.aboutDropdown as { label: string; href: string }[]).map((sub) => (
+                        {navbar.aboutDropdown.map((sub) => (
                           <Link
                             key={sub.href}
                             href={sub.href}
