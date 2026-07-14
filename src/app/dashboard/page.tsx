@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type Lang = "en" | "zh";
@@ -88,7 +88,7 @@ function resolveDashboardLanguage(): Lang {
   return nav.startsWith("zh") ? "zh" : "en";
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [language] = useState<Lang>(resolveDashboardLanguage);
@@ -493,5 +493,19 @@ export default function DashboardPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-600">
+          Loading...
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
   );
 }

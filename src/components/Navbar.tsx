@@ -210,7 +210,7 @@ export default function Navbar() {
                         role="menu"
                         className="absolute left-1/2 top-full z-40 mt-1 w-48 -translate-x-1/2 overflow-hidden rounded-md bg-white py-1 text-sm text-[#0b2545] shadow-lg ring-1 ring-black/5"
                       >
-                        {navbar.aboutDropdown.map((sub) => (
+                        {(navbar.aboutDropdown as { label: string; href: string }[]).map((sub) => (
                           <Link
                             key={sub.href}
                             href={sub.href}

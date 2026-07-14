@@ -7,10 +7,10 @@
   },
   "navbar": {
     "items": [
-      { "label": "HOME", "href": "/" },
-      { "label": "JOURNALS", "href": "/journals" },
-      { "label": "BOOKS", "href": "/books" },
-      { "label": "ABOUT", "href": "/about" }
+      { "label": "HOME", "href": "/", "hasDropdown": false },
+      { "label": "JOURNALS", "href": "/journals", "hasDropdown": false },
+      { "label": "BOOKS", "href": "/books", "hasDropdown": false },
+      { "label": "ABOUT", "href": "/about", "hasDropdown": false }
     ],
     "aboutDropdown": [],
     "searchLabel": "SEARCH",
