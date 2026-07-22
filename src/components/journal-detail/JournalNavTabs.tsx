@@ -1,12 +1,18 @@
 import Link from "next/link";
 
-export type JournalTabKey = "home" | "articles" | "about" | "publish";
+export type JournalTabKey =
+  | "home"
+  | "articles"
+  | "about"
+  | "publish"
+  | "editorial";
 
 const TABS: Array<{ key: JournalTabKey; label: string }> = [
   { key: "home", label: "Home" },
   { key: "articles", label: "Articles & Issues" },
   { key: "about", label: "About" },
   { key: "publish", label: "Publish" },
+  { key: "editorial", label: "Editorial Board" },
 ];
 
 export default function JournalNavTabs({

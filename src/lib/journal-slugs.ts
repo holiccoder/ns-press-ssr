@@ -1,4 +1,5 @@
 import journalDetailData from "@/data/journal-detail.json";
+import type { JournalDatabase } from "./api";
 
 export type ArticleLink = {
   label: string;
@@ -57,6 +58,7 @@ export type JournalEnrichment = {
   news?: NewsItem[];
   latestArticles?: EnrichedArticle[];
   topDownloaded?: EnrichedArticle[];
+  databases?: JournalDatabase[];
 };
 
 /**

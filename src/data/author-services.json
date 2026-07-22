@@ -1,0 +1,152 @@
+{
+  "apc": {
+    "hero": {
+      "title": "Article Processing Charge",
+      "titleZh": "文章处理费",
+      "breadcrumb": [
+        { "label": "Home", "href": "/" },
+        { "label": "Article Processing Charge" }
+      ]
+    },
+    "description": "Journals published by Hong Kong Natural Science Press (NSP) follow the international Open Access Publishing (OA) principle, and the Article Processing Charge (APC) is approximately 1800 Hong Kong Dollars.",
+    "descriptionZh": "香港自然科学出版社 (NSP) 出版的相关期刊遵循国际开放获取出版(OA)原则, 收取文章处理费 (APC) 约为在1800港币。",
+    "details": [
+      {
+        "title": "Fee Standards",
+        "titleZh": "收费标准",
+        "content": "Our article processing fee standards are transparent and public, with specific fees determined by article type and length.",
+        "contentZh": "我们的文章处理费标准透明公开，根据文章类型和篇幅确定具体费用。"
+      },
+      {
+        "title": "Waiver Policy",
+        "titleZh": "减免政策",
+        "content": "For authors from low-income countries, we provide fee waiver policies to support global academic development.",
+        "contentZh": "对来自低收入国家的作者，我们提供费用减免政策，支持全球学术发展。"
+      },
+      {
+        "title": "Payment Methods",
+        "titleZh": "支付方式",
+        "content": "Support various online payment methods including credit cards, bank transfers, etc., ensuring convenient and secure payment.",
+        "contentZh": "支持多种在线支付方式，包括信用卡、银行转账等，确保支付便捷安全。"
+      },
+      {
+        "title": "Invoice Issuance",
+        "titleZh": "发票开具",
+        "content": "Provide formal invoices and receipts to meet the financial reimbursement needs of authors and institutions.",
+        "contentZh": "提供正式发票和收据，满足作者和机构的财务报销需求。"
+      }
+    ]
+  },
+  "copyright": {
+    "hero": {
+      "title": "Copyright Transfer Agreement",
+      "titleZh": "版权转让协议",
+      "breadcrumb": [
+        { "label": "Home", "href": "/" },
+        { "label": "Copyright Transfer Agreement" }
+      ]
+    },
+    "form": {
+      "manuscriptTitle": "Manuscript Title:",
+      "manuscriptTitleZh": "稿件标题:",
+      "authorName": "Author Name:",
+      "authorNameZh": "作者姓名:",
+      "submittedJournal": "Submitted Journal:",
+      "submittedJournalZh": "提交期刊:"
+    },
+    "introduction": "The author (copyright holder) of the aforementioned manuscript agrees to its publication in this journal (referred to as \"this journal\" hereafter) and voluntarily transfers the copyright of the paper globally to the journal's editorial department/publisher. It then clarifies related issues as follows:",
+    "introductionZh": "上述稿件的作者（版权持有人）同意在本刊（以下简称\"本刊\"）发表，并自愿将论文的版权在全球范围内转让给本刊编辑部/出版社。现将相关问题明确如下：",
+    "terms": [
+      {
+        "title": "Article 1",
+        "titleZh": "第一条",
+        "content": "The manuscript author guarantees the work is original, does not involve confidentiality, and avoids academic misconduct such as multiple submissions of the same manuscript. All responsibility for infringement or disclosure lies with the author.",
+        "contentZh": "稿件作者保证作品为原创，不涉及保密内容，避免一稿多投等学术不端行为。因侵权或泄密而产生的所有责任由作者承担。"
+      },
+      {
+        "title": "Article 2",
+        "titleZh": "第二条",
+        "content": "All authors agree to transfer the reproduction and dissemination rights of the paper—including but not limited to reproduction rights, distribution rights, information network dissemination rights, broadcasting rights, performance rights, translation rights, compilation rights, adaptation rights, and other copyright rights—to the journal.",
+        "contentZh": "全体作者同意将论文的复制权和传播权——包括但不限于复制权、发行权、信息网络传播权、广播权、表演权、翻译权、汇编权、改编权等著作权权利——转让给本刊。"
+      },
+      {
+        "title": "Article 3",
+        "titleZh": "第三条",
+        "content": "Authors have no dispute over the authorship of the paper. Any disputes are the sole responsibility of the authors.",
+        "contentZh": "作者对论文的署名权无争议。如有争议，由作者承担全部责任。"
+      },
+      {
+        "title": "Article 4",
+        "titleZh": "第四条",
+        "content": "Transfer Fee: The rights transfer under this agreement is free of charge.",
+        "contentZh": "转让费用：本协议下的权利转让为无偿转让。"
+      },
+      {
+        "title": "Article 5",
+        "titleZh": "第五条",
+        "content": "Author Services: To assist authors with research, study, creation, and publication, this journal and related authorized platforms provide a series of services to authors. Related services are subject to public disclosure on third-party platforms.",
+        "contentZh": "作者服务：为协助作者进行科研、学习、创作和发表，本刊及相关授权平台为作者提供一系列服务。相关服务在第三方平台公开披露。"
+      },
+      {
+        "title": "Article 6",
+        "titleZh": "第六条",
+        "content": "Disputes arising from the performance of this agreement shall be resolved through negotiation. If negotiation fails, either party may file a lawsuit with the competent People's Court in the location of the journal's publisher.",
+        "contentZh": "因履行本协议发生的争议，双方协商解决。协商不成的，任何一方均可向本刊出版社所在地有管辖权的人民法院提起诉讼。"
+      }
+    ],
+    "signature": {
+      "title": "Signatures of All Authors:",
+      "titleZh": "全体作者的签名:",
+      "headers": ["Serial Number", "Author Signature", "Author ID Number", "Author Institution", "Signing Date"],
+      "headersZh": ["序号", "作者签名", "作者身份证号", "作者机构", "签署日期"],
+      "rows": 3,
+      "note": "Note: If there are more than 3 authors, please manually add signature rows.",
+      "noteZh": "注意:如果作者超过3位,请手动添加签名列。"
+    }
+  },
+  "authorContribution": {
+    "hero": {
+      "title": "Author Contribution Statement",
+      "titleZh": "作者贡献声明",
+      "breadcrumb": [
+        { "label": "Home", "href": "/" },
+        { "label": "Author Contribution Statement" }
+      ]
+    },
+    "form": {
+      "manuscriptTitle": "Manuscript Title:",
+      "manuscriptTitleZh": "稿件标题:",
+      "authorName": "Author Name:",
+      "authorNameZh": "作者姓名:",
+      "submittedJournal": "Submission Journal:",
+      "submittedJournalZh": "提交期刊:"
+    },
+    "guidelines": "Before submission, all authors must discuss and agree on the author order, which cannot be changed arbitrarily thereafter. If changes are needed, a statement of no objection from all authors and their respective institutions must be provided. The corresponding author should be selected by all authors and their name, affiliation, postal code, and email address clearly indicated.",
+    "guidelinesZh": "投稿前应征得所有作者的讨论并同意作者顺序，之后不得随意更改。当需要更改时，应出示所有作者和作者所在机构声明不反对的证明。通讯作者应由所有作者选出，并明确标明其姓名、单位、邮政编码和电子邮件地址。",
+    "obligations": {
+      "title": "Authors should fulfill the following obligations:",
+      "titleZh": "作者应履行以下义务:",
+      "items": [
+        "Participate in the design of the paper's topic, or in data collection, analysis, and discussion;",
+        "Draft the manuscript, revise key theories or other main content in the paper;",
+        "Be able to revise based on editorial feedback, answer academic questions, and authorize publication of the paper;",
+        "In addition to research contributions, also be responsible for the academic integrity of the research."
+      ],
+      "itemsZh": [
+        "参与论文选题设计，或资料收集、分析、讨论；",
+        "起草稿件，修改论文中的关键理论或其他主要内容；",
+        "能根据编辑部反馈进行修改，回答学术问题并授权论文发表；",
+        "除了研究贡献外，还对研究的学术诚信负责。"
+      ]
+    },
+    "clarification": "Providing funding, contributing data, or managing projects does not constitute a condition for authorship.",
+    "clarificationZh": "提供资金、贡献数据或管理项目不构成作者身份的条件。",
+    "confirmation": "After confirming the manuscript author's identity, authors should sign their names in order and clearly state their respective contributions. Independent authors do not need to disclose their contributions.",
+    "confirmationZh": "在确认稿件作者身份后，作者应按顺序签上姓名，并分别明确说明自己的贡献。独立作者无需披露其贡献。",
+    "contributionTitle": "Each author's contribution statement is arranged in order:",
+    "contributionTitleZh": "每个作者的贡献声明按顺序排列:",
+    "contributionRows": 3,
+    "note": "Note: If there are more than 3 authors, please manually add signature rows.",
+    "noteZh": "注意:如果作者超过3位,请手动添加签名列。"
+  }
+}

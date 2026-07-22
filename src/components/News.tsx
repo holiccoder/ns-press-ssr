@@ -134,7 +134,7 @@ export default async function News() {
 
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="flex items-end justify-between">
           <h2 className="text-4xl font-extrabold tracking-tight text-[#0b2545] sm:text-5xl">

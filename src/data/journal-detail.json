@@ -22,25 +22,11 @@
         "email": "routhpub@163.com"
       }
     ],
-    "news": [
-      {
-        "id": "doaj-indexed",
-        "title": "ExRNA Officially Indexed in DOAJ",
-        "date": "28 Jul 2025",
-        "thumbnail": "/images/journals/exrna/news-doaj.jpg"
-      },
-      {
-        "id": "recruitment-ecb",
-        "title": "Recruitment Early-Career Editorial Board Members of ExRNA",
-        "date": "24 Jul 2025",
-        "thumbnail": "/images/journals/exrna/news-recruitment.jpg"
-      },
-      {
-        "id": "preanalytical-conditions",
-        "title": "ExRNA 2025(1):0005: Influence of pre-analytical conditions on cell-free...",
-        "date": "24 Mar 2025",
-        "thumbnail": "/images/journals/exrna/news-preanalytical.jpg"
-      }
+    "databases": [
+      { "id": "vip", "name": "VIP", "src": "/images/databases/vip.png", "href": "https://www.cqvip.com" },
+      { "id": "doi", "name": "DOI", "src": "/images/databases/doi.png", "href": "https://www.doi.org" },
+      { "id": "google-scholar", "name": "Google Scholar", "src": "/images/databases/google-scholar.png", "href": "https://scholar.google.com" },
+      { "id": "quanlian", "name": "全联", "src": "/images/databases/quanlian.png", "href": "#" }
     ],
     "latestArticles": [
       {
@@ -138,6 +124,12 @@
   "asymmetry": {
     "title": "Asymmetry",
     "issn": "3042-5406 (Print); 3042-5414 (Online)",
-    "scope": "Asymmetry is a peer-reviewed, open-access journal that publishes high-quality research on all aspects of asymmetry, spanning chemistry, biology, physics, materials science, and related interdisciplinary fields. The journal welcomes fundamental and applied studies on chiral phenomena, asymmetric synthesis, asymmetric catalysis, and structural and functional asymmetry across natural and artificial systems."
+    "scope": "Asymmetry is a peer-reviewed, open-access journal that publishes high-quality research on all aspects of asymmetry, spanning chemistry, biology, physics, materials science, and related interdisciplinary fields. The journal welcomes fundamental and applied studies on chiral phenomena, asymmetric synthesis, asymmetric catalysis, and structural and functional asymmetry across natural and artificial systems.",
+    "databases": [
+      { "id": "vip", "name": "VIP", "src": "/images/databases/vip.png", "href": "https://www.cqvip.com" },
+      { "id": "doi", "name": "DOI", "src": "/images/databases/doi.png", "href": "https://www.doi.org" },
+      { "id": "google-scholar", "name": "Google Scholar", "src": "/images/databases/google-scholar.png", "href": "https://scholar.google.com" },
+      { "id": "quanlian", "name": "全联", "src": "/images/databases/quanlian.png", "href": "#" }
+    ]
   }
 }

@@ -2,20 +2,6 @@ import home from "@/data/home.json";
 
 const { hero } = home;
 
-function DeerLogo({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      fill="currentColor"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M52 8l-4 8-6-2-3 5 5 4-10 10-12-4-8 6 4 6-10 10 4 4 12-8 8 4 6-6-4-6 12-12 6 2 3-6-5-3 4-8-2-4z" />
-      <circle cx="50" cy="12" r="2" />
-    </svg>
-  );
-}
-
 function SearchIcon({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -109,7 +95,7 @@ export default function Hero() {
         backgroundImage: [
           "radial-gradient(ellipse 90% 60% at 50% 110%, rgba(56,189,248,0.45) 0%, rgba(11,37,69,0) 60%)",
           "radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255,255,255,0.25) 0%, rgba(11,37,69,0) 55%)",
-          "linear-gradient(180deg, #050b1f 0%, #0b2545 55%, #0a3d7a 100%)",
+          "linear-gradient(180deg, #0c2a52 0%, #15518f 55%, #3b82f6 100%)",
         ].join(", "),
       }}
     >
@@ -119,8 +105,8 @@ export default function Hero() {
         className="pointer-events-none absolute -bottom-[55%] left-1/2 h-[120%] w-[160%] -translate-x-1/2 rounded-[50%]"
         style={{
           background:
-            "radial-gradient(circle at 50% 0%, rgba(96,165,250,0.35) 0%, rgba(30,64,175,0.25) 35%, rgba(11,37,69,0) 70%)",
-          boxShadow: "inset 0 60px 120px rgba(147,197,253,0.25)",
+            "radial-gradient(circle at 50% 0%, rgba(96,165,250,0.25) 0%, rgba(30,64,175,0.15) 35%, rgba(11,37,69,0) 70%)",
+          boxShadow: "inset 0 60px 120px rgba(147,197,253,0.15)",
         }}
       />
 
@@ -130,21 +116,8 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto flex max-w-5xl flex-col items-center px-6 pt-20 pb-28 text-center sm:pt-24 sm:pb-32">
-        {/* Central branding */}
-        <div className="flex items-center gap-3">
-          <DeerLogo className="h-14 w-14 text-white sm:h-16 sm:w-16" />
-          <span className="flex items-baseline gap-2 leading-none">
-            <span className="text-3xl font-bold tracking-wide sm:text-4xl">
-              {hero.brand.acronym}
-            </span>
-            <span className="text-xl font-light tracking-wide text-white/85 sm:text-2xl">
-              {hero.brand.subtitle}
-            </span>
-          </span>
-        </div>
-
         {/* Headline */}
-        <h1 className="mt-10 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
           {hero.headline}
         </h1>
 

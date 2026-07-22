@@ -7,6 +7,21 @@ import { useEffect, useRef, useState } from "react";
 import layout from "@/data/layout.json";
 import LanguageSwitcher, { useLang } from "./LanguageSwitcher";
 
+function formatPublisherName(name: string, lang: string): React.ReactNode {
+  if (lang === "zh") return name;
+  const pressIndex = name.toLowerCase().indexOf("press");
+  if (pressIndex === -1) return name;
+  const before = name.slice(0, pressIndex).trim();
+  const after = name.slice(pressIndex).trim();
+  return (
+    <>
+      {before}
+      <br />
+      {after}
+    </>
+  );
+}
+
 type NavItem = { label: string; href: string; hasDropdown?: boolean };
 type DropdownItem = { label: string; href: string };
 
@@ -163,15 +178,15 @@ export default function Navbar() {
   return (
     <>
       <header className="w-full bg-[#0b2545] text-white">
-        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6">
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-3">
             <Image
-              src={brand.logo}
+              src="/images/logo-white.png"
               alt={`${brand.acronym} logo`}
-              width={140}
-              height={40}
-              className="h-8 w-auto object-contain"
+              width={180}
+              height={56}
+              className="h-12 w-auto object-contain"
               priority
             />
             {publisherName && (
@@ -180,7 +195,7 @@ export default function Navbar() {
                   lang === "zh" ? "" : "max-w-[16rem] leading-tight"
                 }`}
               >
-                {publisherName}
+                {formatPublisherName(publisherName, lang)}
               </span>
             )}
           </Link>

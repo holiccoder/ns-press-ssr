@@ -6,7 +6,7 @@
     "search": {
       "action": "/search",
       "label": "Search NSP",
-      "placeholder": "Aliquip tenetur do e",
+      "placeholder": "search journals, articles, books",
       "submitLabel": "Search"
     }
   },
@@ -164,6 +164,19 @@
         "title": "Breakthroughs in wireless power and data transfer systems pave the way for...",
         "date": "25 Mar 2026"
       }
+    ]
+  },
+  "partners": {
+    "title": "Our Partners",
+    "titleZh": "合作伙伴",
+    "items": [
+      { "src": "/partners/04.png", "alt": "Partner logo" },
+      { "src": "/partners/07.jpg", "alt": "Partner logo" },
+      { "src": "/partners/03.jpg", "alt": "Partner logo" },
+      { "src": "/partners/10.png", "alt": "Partner logo" },
+      { "src": "/partners/08.png", "alt": "Partner logo" },
+      { "src": "/partners/09.png", "alt": "Partner logo" },
+      { "src": "/partners/01.jpg", "alt": "Partner logo" }
     ]
   }
 }

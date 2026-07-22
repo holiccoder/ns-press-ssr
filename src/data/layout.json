@@ -10,7 +10,8 @@
       { "label": "HOME", "href": "/", "hasDropdown": false },
       { "label": "JOURNALS", "href": "/journals", "hasDropdown": false },
       { "label": "BOOKS", "href": "/books", "hasDropdown": false },
-      { "label": "ABOUT", "href": "/about", "hasDropdown": false }
+      { "label": "ABOUT", "href": "/about", "hasDropdown": false },
+      { "label": "GUIDE", "href": "/guide", "hasDropdown": false }
     ],
     "aboutDropdown": [],
     "searchLabel": "SEARCH",
@@ -25,7 +26,7 @@
     "officeLocations": {
       "heading": "Office Locations",
       "addresses": [
-        ["Unit 127, 7th Floor, Block B, New Mandarin Plaza,", "14 Science Museum Road, Tsim Sha Tsui,", "Kowloon, Hong Kong"]
+        ["7th Floor, Block B, New Mandarin Plaza,", "14 Science Museum Road, Tsim Sha Tsui,", "Kowloon, Hong Kong"]
       ]
     },
     "usefulLinks": {
@@ -35,6 +36,16 @@
         { "label": "Journals", "href": "/journals" },
         { "label": "Books", "href": "/books" },
         { "label": "About", "href": "/about" }
+      ]
+    },
+    "authorServices": {
+      "heading": "Author Services",
+      "headingZh": "作者服务",
+      "items": [
+        { "label": "Article Processing Charges", "labelZh": "文章处理费", "href": "/apc" },
+        { "label": "Open Access Policy", "labelZh": "开放获取政策", "href": "/guide?tab=open_access" },
+        { "label": "Copyright Transfer Agreement", "labelZh": "版权转让协议", "href": "/copyright" },
+        { "label": "Author Contribution Statement", "labelZh": "作者贡献声明", "href": "/author-contribution" }
       ]
     },
     "about": {

@@ -5,12 +5,40 @@ import Link from "next/link";
 import layout from "@/data/layout.json";
 import { useLang } from "./LanguageSwitcher";
 
-const { brand, footer } = layout;
+const PUBLISHER_EN = process.env.NEXT_PUBLIC_PUBLISHER_ENGLISH ?? "";
+const PUBLISHER_ZH = process.env.NEXT_PUBLIC_PUBLISHER_CHINESE ?? "";
 
-const PUBLISHER_EN =
-  process.env.NEXT_PUBLIC_PUBLISHER_ENGLISH ?? "";
-const PUBLISHER_ZH =
-  process.env.NEXT_PUBLIC_PUBLISHER_CHINESE ?? "";
+function formatPublisherName(name: string, lang: string): React.ReactNode {
+  if (lang === "zh") return name;
+  const pressIndex = name.toLowerCase().indexOf("press");
+  if (pressIndex === -1) return name;
+  const before = name.slice(0, pressIndex).trim();
+  const after = name.slice(pressIndex).trim();
+  return (
+    <>
+      {before}
+      <br />
+      {after}
+    </>
+  );
+}
+
+const { brand, footer } = layout as {
+  brand: { acronym: string; logo: string; favicon: string };
+  footer: {
+    contact: { type: string; value: string; href: string }[];
+    officeLocations: { heading: string; addresses: string[][] };
+    usefulLinks: { heading: string; items: { label: string; href: string }[] };
+    authorServices: {
+      heading: string;
+      headingZh: string;
+      items: { label: string; labelZh: string; href: string }[];
+    };
+    about: { heading: string; paragraphs: string[] };
+    backToTopLabel: string;
+    copyright: { prefix: string; highlight: string; suffix: string };
+  };
+};
 
 /* ---------- Icons ---------- */
 
@@ -83,10 +111,10 @@ export default function Footer() {
       {/* Dark navy main area */}
       <div className="bg-[#0b1023] text-white">
         <div className="mx-auto max-w-7xl px-6 py-14 sm:py-16">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5 lg:gap-0">
             {/* Column 1 — Brand & Contact */}
-            <div className="lg:pr-8">
-              <Link href="/" className="inline-flex items-center gap-3">
+            <div className="text-center lg:pr-8 lg:text-left">
+              <Link href="/" className="inline-flex flex-col items-center gap-2">
                 <Image
                   src="/images/logo-white.png"
                   alt={`${brand.acronym} logo`}
@@ -97,7 +125,7 @@ export default function Footer() {
                 />
                 {publisherName && (
                   <span className="text-sm font-semibold leading-tight tracking-wide text-white">
-                    {publisherName}
+                    {formatPublisherName(publisherName, lang)}
                   </span>
                 )}
               </Link>
@@ -159,7 +187,26 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Column 4 — About */}
+            {/* Column 4 — Author Services */}
+            <div className="lg:border-l lg:border-white/15 lg:px-8">
+              <h3 className="text-base font-bold tracking-wide text-white">
+                {lang === "zh" ? footer.authorServices.headingZh : footer.authorServices.heading}
+              </h3>
+              <ul className="mt-6 space-y-3 text-sm text-white/90">
+                {footer.authorServices.items.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="transition-colors hover:text-white"
+                    >
+                      {lang === "zh" ? link.labelZh : link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 5 — About */}
             <div className="lg:border-l lg:border-white/15 lg:pl-8">
               <h3 className="text-base font-bold tracking-wide text-white">
                 {footer.about.heading}

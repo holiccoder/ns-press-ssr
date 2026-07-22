@@ -29,6 +29,19 @@ export type BookListItem = {
   cover_image: string;
 };
 
+export type JournalContact = {
+  label: string;
+  name: string;
+  email: string;
+};
+
+export type JournalDatabase = {
+  id: string;
+  name: string;
+  src: string;
+  href?: string;
+};
+
 export type JournalDetail = {
   id: number;
   cover_image: string;
@@ -47,6 +60,8 @@ export type JournalDetail = {
   other_info?: string;
   year?: number;
   periods?: number;
+  contacts?: JournalContact[];
+  databases?: JournalDatabase[];
 };
 
 export type JournalEditorialTeamMember = {
@@ -243,6 +258,16 @@ export type LatestSubmission = {
 
 export function getLatestSubmissions(): Promise<LatestSubmission[]> {
   return apiGet<LatestSubmission[]>("latestSubmissions", {});
+}
+
+export type PolicyInfo = {
+  author_guide: string;
+  reviewer_guide: string;
+  open_policy: string;
+};
+
+export function getPolicyInfo(lang: Lang = "中文"): Promise<PolicyInfo> {
+  return apiGet<PolicyInfo>("policyInfo", { lang });
 }
 
 export type ArticleListItem = {

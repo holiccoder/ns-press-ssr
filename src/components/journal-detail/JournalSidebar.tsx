@@ -2,31 +2,34 @@ import type {
   Contact,
   EditorialBoardMember,
   EditorInChief,
-  NewsItem,
 } from "@/lib/journal-slugs";
+import type { JournalDatabase } from "@/lib/api";
 import ContactCard from "./ContactCard";
+import DatabaseLogos from "./DatabaseLogos";
 import EditorialBoardCard from "./EditorialBoardCard";
-import NewsList from "./NewsList";
 
 export default function JournalSidebar({
+  journalId,
   chiefEditors,
   boardMembers,
   contacts,
-  news,
+  databases,
 }: {
+  journalId: number;
   chiefEditors?: EditorInChief[];
   boardMembers?: EditorialBoardMember[];
   contacts?: Contact[];
-  news?: NewsItem[];
+  databases?: JournalDatabase[];
 }) {
   return (
     <aside className="space-y-8">
+      <DatabaseLogos databases={databases} />
       <EditorialBoardCard
         chiefEditors={chiefEditors}
         boardMembers={boardMembers}
+        viewAllHref={`/journals/${journalId}?tab=editorial`}
       />
       <ContactCard contacts={contacts} />
-      <NewsList news={news} />
     </aside>
   );
 }

@@ -4,11 +4,13 @@ import {
   getJournalDetail,
   getJournalContents,
   ApiError,
+  type JournalContact,
   type JournalContentSummary,
   type JournalDetail,
 } from "@/lib/api";
 import {
   getEnrichedSlugs,
+  type Contact,
   type EditorialBoardMember,
   type EditorInChief,
   getJournalEnrichment,
@@ -122,10 +124,37 @@ function resolveTab(tabParam?: string | string[]): JournalTabKey {
     case "articles":
     case "about":
     case "publish":
+    case "editorial":
       return value;
     default:
       return "home";
   }
+}
+
+function buildContacts(
+  apiContacts: JournalContact[] | undefined,
+  enrichmentContacts: Contact[] | undefined,
+): Contact[] {
+  if (apiContacts && apiContacts.length > 0) {
+    return apiContacts.map((c) => ({
+      label: c.label,
+      name: c.name,
+      email: c.email,
+    }));
+  }
+  if (enrichmentContacts && enrichmentContacts.length > 0) {
+    return enrichmentContacts.map((c) => ({
+      ...c,
+      email: "routhpub@163.com",
+    }));
+  }
+  return [
+    {
+      label: "Editorial Office",
+      name: "Hong Kong Natural Science Press",
+      email: "routhpub@163.com",
+    },
+  ];
 }
 
 export async function generateMetadata({
@@ -236,6 +265,7 @@ export default async function JournalDetailPage({
     ...(enrichment?.editorialBoardMembers ?? []),
     ...editorialTeam.boardMembers,
   ]);
+  const contacts = buildContacts(journal.contacts, enrichment?.contacts);
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
@@ -274,10 +304,11 @@ export default async function JournalDetailPage({
       <section className="mx-auto w-full max-w-7xl px-6 py-8 sm:py-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr]">
           <JournalSidebar
+            journalId={journal.id}
             chiefEditors={chiefEditors.length > 0 ? chiefEditors : undefined}
             boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
-            contacts={enrichment?.contacts}
-            news={enrichment?.news}
+            contacts={contacts}
+            databases={enrichment?.databases ?? journal.databases}
           />
 
           <JournalMainColumn
@@ -288,6 +319,8 @@ export default async function JournalDetailPage({
             journalId={journal.id}
             activeTab={activeTab}
             policy={journal.policy}
+            chiefEditors={chiefEditors.length > 0 ? chiefEditors : undefined}
+            boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
           />
         </div>
       </section>

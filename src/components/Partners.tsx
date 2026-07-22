@@ -1,35 +1,28 @@
 import Image from "next/image";
+import home from "@/data/home.json";
 
-const PARTNER_LOGOS = [
-  { src: "/partners/01.jpg", alt: "Partner logo 1" },
-  { src: "/partners/03.jpg", alt: "Partner logo 3" },
-  { src: "/partners/04.png", alt: "Partner logo 4" },
-  { src: "/partners/07.jpg", alt: "Partner logo 5" },
-  { src: "/partners/08.png", alt: "Partner logo 6" },
-  { src: "/partners/09.png", alt: "Partner logo 7" },
-  { src: "/partners/10.png", alt: "Partner logo 8" },
-];
+const { partners } = home;
 
 export default function Partners() {
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="text-2xl font-extrabold tracking-tight text-[#0b2545] sm:text-3xl md:text-4xl">
-          Our Partners
+          {partners.title}
         </h2>
 
         <div className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-          {PARTNER_LOGOS.map((logo) => (
+          {partners.items.map((logo) => (
             <div
               key={logo.src}
-              className="flex w-full items-center justify-center p-4 transition-opacity hover:opacity-100 opacity-90"
+              className="flex w-full items-center justify-center p-4 opacity-90 transition-opacity hover:opacity-100"
             >
               <Image
                 src={logo.src}
                 alt={logo.alt}
-                width={280}
-                height={160}
-                className="h-auto w-full object-contain"
+                width={200}
+                height={80}
+                className="h-16 w-auto max-w-full object-contain sm:h-20"
               />
             </div>
           ))}
