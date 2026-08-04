@@ -100,6 +100,25 @@ function CloseIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function MenuIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
 function SearchModal({
   isOpen,
   onClose,
@@ -179,8 +198,10 @@ export default function Navbar() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState<Record<string, unknown> | null>(null);
 
+  // Synchronize dynamic user authentication state
   useEffect(() => {
     const syncProfile = () => {
       setProfile(getToken() ? getUserProfile() : null);
@@ -195,6 +216,11 @@ export default function Navbar() {
     };
   }, []);
 
+  // Automatically close mobile menu when pathname changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   const displayName = String(
     profile?.real_name ?? profile?.name ?? profile?.account ?? profile?.email ?? "Account",
   );
@@ -203,6 +229,7 @@ export default function Navbar() {
     removeToken();
     removeUserProfile();
     setUserMenuOpen(false);
+    setMobileMenuOpen(false);
     router.push("/login");
   }
 
@@ -234,7 +261,7 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* Centered nav links */}
+          {/* Centered nav links (Desktop Only) */}
           <ul className="hidden items-center gap-2 md:flex">
             {navbar.items.map((item) => {
               const active = isActive(item.href);
@@ -304,8 +331,8 @@ export default function Navbar() {
             })}
           </ul>
 
-          {/* Action items */}
-          <div className="flex shrink-0 items-center gap-5">
+          {/* Action items (Desktop Only) */}
+          <div className="hidden shrink-0 items-center gap-5 md:flex">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
@@ -376,7 +403,140 @@ export default function Navbar() {
             )}
             <LanguageSwitcher />
           </div>
+
+          {/* Hamburger button (Mobile Only) */}
+          <div className="flex items-center md:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle navigation menu"
+              className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-[#0b2545]/80 hover:text-white/80 focus:outline-none"
+            >
+              {mobileMenuOpen ? (
+                <CloseIcon className="h-6 w-6" />
+              ) : (
+                <MenuIcon className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </nav>
+
+        {/* Mobile Navigation Drawer (Slide-down Panel) */}
+        {mobileMenuOpen && (
+          <div className="border-t border-white/10 bg-[#0b2545] px-6 py-4 md:hidden">
+            <ul className="space-y-3">
+              {navbar.items.map((item) => (
+                <li key={item.label} className="space-y-2">
+                  {item.hasDropdown ? (
+                    <>
+                      <div className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white/50">
+                        {item.label}
+                      </div>
+                      <ul className="pl-4 space-y-1">
+                        {navbar.aboutDropdown.map((sub) => (
+                          <li key={sub.href}>
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="block rounded-md px-3 py-1.5 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white"
+                            >
+                              {sub.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block rounded-md px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/5 hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+
+              <hr className="my-4 border-white/10" />
+
+              {/* Extra Mobile Actions */}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setSearchOpen(true);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/5"
+                >
+                  <SearchIcon className="h-4 w-4" />
+                  {navbar.searchLabel}
+                </button>
+              </li>
+
+              <li>
+                <Link
+                  href={navbar.submitHref}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block rounded-md px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/5"
+                >
+                  {navbar.submitLabel}
+                </Link>
+              </li>
+
+              <hr className="my-4 border-white/10" />
+
+              {/* Authentication & Translation Controls */}
+              <li className="flex flex-col gap-3 px-3 py-1.5">
+                {profile ? (
+                  <div className="space-y-3">
+                    <p className="max-w-xs truncate text-sm font-medium text-white/60">
+                      {displayName}
+                    </p>
+                    <Link
+                      href="/dashboard/account-info"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-sm font-medium text-white hover:underline"
+                    >
+                      Account Info
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="block text-sm font-medium text-rose-300 hover:underline"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-sm font-semibold text-white hover:text-white/80"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="rounded-sm bg-white px-3 py-1.5 text-sm font-semibold text-[#0b2545] transition-colors hover:bg-slate-100"
+                    >
+                      Register
+                    </Link>
+                  </div>
+                )}
+
+                <div className="pt-2">
+                  <LanguageSwitcher />
+                </div>
+              </li>
+            </ul>
+          </div>
+        )}
       </header>
 
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
