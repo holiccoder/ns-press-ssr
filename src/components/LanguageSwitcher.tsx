@@ -51,7 +51,7 @@ export function useLang(): LangCode {
   return useSyncExternalStore(subscribe, resolveLang, () => SERVER_SNAPSHOT);
 }
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ className = "" }: { className?: string }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const lang = useLang();
@@ -72,7 +72,7 @@ export default function LanguageSwitcher() {
     <div
       role="group"
       aria-label="Language"
-      className={`hidden items-center rounded-full border border-white/30 text-xs font-semibold sm:inline-flex ${
+      className={`${className || "hidden sm:inline-flex"} items-center rounded-full border border-white/30 text-xs font-semibold ${
         isPending ? "opacity-70" : ""
       }`}
     >

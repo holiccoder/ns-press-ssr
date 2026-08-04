@@ -531,7 +531,7 @@ export default function Navbar() {
                 )}
 
                 <div className="pt-2">
-                  <LanguageSwitcher />
+                  <LanguageSwitcher className="inline-flex" />
                 </div>
               </li>
             </ul>
