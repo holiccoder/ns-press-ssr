@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getJournalList, parseIssn, type JournalListItem } from "@/lib/api";
+import { getServerApiLang } from "@/lib/lang.server";
 import { resolveJournalCover } from "@/lib/images";
 
 function toHref(id: number): string {
@@ -8,10 +9,11 @@ function toHref(id: number): string {
 }
 
 export default async function JournalsList() {
+  const lang = await getServerApiLang();
   let lists: JournalListItem[] = [];
   let failed = false;
   try {
-    const data = await getJournalList({ page: 1, pageSize: 12, lang: "中文" });
+    const data = await getJournalList({ page: 1, pageSize: 12, lang });
     lists = data.lists;
   } catch (err) {
     failed = true;

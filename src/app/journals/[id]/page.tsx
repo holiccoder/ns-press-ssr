@@ -18,6 +18,7 @@ import {
   type JournalEnrichment,
 } from "@/lib/journal-slugs";
 import { resolveJournalCover } from "@/lib/images";
+import { getServerApiLang } from "@/lib/lang.server";
 import ExRNACover from "@/components/journal-detail/ExRNACover";
 import JournalBanner from "@/components/journal-detail/JournalBanner";
 import JournalMainColumn from "@/components/journal-detail/JournalMainColumn";
@@ -187,7 +188,8 @@ export async function generateMetadata({
   }
 
   try {
-    const journal = await getJournalDetail(numericId, "中文");
+    const lang = await getServerApiLang();
+    const journal = await getJournalDetail(numericId, lang);
     const description = journal.introduction?.slice(0, 200);
     return {
       title: journal.title,
@@ -216,6 +218,7 @@ export default async function JournalDetailPage({
   const { id } = await params;
   const { tab } = await searchParams;
   const activeTab = resolveTab(tab);
+  const lang = await getServerApiLang();
 
   let journal: JournalDetail;
   let apiArticles: JournalContentSummary[] | undefined;
@@ -232,12 +235,12 @@ export default async function JournalDetailPage({
     const numericId = Number(id);
     if (!Number.isFinite(numericId) || numericId <= 0) notFound();
 
-    const journalPromise = getJournalDetail(numericId, "中文");
+    const journalPromise = getJournalDetail(numericId, lang);
     const contentsPromise = getJournalContents({
       journalId: numericId,
       pageNo: 1,
       pageSize: 10,
-      lang: "中文",
+      lang,
     }).catch((err) => {
       console.error("[journals/[id]] contents failed:", err);
       return null;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { resolveArticle } from "@/lib/article-detail";
+import { getServerApiLang } from "@/lib/lang.server";
 import ArticleHeader from "@/components/journal-detail/ArticleHeader";
 import AuthorBlock from "@/components/journal-detail/AuthorBlock";
 import ArticleMetadata from "@/components/journal-detail/ArticleMetadata";
@@ -18,7 +19,8 @@ export async function generateMetadata({
   const canonical = `/articles/${articleId}`;
 
   try {
-    const { article } = await resolveArticle(articleId);
+    const lang = await getServerApiLang();
+    const { article } = await resolveArticle(articleId, lang);
     const description = article.abstract?.slice(0, 200);
     return {
       title: article.title,
@@ -49,11 +51,12 @@ export default async function ArticleDetailPage({
   params: Promise<RouteParams>;
 }) {
   const { articleId } = await params;
+  const lang = await getServerApiLang();
 
   let article;
   let volumeHref;
   try {
-    const resolved = await resolveArticle(articleId);
+    const resolved = await resolveArticle(articleId, lang);
     article = resolved.article;
     volumeHref = resolved.volumeHref;
   } catch {
@@ -163,11 +166,11 @@ export default async function ArticleDetailPage({
                 <h2 className="text-sm font-bold uppercase tracking-wider text-[#0b2545]">
                   References
                 </h2>
-                <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-slate-700">
+                <ul className="mt-3 list-none space-y-2 text-sm leading-relaxed text-slate-700">
                   {article.references.map((ref, i) => (
                     <li key={i}>{ref}</li>
                   ))}
-                </ol>
+                </ul>
               </section>
             )}
           </article>

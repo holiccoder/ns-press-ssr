@@ -83,7 +83,7 @@
         "id": "journal-manuscript-platform",
         "title": "Journal Manuscript Platform",
         "description": "NSP Journal Manuscript Platform provides manuscript tracking services for journal contributors and offers article management services for editors.",
-        "cta": { "label": "Submit manuscript", "href": "/submit" }
+        "cta": { "label": "Submit manuscript", "href": "/login" }
       },
       {
         "id": "journal-partnership",

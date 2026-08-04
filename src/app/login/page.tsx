@@ -51,7 +51,7 @@ export default function LoginPage() {
       }
 
       setStatus("success");
-      router.push("/");
+      router.push("/dashboard");
     } catch (err) {
       setStatus("error");
       if (err instanceof AuthApiError) {

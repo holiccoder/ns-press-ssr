@@ -120,7 +120,7 @@ export default function Footer() {
                   alt={`${brand.acronym} logo`}
                   width={300}
                   height={82}
-                  className="h-16 w-auto object-contain"
+                  className="h-20 w-auto object-contain"
                   priority
                 />
                 {publisherName && (

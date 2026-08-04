@@ -77,13 +77,13 @@ const DigitalJournalDetailPage = () => {
 
             <div className="references-section">
               <h3>{language === 'zh' ? '参考文献' : 'References'}</h3>
-              <ol className="references-list">
+              <div className="references-list">
                 {articleData.references?.map((reference, index) => (
-                  <li key={index} className="reference-item">
+                  <div key={index} className="reference-item">
                     {reference}
-                  </li>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </div>
 
             <div className="download-section">

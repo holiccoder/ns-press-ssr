@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import journalsData from "@/data/journals.json";
 import { getJournalList, parseIssn, type JournalListItem } from "@/lib/api";
+import { getServerApiLang } from "@/lib/lang.server";
 import { resolveJournalCover } from "@/lib/images";
 import CarouselScroller from "./CarouselScroller";
 
@@ -92,9 +93,10 @@ function JournalDetailCard({ journal }: { journal: JournalListItem }) {
 /* ---------- Main carousel ---------- */
 
 export default async function JournalsCarousel() {
+  const lang = await getServerApiLang();
   let lists: JournalListItem[] = [];
   try {
-    const data = await getJournalList({ page: 1, pageSize: 12, lang: "中文" });
+    const data = await getJournalList({ page: 1, pageSize: 12, lang });
     lists = data.lists;
   } catch (err) {
     console.error("[JournalsCarousel] failed to load journalList:", err);

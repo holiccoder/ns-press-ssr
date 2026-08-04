@@ -144,12 +144,17 @@ function DashboardContent() {
     };
 
     if (key === "All My Submission") {
-      router.push("/dashboard");
+      router.push("/dashboard/my-submission");
       return;
     }
 
     if (Object.prototype.hasOwnProperty.call(submissionStatusMap, key)) {
-      router.push(`/dashboard?status=${submissionStatusMap[key]}`);
+      router.push(`/dashboard/my-submission?status=${submissionStatusMap[key]}`);
+      return;
+    }
+
+    if (key === "New Submission") {
+      router.push("/dashboard/new-submission");
       return;
     }
 

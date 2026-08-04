@@ -2,11 +2,13 @@
 
 import { useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import {
+  COOKIE_NAME,
+  STORAGE_KEY,
+  type UiLang as LangCode,
+} from "@/lib/lang";
 
-export type LangCode = "en" | "zh";
-
-const COOKIE_NAME = "lang";
-const STORAGE_KEY = "ns-press:lang";
+export type { LangCode };
 
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;

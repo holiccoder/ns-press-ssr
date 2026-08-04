@@ -1,6 +1,7 @@
 import Link from "next/link";
 import home from "@/data/home.json";
 import { getJournalList, type JournalListItem } from "@/lib/api";
+import { getServerApiLang } from "@/lib/lang.server";
 import { resolveJournalCover } from "@/lib/images";
 import OurJournalsCarousel, {
   type CarouselItem,
@@ -23,9 +24,10 @@ function chunkRows<T>(items: T[], rowSize: number): T[][] {
 }
 
 export default async function OurJournals() {
+  const lang = await getServerApiLang();
   let lists: JournalListItem[] = [];
   try {
-    const data = await getJournalList({ page: 1, pageSize: 12, lang: "中文" });
+    const data = await getJournalList({ page: 1, pageSize: 12, lang });
     lists = data.lists;
   } catch (err) {
     // Upstream API hiccup — log it and render an empty section rather than

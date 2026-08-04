@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactElement } from "react";
 import PageHero from "@/components/PageHero";
 import about from "@/data/about.json";
+import { getServerUiLang } from "@/lib/lang.server";
 
 export const metadata: Metadata = {
   title: "About NSP",
@@ -19,17 +20,20 @@ export const metadata: Metadata = {
 
 /* ---------- Company profile ---------- */
 
-function CompanyProfile() {
+function CompanyProfile({ lang }: { lang: string }) {
+  const isZh = lang === "zh";
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-4xl px-6">
         <h2 className="text-center text-2xl font-extrabold tracking-tight text-[#0b2545] sm:text-3xl md:text-4xl">
-          {about.companyProfile.title}
+          {isZh ? about.companyProfile.titleZh : about.companyProfile.title}
         </h2>
         <div className="mt-10 space-y-10 text-base leading-relaxed text-slate-700 sm:text-[17px]">
           {about.companyProfile.sections.map((section, i) => (
             <div key={i} className="space-y-4">
-              <h3 className="text-xl font-bold text-[#0b2545]">{section.heading}</h3>
+              <h3 className="text-xl font-bold text-[#0b2545]">
+                {isZh ? section.headingZh : section.heading}
+              </h3>
               {section.paragraphs.map((p, pi) => (
                 <p key={pi}>{p}</p>
               ))}
@@ -99,12 +103,13 @@ const ICONS: Record<string, (props: { className?: string }) => ReactElement> = {
 
 /* ---------- Contact information ---------- */
 
-function ContactInfo() {
+function ContactInfo({ lang }: { lang: string }) {
+  const isZh = lang === "zh";
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
       <div className="mx-auto max-w-4xl px-6">
         <h2 className="text-center text-2xl font-extrabold tracking-tight text-[#0b2545] sm:text-3xl md:text-4xl">
-          {about.contact.title}
+          {isZh ? about.contact.titleZh : about.contact.title}
         </h2>
         <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {about.contact.items.map((item) => {
@@ -129,7 +134,7 @@ function ContactInfo() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                    {item.label}
+                    {isZh ? item.labelZh : item.label}
                   </p>
                   <div className="mt-1 text-sm leading-relaxed text-slate-700 sm:text-base">
                     {content}
@@ -146,15 +151,16 @@ function ContactInfo() {
 
 /* ---------- Page ---------- */
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const lang = await getServerUiLang();
   return (
     <main className="flex flex-1 flex-col">
       <PageHero
         title={about.hero.title}
         breadcrumb={about.hero.breadcrumb}
       />
-      <CompanyProfile />
-      <ContactInfo />
+      <CompanyProfile lang={lang} />
+      <ContactInfo lang={lang} />
     </main>
   );
 }

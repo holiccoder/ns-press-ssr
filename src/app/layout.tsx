@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import layout from "@/data/layout.json";
+import { getServerUiLang } from "@/lib/lang.server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -73,14 +74,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const lang = await getServerUiLang();
   return (
     <html
-      lang="en"
+      lang={lang}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       // Browser extensions (e.g. dark-mode toggles) commonly stamp
       // `data-theme` / `color-scheme` onto <html> before React hydrates,

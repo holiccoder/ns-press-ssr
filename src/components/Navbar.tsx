@@ -186,12 +186,12 @@ export default function Navbar() {
               alt={`${brand.acronym} logo`}
               width={180}
               height={56}
-              className="h-12 w-auto object-contain"
+              className="h-14 w-auto object-contain"
               priority
             />
             {publisherName && (
               <span
-                className={`hidden text-sm font-semibold tracking-wide text-white lg:inline ${
+                className={`hidden text-sm font-semibold tracking-wide text-white md:inline ${
                   lang === "zh" ? "" : "max-w-[16rem] leading-tight"
                 }`}
               >

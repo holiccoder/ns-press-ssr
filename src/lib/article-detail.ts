@@ -1,4 +1,4 @@
-import { getJournalContentDetail, ApiError } from "@/lib/api";
+import { getJournalContentDetail, ApiError, type Lang } from "@/lib/api";
 import {
   getArticleEnrichment,
   isEnrichedArticleId,
@@ -70,6 +70,7 @@ export function buildArticleFromApi(
  */
 export async function resolveArticle(
   articleId: string,
+  lang: Lang = "English",
 ): Promise<ResolvedArticle> {
   if (isEnrichedArticleId(articleId)) {
     const article = getArticleEnrichment(articleId)!;
@@ -88,7 +89,7 @@ export async function resolveArticle(
   }
 
   try {
-    const apiArticle = await getJournalContentDetail(numericArticleId, "中文");
+    const apiArticle = await getJournalContentDetail(numericArticleId, lang);
     const enrichment = getArticleEnrichment(String(apiArticle.id));
     const article = enrichment ?? buildArticleFromApi(apiArticle);
     const journalId = apiArticle.journal_id ?? article.journalSlug;

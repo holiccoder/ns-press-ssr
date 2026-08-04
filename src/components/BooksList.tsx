@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import books from "@/data/books.json";
 import { getBookList, type BookListItem } from "@/lib/api";
+import { getServerApiLang } from "@/lib/lang.server";
 import { resolveBookCover } from "@/lib/images";
 
 function BookRow({ book }: { book: BookListItem }) {
@@ -52,10 +53,11 @@ function BookRow({ book }: { book: BookListItem }) {
 }
 
 export default async function BooksList() {
+  const lang = await getServerApiLang();
   let lists: BookListItem[] = [];
   let failed = false;
   try {
-    const data = await getBookList({ page: 1, pageSize: 8, lang: "中文" });
+    const data = await getBookList({ page: 1, pageSize: 8, lang });
     lists = data.lists;
   } catch (err) {
     failed = true;

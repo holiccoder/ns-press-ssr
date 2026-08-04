@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import guideData from "@/data/guide.json";
+import { getServerUiLang } from "@/lib/lang.server";
 
 export const metadata: Metadata = {
   title: "Information Guide",
@@ -32,7 +33,8 @@ function resolveTab(tabParam?: string | string[]): TabKey {
   }
 }
 
-function TabNav({ activeTab }: { activeTab: TabKey }) {
+function TabNav({ activeTab, lang }: { activeTab: TabKey; lang: string }) {
+  const isZh = lang === "zh";
   return (
     <div className="border-b border-slate-200 bg-white">
       <div className="mx-auto max-w-4xl px-6">
@@ -50,7 +52,7 @@ function TabNav({ activeTab }: { activeTab: TabKey }) {
                 }`}
                 aria-current={isActive ? "page" : undefined}
               >
-                {tab.label}
+                {isZh ? tab.labelZh : tab.label}
               </Link>
             );
           })}
@@ -89,6 +91,7 @@ export default async function GuidePage({
 }) {
   const { tab } = await searchParams;
   const activeTab = resolveTab(tab);
+  const lang = await getServerUiLang();
 
   return (
     <main className="flex flex-1 flex-col">
@@ -96,7 +99,7 @@ export default async function GuidePage({
         title={guideData.hero.title}
         breadcrumb={guideData.hero.breadcrumb}
       />
-      <TabNav activeTab={activeTab} />
+      <TabNav activeTab={activeTab} lang={lang} />
       <TabContent activeTab={activeTab} policyInfo={guideData.fallback} />
     </main>
   );
