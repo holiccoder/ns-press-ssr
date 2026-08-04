@@ -72,6 +72,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                 <div className="px-3 py-2 text-sm font-semibold text-[#0b2545]">
                   {lang === "zh" ? "我的资料" : "My Profile"}
                 </div>
+                <Link
+                  href="/dashboard/account-info"
+                  className={`block px-3 py-1.5 text-sm hover:bg-slate-100 ${isActive("/dashboard/account-info") ? "font-semibold text-[#0b2545]" : "text-slate-700"}`}
+                >
+                  {lang === "zh" ? "账户信息" : "Account Info"}
+                </Link>
                 <button
                   type="button"
                   onClick={logout}

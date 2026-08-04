@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { registerApi, AuthApiError } from "@/lib/auth";
+import { useEffect, useState } from "react";
+import { getToken, registerApi, AuthApiError } from "@/lib/auth";
 import { countryOptions } from "@/data/countries";
 
 const TITLE_OPTIONS = [
@@ -20,6 +20,7 @@ const DEGREE_OPTIONS = ["Bachelor", "Master", "Doctor"];
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [authChecked, setAuthChecked] = useState(false);
   const [form, setForm] = useState({
     titlePrefix: "Mr",
     name: "",
@@ -38,6 +39,25 @@ export default function RegisterPage() {
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (getToken()) {
+        router.replace("/dashboard");
+      } else {
+        setAuthChecked(true);
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [router]);
+
+  if (!authChecked) {
+    return (
+      <main className="flex flex-1 items-center justify-center bg-white py-16 text-sm text-slate-500">
+        Checking session...
+      </main>
+    );
+  }
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,

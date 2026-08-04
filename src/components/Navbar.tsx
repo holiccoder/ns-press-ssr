@@ -5,6 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import layout from "@/data/layout.json";
+import {
+  getToken,
+  getUserProfile,
+  removeToken,
+  removeUserProfile,
+} from "@/lib/auth";
 import LanguageSwitcher, { useLang } from "./LanguageSwitcher";
 
 function formatPublisherName(name: string, lang: string): React.ReactNode {
@@ -167,10 +173,38 @@ function SearchModal({
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const lang = useLang();
   const publisherName = lang === "zh" ? PUBLISHER_ZH : PUBLISHER_EN;
   const [aboutOpen, setAboutOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [profile, setProfile] = useState<Record<string, unknown> | null>(null);
+
+  useEffect(() => {
+    const syncProfile = () => {
+      setProfile(getToken() ? getUserProfile() : null);
+    };
+    const initialSync = window.setTimeout(syncProfile, 0);
+    window.addEventListener("ns-press:auth-change", syncProfile);
+    window.addEventListener("storage", syncProfile);
+    return () => {
+      window.clearTimeout(initialSync);
+      window.removeEventListener("ns-press:auth-change", syncProfile);
+      window.removeEventListener("storage", syncProfile);
+    };
+  }, []);
+
+  const displayName = String(
+    profile?.real_name ?? profile?.name ?? profile?.account ?? profile?.email ?? "Account",
+  );
+
+  function logout() {
+    removeToken();
+    removeUserProfile();
+    setUserMenuOpen(false);
+    router.push("/login");
+  }
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -286,18 +320,60 @@ export default function Navbar() {
             >
               {navbar.submitLabel}
             </Link>
-            <Link
-              href="/login"
-              className="text-sm font-semibold tracking-wide text-white hover:text-white/80"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-sm bg-white px-3 py-1.5 text-sm font-semibold tracking-wide text-[#0b2545] transition-colors hover:bg-slate-100"
-            >
-              Register
-            </Link>
+            {profile ? (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setUserMenuOpen((open) => !open)}
+                  aria-expanded={userMenuOpen}
+                  aria-haspopup="menu"
+                  className="flex items-center gap-1.5 text-sm font-semibold tracking-wide text-white hover:text-white/80"
+                >
+                  <span className="max-w-32 truncate">{displayName}</span>
+                  <ChevronDownIcon
+                    className={`h-3.5 w-3.5 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {userMenuOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 top-full z-40 mt-2 w-48 overflow-hidden rounded-md bg-white py-1 text-sm text-[#0b2545] shadow-lg ring-1 ring-black/5"
+                  >
+                    <Link
+                      href="/dashboard/account-info"
+                      role="menuitem"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2 hover:bg-[#0b2545]/5"
+                    >
+                      Account Info
+                    </Link>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={logout}
+                      className="block w-full px-4 py-2 text-left hover:bg-[#0b2545]/5"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-semibold tracking-wide text-white hover:text-white/80"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="rounded-sm bg-white px-3 py-1.5 text-sm font-semibold tracking-wide text-[#0b2545] transition-colors hover:bg-slate-100"
+                >
+                  Register
+                </Link>
+              </>
+            )}
             <LanguageSwitcher />
           </div>
         </nav>

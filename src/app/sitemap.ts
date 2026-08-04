@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 import {
   getArticleList,
   getJournalList,
+  getBookList,
   type ArticleListItem,
   type JournalListItem,
+  type BookListItem,
 } from "@/lib/api";
 import {
   getEnrichedArticleIds,
@@ -75,7 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ] satisfies SitemapEntry[]
   ).filter((e) => !PRIVATE_ROUTES.has(new URL(e.url).pathname));
 
-  const [apiJournals, apiArticles] = await Promise.all([
+  const [apiJournals, apiArticles, apiBooks] = await Promise.all([
     fetchAllPaged<JournalListItem>((pageNo, pageSize) =>
       getJournalList({ page: pageNo, pageSize }).then((p) => ({
         lists: p.lists,
@@ -84,6 +86,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
     fetchAllPaged<ArticleListItem>((pageNo, pageSize) =>
       getArticleList({ pageNo, pageSize }).then((p) => ({
+        lists: p.lists,
+        count: p.count,
+      })),
+    ),
+    fetchAllPaged<BookListItem>((pageNo, pageSize) =>
+      getBookList({ page: pageNo, pageSize }).then((p) => ({
         lists: p.lists,
         count: p.count,
       })),
@@ -113,6 +121,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const bookEntries: SitemapEntry[] = apiBooks.map((b) => ({
+    url: safeUrl(`/books/${b.id}`),
+    lastModified: toDate(b.publication_time) ?? now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
   const enrichedArticleEntries: SitemapEntry[] = getEnrichedArticleIds()
     .map((id): SitemapEntry | null => {
       const article = getArticleEnrichment(id);
@@ -131,6 +146,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...journalEntries,
     ...enrichedJournalEntries,
     ...newsEntries,
+    ...bookEntries,
     ...enrichedArticleEntries,
   ];
 

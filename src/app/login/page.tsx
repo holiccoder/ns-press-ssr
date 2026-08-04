@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  getToken,
   loginApi,
   setToken,
   setUserProfile,
@@ -12,11 +13,31 @@ import {
 
 export default function LoginPage() {
   const router = useRouter();
+  const [authChecked, setAuthChecked] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (getToken()) {
+        router.replace("/dashboard");
+      } else {
+        setAuthChecked(true);
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [router]);
+
+  if (!authChecked) {
+    return (
+      <main className="flex flex-1 items-center justify-center bg-white py-16 text-sm text-slate-500">
+        Checking session...
+      </main>
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -33,22 +54,21 @@ export default function LoginPage() {
 
       setToken(data.token);
 
-      const sessionSource = data.user;
-      if (sessionSource) {
-        setUserProfile({
-          user_id: sessionSource.user_id,
-          real_name: sessionSource.real_name,
-          title: sessionSource.title,
-          degree: sessionSource.degree,
-          affiliation: sessionSource.affiliation,
-          city: sessionSource.city,
-          country: sessionSource.country,
-          address: sessionSource.address,
-          intro: sessionSource.intro,
-          account: sessionSource.account,
-          phone: sessionSource.mobile,
-        });
-      }
+      const sessionSource = data.user ?? {};
+      setUserProfile({
+        user_id: sessionSource.user_id,
+        real_name: sessionSource.real_name ?? sessionSource.account ?? form.email,
+        title: sessionSource.title,
+        degree: sessionSource.degree,
+        affiliation: sessionSource.affiliation,
+        city: sessionSource.city,
+        country: sessionSource.country,
+        address: sessionSource.address,
+        intro: sessionSource.intro,
+        account: sessionSource.account ?? form.email,
+        email: sessionSource.account ?? form.email,
+        phone: sessionSource.mobile,
+      });
 
       setStatus("success");
       router.push("/dashboard");

@@ -213,6 +213,27 @@ export function getBookList(opts?: {
   });
 }
 
+export type BookDetail = {
+  id: number;
+  cover_image: string;
+  title: string;
+  ISSN: string;
+  lang: string;
+  author: string;
+  introduction: string;
+  catalogue: string;
+  author_info: string;
+  content: string;
+  publication_time?: string;
+};
+
+export function getBookDetail(
+  id: number,
+  lang: Lang = "中文",
+): Promise<BookDetail> {
+  return apiGet<BookDetail>("bookDetail", { id, lang });
+}
+
 export function getJournalDetail(
   id: number,
   lang: Lang = "中文",

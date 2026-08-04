@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { removeToken, removeUserProfile } from "@/lib/auth";
 
 type Lang = "en" | "zh";
 type NavLabel = { en: string; zh: string };
@@ -158,8 +159,14 @@ function DashboardContent() {
       return;
     }
 
+    if (key === "Account Info") {
+      router.push("/dashboard/account-info");
+      return;
+    }
+
     if (key === "Logout") {
-      window.localStorage.removeItem("authToken");
+      removeToken();
+      removeUserProfile();
       router.push("/login");
     }
   }

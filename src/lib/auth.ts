@@ -35,6 +35,23 @@ export type LoginData = {
   };
 };
 
+export type UserProfile = {
+  user_id?: number;
+  real_name?: string;
+  name?: string;
+  title?: string;
+  degree?: string;
+  affiliation?: string;
+  city?: string;
+  country?: string;
+  address?: string;
+  intro?: string;
+  account?: string;
+  email?: string;
+  mobile?: string;
+  phone?: string;
+};
+
 export type LoginPayload = {
   account: string;
   password: string;
@@ -80,6 +97,34 @@ async function authPost<T>(
   return envelope.data;
 }
 
+function notifyAuthChanged(): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("ns-press:auth-change"));
+  }
+}
+
+async function profileRequest<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<T> {
+  const authToken = getToken();
+  const response = await fetch(`${API_BASE}/${path}`, {
+    ...init,
+    headers: {
+      ...(init?.headers ?? {}),
+      ...(authToken ? { token: authToken } : {}),
+    },
+  });
+  if (!response.ok) {
+    throw new AuthApiError(`Request failed: ${response.status} ${response.statusText}`);
+  }
+  const envelope = (await response.json()) as ApiEnvelope<T>;
+  if (envelope.code !== 1) {
+    throw new AuthApiError(envelope.msg || "Operation failed");
+  }
+  return envelope.data;
+}
+
 export async function loginApi(payload: LoginPayload): Promise<LoginData> {
   return authPost<LoginData>("login/account", payload as Record<string, unknown>);
 }
@@ -97,11 +142,13 @@ export function getToken(): string | null {
 export function setToken(token: string): void {
   if (typeof window === "undefined") return;
   localStorage.setItem("authToken", token);
+  notifyAuthChanged();
 }
 
 export function removeToken(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem("authToken");
+  notifyAuthChanged();
 }
 
 // User profile management
@@ -116,12 +163,30 @@ export function getUserProfile(): Record<string, unknown> | null {
   }
 }
 
-export function setUserProfile(profile: Record<string, unknown>): void {
+export function setUserProfile(profile: UserProfile | Record<string, unknown>): void {
   if (typeof window === "undefined") return;
   localStorage.setItem("userProfile", JSON.stringify(profile));
+  notifyAuthChanged();
 }
 
 export function removeUserProfile(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem("userProfile");
+  notifyAuthChanged();
+}
+
+export async function getProfileApi(): Promise<UserProfile> {
+  return profileRequest<UserProfile>("user/info");
+}
+
+export async function updateProfileApi(
+  profile: Record<string, unknown>,
+): Promise<UserProfile | void> {
+  const updated = await profileRequest<UserProfile>("user/setInfo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profile),
+  });
+  setUserProfile(updated);
+  return updated;
 }
