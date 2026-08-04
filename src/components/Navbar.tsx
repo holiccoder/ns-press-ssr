@@ -252,7 +252,7 @@ export default function Navbar() {
             />
             {publisherName && (
               <span
-                className={`text-[10px] min-[375px]:text-xs sm:text-sm font-semibold tracking-wide text-white leading-tight ${
+                className={`text-xs min-[375px]:text-sm sm:text-base font-bold tracking-wide text-white leading-tight ${
                   lang === "zh" ? "" : "max-w-[16rem]"
                 }`}
               >
