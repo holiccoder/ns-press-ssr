@@ -252,8 +252,8 @@ export default function Navbar() {
             />
             {publisherName && (
               <span
-                className={`hidden text-sm font-semibold tracking-wide text-white md:inline ${
-                  lang === "zh" ? "" : "max-w-[16rem] leading-tight"
+                className={`text-[10px] min-[375px]:text-xs sm:text-sm font-semibold tracking-wide text-white leading-tight ${
+                  lang === "zh" ? "" : "max-w-[16rem]"
                 }`}
               >
                 {formatPublisherName(publisherName, lang)}
