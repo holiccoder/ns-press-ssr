@@ -34,6 +34,9 @@ const NEWS_IMAGES: Record<string, string> = {
   "4": "/images/news/20260626185611635a95692.png",
 };
 
+const TRANSPARENT_GIF =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 /**
  * Resolve a journal cover image to a local path when the asset has been
  * downloaded to public/images/journals/covers/<id>.<ext>. Falls back to the
@@ -43,7 +46,7 @@ export function resolveJournalCover(
   id: number,
   originalUrl: string,
 ): string {
-  return JOURNAL_COVERS[String(id)] ?? originalUrl;
+  return JOURNAL_COVERS[String(id)] || originalUrl || TRANSPARENT_GIF;
 }
 
 /**
@@ -54,7 +57,7 @@ export function resolveBookCover(
   id: number,
   originalUrl: string,
 ): string {
-  return BOOK_COVERS[String(id)] ?? originalUrl;
+  return BOOK_COVERS[String(id)] || originalUrl || TRANSPARENT_GIF;
 }
 
 /**
@@ -66,5 +69,5 @@ export function resolveNewsImage(
   id: number,
   originalUrl: string,
 ): string {
-  return NEWS_IMAGES[String(id)] ?? originalUrl;
+  return NEWS_IMAGES[String(id)] || originalUrl || TRANSPARENT_GIF;
 }
