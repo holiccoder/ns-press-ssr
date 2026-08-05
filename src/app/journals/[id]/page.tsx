@@ -324,6 +324,7 @@ export default async function JournalDetailPage({
             policy={journal.policy}
             chiefEditors={chiefEditors.length > 0 ? chiefEditors : undefined}
             boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
+            lang={lang}
           />
         </div>
       </section>

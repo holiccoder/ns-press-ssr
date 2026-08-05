@@ -34,8 +34,7 @@ function resolveLang(): LangCode {
   } catch {
     /* private mode etc. */
   }
-  const nav = window.navigator.language?.toLowerCase() ?? "";
-  return nav.startsWith("zh") ? "zh" : "en";
+  return "en";
 }
 
 // useSyncExternalStore subscription — fires the listener when anything that
