@@ -77,7 +77,7 @@ export default async function JournalsList() {
                       </h2>
                     </Link>
 
-                    <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-600">
+                    <div className="flex flex-col gap-1 text-sm text-slate-600">
                       {issns.map((i, idx) => {
                         const isPrint = i.label.toLowerCase() === "print";
                         const isOnline = i.label.toLowerCase() === "online";
@@ -96,7 +96,7 @@ export default async function JournalsList() {
                           <span className="font-semibold text-slate-700">
                             Frequency:
                           </span>{" "}
-                          {j.frequency}
+                          <span className="text-slate-900 font-medium">{j.frequency}</span>
                         </span>
                       )}
                     </div>
