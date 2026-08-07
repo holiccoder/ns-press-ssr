@@ -78,15 +78,19 @@ export default async function JournalsList() {
                     </Link>
 
                     <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-600">
-                      {issns.map((i, idx) => (
-                        <span key={`${i.label}-${idx}`}>
-                          <span className="font-semibold text-slate-700">
-                            ISSN:
-                          </span>{" "}
-                          {i.value}{" "}
-                          <span className="text-slate-500">({i.label})</span>
-                        </span>
-                      ))}
+                      {issns.map((i, idx) => {
+                        const isPrint = i.label.toLowerCase() === "print";
+                        const isOnline = i.label.toLowerCase() === "online";
+                        const isFallback = i.label.toLowerCase() === "issn";
+                        return (
+                          <span key={`${i.label}-${idx}`}>
+                            <span className="font-semibold text-slate-700">
+                              {isPrint ? "ISSN (Print):" : isOnline ? "ISSN (Online):" : isFallback ? "ISSN:" : `ISSN (${i.label}):`}
+                            </span>{" "}
+                            <span className="text-slate-900 font-medium">{i.value}</span>
+                          </span>
+                        );
+                      })}
                       {j.frequency && (
                         <span>
                           <span className="font-semibold text-slate-700">

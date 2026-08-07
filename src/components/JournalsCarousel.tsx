@@ -71,14 +71,19 @@ function JournalDetailCard({ journal }: { journal: JournalListItem & { introduct
       </div>
 
       <dl className="mt-6 space-y-1 text-xs leading-relaxed text-slate-700 sm:text-sm">
-        {issns.map((m, i) => (
-          <div key={i} className="flex gap-2">
-            <dt className="font-semibold text-slate-800">ISSN:</dt>
-            <dd>
-              {m.value} ({m.label})
-            </dd>
-          </div>
-        ))}
+        {issns.map((m, i) => {
+          const isPrint = m.label.toLowerCase() === "print";
+          const isOnline = m.label.toLowerCase() === "online";
+          const isFallback = m.label.toLowerCase() === "issn";
+          return (
+            <div key={i} className="flex gap-2">
+              <dt className="font-semibold text-slate-800">
+                {isPrint ? "ISSN (Print):" : isOnline ? "ISSN (Online):" : isFallback ? "ISSN:" : `ISSN (${m.label}):`}
+              </dt>
+              <dd className="text-slate-900">{m.value}</dd>
+            </div>
+          );
+        })}
         {journal.frequency && (
           <div className="flex gap-2">
             <dt className="font-semibold text-slate-800">Frequency:</dt>

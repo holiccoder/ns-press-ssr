@@ -85,11 +85,19 @@ export default function JournalBanner({
             </h1>
 
             <div className="flex flex-col gap-1 text-sm text-blue-100">
-              {issns.map((i, idx) => (
-                <span key={`${i.label}-${idx}`}>
-                  ISSN {i.value} ({i.label})
-                </span>
-              ))}
+              {issns.map((i, idx) => {
+                const isPrint = i.label.toLowerCase() === "print";
+                const isOnline = i.label.toLowerCase() === "online";
+                const isFallback = i.label.toLowerCase() === "issn";
+                return (
+                  <span key={`${i.label}-${idx}`}>
+                    <span className="font-semibold">
+                      {isPrint ? "ISSN (Print):" : isOnline ? "ISSN (Online):" : isFallback ? "ISSN:" : `ISSN (${i.label}):`}
+                    </span>{" "}
+                    {i.value}
+                  </span>
+                );
+              })}
               {frequency && <span>Frequency: {frequency}</span>}
               {coden && <span>CODEN {coden}</span>}
               {citeScore && (
