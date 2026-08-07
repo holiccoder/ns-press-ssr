@@ -58,8 +58,8 @@ export type JournalDetail = {
   lang?: string;
   initials?: string;
   other_info?: string;
-  year?: number;
-  periods?: number;
+  year?: string[];
+  periods?: Record<string, number[]>;
   contacts?: JournalContact[];
   databases?: JournalDatabase[];
 };

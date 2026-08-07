@@ -22,13 +22,25 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col">
-      <Hero />
-      <Services />
-      <OurJournals />
-      <Articles />
-      <Partners />
-      <News />
+    <main className="flex flex-1 flex-col overflow-hidden">
+      <div className="animate-fade-in-up">
+        <Hero />
+      </div>
+      <div className="animate-fade-in-up delay-100">
+        <Services />
+      </div>
+      <div className="animate-fade-in-up delay-200">
+        <OurJournals />
+      </div>
+      <div className="animate-fade-in-up delay-300">
+        <Articles />
+      </div>
+      <div className="animate-fade-in-up delay-400">
+        <Partners />
+      </div>
+      <div className="animate-fade-in-up delay-500">
+        <News />
+      </div>
     </main>
   );
 }

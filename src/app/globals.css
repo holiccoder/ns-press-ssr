@@ -24,3 +24,41 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom premium fade-in-up animations with stagger delays */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0; /* Ensures the element is hidden before animation begins */
+}
+
+.delay-100 {
+  animation-delay: 120ms;
+}
+
+.delay-200 {
+  animation-delay: 240ms;
+}
+
+.delay-300 {
+  animation-delay: 360ms;
+}
+
+.delay-400 {
+  animation-delay: 480ms;
+}
+
+.delay-500 {
+  animation-delay: 600ms;
+}
+
