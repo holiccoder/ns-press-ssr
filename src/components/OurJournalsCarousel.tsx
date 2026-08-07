@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useRef } from "react";
+import { parseIssn } from "@/lib/api";
 
 export type CarouselItem = {
   id: number;
@@ -97,6 +98,8 @@ export default function OurJournalsCarousel({
 }
 
 function JournalCard({ item }: { item: CarouselItem }) {
+  const issns = parseIssn(item.issn);
+
   return (
     <Link
       href={item.href}
@@ -111,9 +114,23 @@ function JournalCard({ item }: { item: CarouselItem }) {
           className="object-cover"
         />
       </div>
-      <p className="text-center text-sm font-semibold leading-snug text-slate-900 group-hover:text-[#1d4ed8]">
+      <p className="text-center text-sm font-semibold leading-snug text-slate-900 group-hover:text-[#1d4ed8] line-clamp-1">
         {item.title}
       </p>
+      {issns.length > 0 && (
+        <div className="text-center text-[11px] leading-relaxed text-slate-500 font-medium space-y-0.5">
+          {issns.map((m, i) => {
+            const isPrint = m.label.toLowerCase() === "print";
+            const isOnline = m.label.toLowerCase() === "online";
+            const labelStr = isPrint ? "Print" : isOnline ? "Online" : m.label;
+            return (
+              <span key={i} className="block">
+                ISSN ({labelStr}): {m.value}
+              </span>
+            );
+          })}
+        </div>
+      )}
     </Link>
   );
 }
