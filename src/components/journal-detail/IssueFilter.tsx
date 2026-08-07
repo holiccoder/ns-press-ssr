@@ -19,30 +19,25 @@ export default function IssueFilter({
   periodsMap: Record<string, number[]>;
   selection?: IssueSelection;
 }) {
-  if (years.length === 0) return null;
-
   const activeYear = selection?.year;
   const activeIssue = selection?.periods;
   const hasSelection = Boolean(activeYear);
 
-  // Default: expand the active year (or the first year if nothing selected).
-  const initialOpen = activeYear ?? years[0];
+  const initialOpen = activeYear ?? years[0] ?? null;
   const [openYear, setOpenYear] = useState<string | null>(initialOpen);
 
+  if (years.length === 0) return null;
+
   const allHref = `/journals/${journalId}?tab=articles`;
+  const allLinkClass = hasSelection
+    ? "block rounded-sm px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#0b2545] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
+    : "block rounded-sm px-3 py-2 text-sm font-medium bg-[#0b2545] text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]";
 
   return (
     <div className="space-y-3">
       <h2 className="text-base font-bold text-[#0b2545]">Issues</h2>
 
-      <Link
-        href={allHref}
-        className={`block rounded-sm px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] ${
-          !hasSelection
-            ? "bg-[#0b2545] text-white"
-            : "text-slate-600 hover:bg-slate-50 hover:text-[#0b2545]"
-        }`}
-      >
+      <Link href={allHref} className={allLinkClass}>
         All Articles
       </Link>
 
@@ -52,23 +47,25 @@ export default function IssueFilter({
           const isOpen = openYear === year;
           const yearActive = activeYear === year;
 
+          const yearBtnClass = yearActive
+            ? "flex w-full items-center justify-between rounded-sm px-3 py-2 text-sm font-semibold text-[#0b2545] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
+            : "flex w-full items-center justify-between rounded-sm px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-[#0b2545] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]";
+
+          const chevronClass = isOpen
+            ? "h-4 w-4 shrink-0 rotate-90 transition-transform"
+            : "h-4 w-4 shrink-0 transition-transform";
+
           return (
             <li key={year}>
               <button
                 type="button"
                 onClick={() => setOpenYear(isOpen ? null : year)}
                 aria-expanded={isOpen}
-                className={`flex w-full items-center justify-between rounded-sm px-3 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] ${
-                  yearActive
-                    ? "text-[#0b2545]"
-                    : "text-slate-700 hover:bg-slate-50 hover:text-[#0b2545]"
-                }`}
+                className={yearBtnClass}
               >
                 <span>{year}</span>
                 <svg
-                  className={`h-4 w-4 shrink-0 transition-transform ${
-                    isOpen ? "rotate-90" : ""
-                  }`}
+                  className={chevronClass}
                   viewBox="0 0 20 20"
                   fill="currentColor"
                   aria-hidden="true"
@@ -86,16 +83,12 @@ export default function IssueFilter({
                   {issues.map((issue) => {
                     const href = `/journals/${journalId}?tab=articles&year=${year}&periods=${issue}`;
                     const isActive = yearActive && activeIssue === issue;
+                    const issueLinkClass = isActive
+                      ? "block rounded-sm px-3 py-1.5 text-sm bg-sky-100 font-medium text-[#0b2545] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
+                      : "block rounded-sm px-3 py-1.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#0b2545] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]";
                     return (
                       <li key={issue}>
-                        <Link
-                          href={href}
-                          className={`block rounded-sm px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] ${
-                            isActive
-                              ? "bg-sky-100 font-medium text-[#0b2545]"
-                              : "text-slate-600 hover:bg-slate-50 hover:text-[#0b2545]"
-                          }`}
-                        >
+                        <Link href={href} className={issueLinkClass}>
                           Issue {issue}
                         </Link>
                       </li>
