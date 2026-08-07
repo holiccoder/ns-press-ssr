@@ -8,21 +8,32 @@ export default function ArticleListSection({
   articles,
   apiArticles,
   journalId,
+  filterLabel,
+  pagination,
+  emptyMessage,
 }: {
   title: string;
   articles?: EnrichedArticle[];
   apiArticles?: JournalContentSummary[];
   journalId: number;
+  filterLabel?: string;
+  pagination?: React.ReactNode;
+  emptyMessage?: string;
 }) {
   const hasEnriched = Array.isArray(articles) && articles.length > 0;
   const hasApi = Array.isArray(apiArticles) && apiArticles.length > 0;
 
-  if (!hasEnriched && !hasApi) return null;
-
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-[#0b2545]">{title}</h2>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-baseline gap-2">
+          <h2 className="text-lg font-bold text-[#0b2545]">{title}</h2>
+          {filterLabel && (
+            <span className="rounded-sm bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+              {filterLabel}
+            </span>
+          )}
+        </div>
         {hasEnriched && (
           <Link
             href={`/journals/${journalId}/articles`}
@@ -57,7 +68,13 @@ export default function ArticleListSection({
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <p className="py-6 text-sm text-slate-500">
+          {emptyMessage ?? "No articles found."}
+        </p>
+      )}
+
+      {pagination}
     </section>
   );
 }

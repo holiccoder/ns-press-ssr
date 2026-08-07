@@ -4,6 +4,8 @@ import {
   getJournalDetail,
   getJournalContents,
   ApiError,
+  normalizeJournalYears,
+  normalizeJournalPeriods,
   type JournalContact,
   type JournalContentSummary,
   type JournalDetail,
@@ -26,9 +28,15 @@ import JournalNavTabs, {
   type JournalTabKey,
 } from "@/components/journal-detail/JournalNavTabs";
 import JournalSidebar from "@/components/journal-detail/JournalSidebar";
+import type { IssueSelection } from "@/components/journal-detail/IssueFilter";
 
 type RouteParams = { id: string };
-type RouteSearchParams = { tab?: string | string[] };
+type RouteSearchParams = {
+  tab?: string | string[];
+  year?: string | string[];
+  periods?: string | string[];
+  page?: string | string[];
+};
 
 const ENRICHED_SLUGS = getEnrichedSlugs();
 
@@ -132,6 +140,33 @@ function resolveTab(tabParam?: string | string[]): JournalTabKey {
   }
 }
 
+function firstParam(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
+function resolveIssueSelection(
+  yearParam?: string,
+  periodsParam?: string,
+): IssueSelection | undefined {
+  const year = yearParam?.trim();
+  const periodsRaw = periodsParam?.trim();
+  const periods = periodsRaw ? Number(periodsRaw) : undefined;
+  if (!year && periods == null) return undefined;
+  return {
+    year: year || undefined,
+    periods: Number.isFinite(periods) ? periods : undefined,
+  };
+}
+
+function resolvePage(pageParam?: string): number {
+  const n = Number(pageParam);
+  if (!Number.isFinite(n) || n < 1) return 1;
+  return Math.floor(n);
+}
+
+const ARTICLES_PAGE_SIZE = 10;
+
 function buildContacts(
   apiContacts: JournalContact[] | undefined,
   enrichmentContacts: Contact[] | undefined,
@@ -216,14 +251,24 @@ export default async function JournalDetailPage({
   searchParams: Promise<RouteSearchParams>;
 }) {
   const { id } = await params;
-  const { tab } = await searchParams;
+  const { tab, year: yearParam, periods: periodsParam, page: pageParam } =
+    await searchParams;
   const activeTab = resolveTab(tab);
   const lang = await getServerApiLang();
+
+  const issueSelection = resolveIssueSelection(
+    firstParam(yearParam),
+    firstParam(periodsParam),
+  );
+  const articlesPage = resolvePage(firstParam(pageParam));
 
   let journal: JournalDetail;
   let apiArticles: JournalContentSummary[] | undefined;
   let enrichment: JournalEnrichment | undefined;
   let coverSlot: React.ReactNode | undefined;
+  let years: string[] = [];
+  let periodsMap: Record<string, number[]> = {};
+  let articlesCount = 0;
 
   if (isKnownSlug(id)) {
     journal = buildStaticJournal(id);
@@ -236,15 +281,6 @@ export default async function JournalDetailPage({
     if (!Number.isFinite(numericId) || numericId <= 0) notFound();
 
     const journalPromise = getJournalDetail(numericId, lang);
-    const contentsPromise = getJournalContents({
-      journalId: numericId,
-      pageNo: 1,
-      pageSize: 10,
-      lang,
-    }).catch((err) => {
-      console.error("[journals/[id]] contents failed:", err);
-      return null;
-    });
 
     try {
       journal = await journalPromise;
@@ -253,8 +289,27 @@ export default async function JournalDetailPage({
       throw err;
     }
 
-    const contents = await contentsPromise;
-    apiArticles = contents?.lists;
+    years = normalizeJournalYears(journal.year);
+    periodsMap = normalizeJournalPeriods(journal.periods, years);
+
+    // Only fetch the article list for the Articles tab; the Home tab uses
+    // enrichment data (top downloaded) and does not need the API list.
+    if (activeTab === "articles") {
+      const contents = await getJournalContents({
+        journalId: numericId,
+        pageNo: articlesPage,
+        pageSize: ARTICLES_PAGE_SIZE,
+        lang,
+        year: issueSelection?.year,
+        periods: issueSelection?.periods,
+      }).catch((err) => {
+        console.error("[journals/[id]] contents failed:", err);
+        return null;
+      });
+      apiArticles = contents?.lists;
+      articlesCount = contents?.count ?? 0;
+    }
+
     enrichment = getJournalEnrichment(journal.title);
   }
 
@@ -312,6 +367,9 @@ export default async function JournalDetailPage({
             boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
             contacts={contacts}
             databases={enrichment?.databases ?? journal.databases}
+            years={years}
+            periodsMap={periodsMap}
+            issueSelection={issueSelection}
           />
 
           <JournalMainColumn
@@ -325,6 +383,10 @@ export default async function JournalDetailPage({
             chiefEditors={chiefEditors.length > 0 ? chiefEditors : undefined}
             boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
             lang={lang}
+            issueSelection={issueSelection}
+            articlesCount={articlesCount}
+            articlesPage={articlesPage}
+            articlesPageSize={ARTICLES_PAGE_SIZE}
           />
         </div>
       </section>

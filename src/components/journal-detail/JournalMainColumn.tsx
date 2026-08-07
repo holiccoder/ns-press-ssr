@@ -1,7 +1,9 @@
 import AboutJournal from "./AboutJournal";
 import ArticleListSection from "./ArticleListSection";
+import Pagination from "./Pagination";
 import type { JournalContentSummary } from "@/lib/api";
 import type { JournalTabKey } from "./JournalNavTabs";
+import type { IssueSelection } from "./IssueFilter";
 import type {
   EditorialBoardMember,
   EditorInChief,
@@ -74,6 +76,10 @@ export default function JournalMainColumn({
   chiefEditors,
   boardMembers,
   lang = "English",
+  issueSelection,
+  articlesCount = 0,
+  articlesPage = 1,
+  articlesPageSize = 10,
 }: {
   scope: string;
   latestArticles?: EnrichedArticle[];
@@ -85,6 +91,10 @@ export default function JournalMainColumn({
   chiefEditors?: EditorInChief[];
   boardMembers?: EditorialBoardMember[];
   lang?: "中文" | "English";
+  issueSelection?: IssueSelection;
+  articlesCount?: number;
+  articlesPage?: number;
+  articlesPageSize?: number;
 }) {
   const renderHome = activeTab === "home";
   const renderArticles = activeTab === "articles";
@@ -93,6 +103,17 @@ export default function JournalMainColumn({
   const renderEditorial = activeTab === "editorial";
 
   const isZh = lang === "中文";
+
+  const articlesFilterLabel = issueSelection?.year
+    ? issueSelection.periods != null
+      ? `${issueSelection.year} · Issue ${issueSelection.periods}`
+      : String(issueSelection.year)
+    : "All Articles";
+
+  const articlesTotalPages = Math.max(
+    1,
+    Math.ceil(articlesCount / articlesPageSize),
+  );
 
   return (
     <div className="space-y-10">
@@ -109,10 +130,26 @@ export default function JournalMainColumn({
 
       {renderArticles && (
         <ArticleListSection
-          title="Latest Articles"
+          title={isZh ? "文章" : "Articles"}
           articles={latestArticles}
           apiArticles={apiArticles}
           journalId={journalId}
+          filterLabel={articlesFilterLabel}
+          emptyMessage={
+            isZh ? "暂无文章。" : "No articles found for this issue."
+          }
+          pagination={
+            <Pagination
+              base={`/journals/${journalId}`}
+              params={{
+                tab: "articles",
+                year: issueSelection?.year,
+                periods: issueSelection?.periods,
+              }}
+              currentPage={articlesPage}
+              totalPages={articlesTotalPages}
+            />
+          }
         />
       )}
 

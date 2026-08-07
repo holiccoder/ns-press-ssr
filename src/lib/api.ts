@@ -267,6 +267,72 @@ export function getJournalContentDetail(
   return apiGet<JournalContentDetail>("journalContentDetail", { id, lang });
 }
 
+/**
+ * Normalize the `year` field of a journal detail into a sorted list of
+ * year strings (descending). Accepts arrays, single numbers/strings, or
+ * JSON-encoded strings as returned by legacy API responses.
+ */
+export function normalizeJournalYears(
+  year: string[] | string | number | undefined,
+): string[] {
+  const toArray = (value: unknown): string[] => {
+    if (Array.isArray(value)) {
+      return value.map((v) => String(v).trim()).filter(Boolean);
+    }
+    if (value === undefined || value === null || value === "") return [];
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) return toArray(parsed);
+        } catch {
+          // fall through to comma split
+        }
+      }
+      if (trimmed.includes(",")) {
+        return trimmed
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }
+      return [trimmed];
+    }
+    if (typeof value === "number") return [String(value)];
+    return [];
+  };
+
+  const years = toArray(year);
+  return Array.from(new Set(years)).sort((a, b) => Number(b) - Number(a));
+}
+
+/**
+ * Normalize the `periods` field of a journal detail into a map of
+ * year string -> sorted issue numbers (ascending). Falls back to deriving
+ * issues from the years list when the map is missing or malformed.
+ */
+export function normalizeJournalPeriods(
+  periods: Record<string, number[]> | undefined,
+  years: string[],
+): Record<string, number[]> {
+  const result: Record<string, number[]> = {};
+  if (periods && typeof periods === "object" && !Array.isArray(periods)) {
+    for (const [year, raw] of Object.entries(periods)) {
+      const issues = Array.isArray(raw)
+        ? raw.map((n) => Number(n)).filter((n) => Number.isFinite(n) && n > 0)
+        : [];
+      if (issues.length > 0) {
+        result[year] = issues.sort((a, b) => a - b);
+      }
+    }
+  }
+  // Ensure every known year has an entry (derive empty if missing)
+  for (const year of years) {
+    if (!result[year]) result[year] = [];
+  }
+  return result;
+}
+
 export type LatestSubmission = {
   id: number;
   journal_name: string;
