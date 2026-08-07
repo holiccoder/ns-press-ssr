@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import journalsData from "@/data/journals.json";
-import { getJournalList, parseIssn, type JournalListItem } from "@/lib/api";
+import { getJournalList, getJournalDetail, parseIssn, type JournalListItem } from "@/lib/api";
 import { getServerApiLang } from "@/lib/lang.server";
 import { resolveJournalCover } from "@/lib/images";
 import CarouselScroller from "./CarouselScroller";
@@ -30,7 +30,7 @@ function SearchIcon({ className = "" }: { className?: string }) {
 
 /* ---------- Card ---------- */
 
-function JournalDetailCard({ journal }: { journal: JournalListItem }) {
+function JournalDetailCard({ journal }: { journal: JournalListItem & { introduction?: string } }) {
   const issns = parseIssn(journal.issn);
   const href = `/journals/${journal.id}`;
   const coverImage = resolveJournalCover(journal.id, journal.cover_image);
@@ -40,7 +40,7 @@ function JournalDetailCard({ journal }: { journal: JournalListItem }) {
       href={href}
       className="group flex h-full flex-col rounded-2xl bg-white/55 p-6 ring-1 ring-white/70 backdrop-blur-sm transition-all duration-200 hover:bg-white/75 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
     >
-      <h3 className="text-lg font-bold tracking-tight text-[#0b2545] group-hover:text-[#1d4ed8] sm:text-xl">
+      <h3 className="text-lg font-bold tracking-tight text-[#0b2545] group-hover:text-[#1d4ed8] sm:text-xl line-clamp-1">
         {journal.title}
       </h3>
 
@@ -86,6 +86,12 @@ function JournalDetailCard({ journal }: { journal: JournalListItem }) {
           </div>
         )}
       </dl>
+
+      {journal.introduction && (
+        <p className="mt-4 text-xs leading-relaxed text-slate-600 line-clamp-2 border-t border-slate-200/50 pt-3">
+          {journal.introduction}
+        </p>
+      )}
     </Link>
   );
 }
@@ -94,10 +100,22 @@ function JournalDetailCard({ journal }: { journal: JournalListItem }) {
 
 export default async function JournalsCarousel() {
   const lang = await getServerApiLang();
-  let lists: JournalListItem[] = [];
+  let lists: Array<JournalListItem & { introduction?: string }> = [];
   try {
     const data = await getJournalList({ page: 1, pageSize: 12, lang });
-    lists = data.lists;
+    
+    // Fetch full detail for each journal to extract the introduction
+    lists = await Promise.all(
+      data.lists.map(async (j) => {
+        try {
+          const detail = await getJournalDetail(j.id, lang);
+          return { ...j, introduction: detail.introduction };
+        } catch (err) {
+          console.error(`[JournalsCarousel] failed to load journal detail for ${j.id}:`, err);
+          return j;
+        }
+      })
+    );
   } catch (err) {
     console.error("[JournalsCarousel] failed to load journalList:", err);
   }
