@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getJournalList, parseIssn, type JournalListItem } from "@/lib/api";
+import { getJournalList, getJournalDetail, parseIssn, type JournalListItem } from "@/lib/api";
 import { getServerApiLang } from "@/lib/lang.server";
 import { resolveJournalCover } from "@/lib/images";
 
@@ -10,11 +10,23 @@ function toHref(id: number): string {
 
 export default async function JournalsList() {
   const lang = await getServerApiLang();
-  let lists: JournalListItem[] = [];
+  let lists: Array<JournalListItem & { introduction?: string }> = [];
   let failed = false;
   try {
     const data = await getJournalList({ page: 1, pageSize: 12, lang });
-    lists = data.lists;
+    
+    // Fetch full detail for each journal to extract the introduction
+    lists = await Promise.all(
+      data.lists.map(async (j) => {
+        try {
+          const detail = await getJournalDetail(j.id, lang);
+          return { ...j, introduction: detail.introduction };
+        } catch (err) {
+          console.error(`[JournalsList] failed to load journal detail for ${j.id}:`, err);
+          return j;
+        }
+      })
+    );
   } catch (err) {
     failed = true;
     console.error("[JournalsList] failed to load journalList:", err);
@@ -84,6 +96,12 @@ export default async function JournalsList() {
                         </span>
                       )}
                     </div>
+
+                    {j.introduction && (
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600 line-clamp-3">
+                        {j.introduction}
+                      </p>
+                    )}
                   </div>
                 </article>
               );
