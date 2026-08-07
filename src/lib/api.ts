@@ -246,13 +246,18 @@ export function getJournalContents(opts: {
   pageNo?: number;
   pageSize?: number;
   lang?: Lang;
+  year?: string;
+  periods?: number;
 }): Promise<PagedData<JournalContentSummary>> {
-  return apiGet<PagedData<JournalContentSummary>>("journalContents", {
+  const params: Record<string, string | number> = {
     journal_id: opts.journalId,
     page_no: opts.pageNo ?? 1,
     page_size: opts.pageSize ?? 10,
     lang: opts.lang ?? "中文",
-  });
+  };
+  if (opts.year) params.year = opts.year;
+  if (opts.periods != null) params.periods = opts.periods;
+  return apiGet<PagedData<JournalContentSummary>>("journalContents", params);
 }
 
 export function getJournalContentDetail(
