@@ -36,7 +36,7 @@ export default function ArticleListSection({
         </div>
         {hasEnriched && (
           <Link
-            href={`/journals/${journalId}/articles`}
+            href={`/journals/${journalId}?tab=articles`}
             className="text-sm font-medium text-[#1d4ed8] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
           >
             View all

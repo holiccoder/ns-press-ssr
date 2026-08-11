@@ -52,6 +52,7 @@ export default async function ArticleDetailPage({
 }) {
   const { articleId } = await params;
   const lang = await getServerApiLang();
+  const articleHref = `/articles/${articleId}`;
 
   let article;
   let volumeHref;
@@ -73,7 +74,7 @@ export default async function ArticleDetailPage({
     abstract: article.abstract || undefined,
     keywords: article.keywords.length ? article.keywords.join(", ") : undefined,
     inLanguage: "en",
-    url: `${siteUrl}/articles/${articleId}`,
+    url: `${siteUrl}${articleHref}`,
     datePublished: article.dates?.published || undefined,
     author: article.authors.map((a) => ({
       "@type": "Person",
@@ -124,7 +125,7 @@ export default async function ArticleDetailPage({
             <ArticleMetadata
               volumeHref={volumeHref}
               volumeLabel={article.volumeLabel}
-              citation={article.citation}
+              articleHref={articleHref}
               doi={article.doi}
               copyright={article.copyright}
               specialIssue={article.specialIssue}

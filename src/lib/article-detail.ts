@@ -2,6 +2,7 @@ import { getJournalContentDetail, ApiError, type Lang } from "@/lib/api";
 import {
   getArticleEnrichment,
   isEnrichedArticleId,
+  resolveArticleMetrics,
   type ArticleEnrichment,
 } from "@/lib/article-slugs";
 
@@ -51,15 +52,26 @@ export function buildArticleFromApi(
         : "Article",
     citation: "",
     doi: apiArticle.doi ?? "",
-    copyright: "",
+    copyright: "Published by NSP.",
     pdfUrl: apiArticle.content,
-    metrics: { accesses: 0, downloads: 0 },
+    metrics: resolveArticleMetrics(String(apiArticle.id), {
+      accesses: apiArticle.accesses ?? apiArticle.click,
+      downloads: apiArticle.downloads ?? apiArticle.download,
+    }),
     dates: {
       received: "",
       accepted: "",
       published: apiArticle.create_time ?? "",
     },
     recommendedArticles: [],
+  };
+}
+
+function normalizeArticle(article: ArticleEnrichment): ArticleEnrichment {
+  return {
+    ...article,
+    copyright: "Published by NSP.",
+    metrics: resolveArticleMetrics(article.id, article.metrics),
   };
 }
 
@@ -73,7 +85,7 @@ export async function resolveArticle(
   lang: Lang = "English",
 ): Promise<ResolvedArticle> {
   if (isEnrichedArticleId(articleId)) {
-    const article = getArticleEnrichment(articleId)!;
+    const article = normalizeArticle(getArticleEnrichment(articleId)!);
     return {
       article,
       volumeHref: `/journals/${article.journalSlug}`,
@@ -91,7 +103,9 @@ export async function resolveArticle(
   try {
     const apiArticle = await getJournalContentDetail(numericArticleId, lang);
     const enrichment = getArticleEnrichment(String(apiArticle.id));
-    const article = enrichment ?? buildArticleFromApi(apiArticle);
+    const article = normalizeArticle(
+      enrichment ?? buildArticleFromApi(apiArticle),
+    );
     const journalId = apiArticle.journal_id ?? article.journalSlug;
     return {
       article,

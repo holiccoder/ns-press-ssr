@@ -11,17 +11,23 @@ const TABS: Array<{ key: JournalTabKey; label: string }> = [
   { key: "home", label: "Home" },
   { key: "articles", label: "Articles & Issues" },
   { key: "about", label: "About" },
-  { key: "publish", label: "Publish" },
+  { key: "publish", label: "APC" },
   { key: "editorial", label: "Editorial Board" },
 ];
 
 export default function JournalNavTabs({
   journalId,
   activeTab = "home",
+  hasEditorialBoard = false,
 }: {
   journalId: number;
   activeTab?: JournalTabKey;
+  hasEditorialBoard?: boolean;
 }) {
+  const tabs = hasEditorialBoard
+    ? TABS
+    : TABS.filter((tab) => tab.key !== "editorial");
+
   return (
     <nav
       aria-label="Journal sections"
@@ -29,7 +35,7 @@ export default function JournalNavTabs({
     >
       <div className="mx-auto max-w-7xl px-6">
         <ul className="flex flex-wrap items-center gap-1">
-          {TABS.map((tab) => {
+          {tabs.map((tab) => {
             const href =
               tab.key === "home"
                 ? `/journals/${journalId}`

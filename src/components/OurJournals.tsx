@@ -13,16 +13,6 @@ function toHref(id: number): string {
   return `/journals/${id}`;
 }
 
-function chunkRows<T>(items: T[], rowSize: number): T[][] {
-  if (items.length === 0) return [];
-  const rows: T[][] = [];
-  for (let i = 0; i < items.length; i += rowSize) {
-    rows.push(items.slice(i, i + rowSize));
-  }
-  // Always render at least one row; if a single row, still wrap as [row].
-  return rows;
-}
-
 export default async function OurJournals() {
   const lang = await getServerApiLang();
   let lists: JournalListItem[] = [];
@@ -43,10 +33,6 @@ export default async function OurJournals() {
     href: toHref(j.id),
   }));
 
-  // Two rows when we have at least 4 items, otherwise one row.
-  const rowSize = items.length >= 4 ? Math.ceil(items.length / 2) : items.length;
-  const rows = chunkRows(items, rowSize);
-
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -66,7 +52,7 @@ export default async function OurJournals() {
         {items.length === 0 ? (
           <p className="mt-10 text-sm text-slate-500">No journals available.</p>
         ) : (
-          <OurJournalsCarousel rows={rows} />
+          <OurJournalsCarousel items={items} />
         )}
       </div>
     </section>

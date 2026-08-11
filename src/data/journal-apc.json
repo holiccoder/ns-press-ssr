@@ -1,0 +1,20 @@
+{
+  "title": "Article Processing Charge (APC)",
+  "description": "NSP journals follow an open-access publishing model. The standard article processing charge is approximately HKD 1,800 or USD 230 and is payable after formal acceptance.",
+  "payments": [
+    {
+      "id": "payment-hkd",
+      "label": "HKD Payment Link",
+      "currency": "HKD",
+      "href": "#payment-hkd",
+      "instructions": "Please use the payment instructions and invoice number supplied with the acceptance notice."
+    },
+    {
+      "id": "payment-usd",
+      "label": "USD Payment Link",
+      "currency": "USD",
+      "href": "#payment-usd",
+      "instructions": "Please use the payment instructions and invoice number supplied with the acceptance notice."
+    }
+  ]
+}

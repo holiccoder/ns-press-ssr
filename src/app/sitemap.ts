@@ -74,6 +74,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: safeUrl("/about"), lastModified: now, changeFrequency: "yearly", priority: 0.6 },
       { url: safeUrl("/books"), lastModified: now, changeFrequency: "monthly", priority: 0.7 },
       { url: safeUrl("/journals"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+      { url: safeUrl("/news"), lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+      { url: safeUrl("/articles"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     ] satisfies SitemapEntry[]
   ).filter((e) => !PRIVATE_ROUTES.has(new URL(e.url).pathname));
 

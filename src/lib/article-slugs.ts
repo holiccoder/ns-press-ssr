@@ -16,6 +16,31 @@ export type ArticleMetrics = {
   downloads: number;
 };
 
+function stableMetric(seed: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    hash ^= seed.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) % 101;
+}
+
+export function resolveArticleMetrics(
+  articleId: string,
+  metrics?: Partial<ArticleMetrics>,
+): ArticleMetrics {
+  return {
+    accesses:
+      typeof metrics?.accesses === "number" && metrics.accesses > 0
+        ? metrics.accesses
+        : stableMetric(`${articleId}:accesses`),
+    downloads:
+      typeof metrics?.downloads === "number" && metrics.downloads > 0
+        ? metrics.downloads
+        : stableMetric(`${articleId}:downloads`),
+  };
+}
+
 export type ArticleDates = {
   received: string;
   accepted: string;

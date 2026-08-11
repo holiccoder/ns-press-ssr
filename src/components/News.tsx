@@ -1,19 +1,115 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import home from "@/data/home.json";
 import { getArticleList, type ArticleListItem } from "@/lib/api";
 import { resolveNewsImage } from "@/lib/images";
 
 const { news } = home;
 
+export type NewsCardItem = {
+  id: string;
+  title: string;
+  href: string;
+  date: string;
+  excerpt?: string;
+  image?: string;
+  bannerHeadline?: string;
+  dates?: string[];
+};
+
+export type NewsData = {
+  featured: NewsCardItem;
+  items: NewsCardItem[];
+  all: NewsCardItem[];
+  fromApi: boolean;
+};
+
+function formatDate(isoLike: string): string {
+  const date = new Date(isoLike.replace(/-/g, "/"));
+  if (Number.isNaN(date.getTime())) return isoLike;
+  const d = date.getDate().toString().padStart(2, "0");
+  const m = (date.getMonth() + 1).toString().padStart(2, "0");
+  const y = date.getFullYear();
+  return `${d} ${m} ${y}`;
+}
+
+function toApiCard(item: ArticleListItem): NewsCardItem {
+  return {
+    id: String(item.id),
+    title: item.title,
+    href: `/news/${item.id}`,
+    date: item.create_time,
+    excerpt: item.desc,
+    image: item.image,
+    bannerHeadline: item.title,
+  };
+}
+
+function staticCard(item: (typeof news.items)[number]): NewsCardItem {
+  return {
+    id: String(item.id),
+    title: item.title,
+    href: "/news",
+    date: item.date,
+  };
+}
+
+async function fetchAllNews(): Promise<ArticleListItem[]> {
+  const pageSize = 50;
+  const first = await getArticleList({
+    pageNo: 1,
+    pageSize,
+    sort: "new",
+  });
+  const items = [...first.lists];
+  const totalPages = Math.ceil((first.count || items.length) / pageSize);
+
+  for (let pageNo = 2; pageNo <= totalPages; pageNo++) {
+    const next = await getArticleList({ pageNo, pageSize, sort: "new" });
+    if (!next.lists.length) break;
+    items.push(...next.lists);
+  }
+
+  return items;
+}
+
+export async function loadNews(): Promise<NewsData> {
+  try {
+    const apiItems = await fetchAllNews();
+    if (apiItems.length > 0) {
+      const cards = apiItems.map(toApiCard);
+      return {
+        featured: cards[0],
+        items: cards.slice(1),
+        all: cards,
+        fromApi: true,
+      };
+    }
+  } catch (err) {
+    console.error("[News] failed to load article list:", err);
+  }
+
+  const fallbackFeatured: NewsCardItem = {
+    id: "featured",
+    title: news.featured.headline,
+    href: "/news",
+    date: news.featured.date,
+    excerpt: news.featured.excerpt,
+    bannerHeadline: news.featured.bannerHeadline,
+    dates: news.featured.dates,
+  };
+  const fallbackItems = news.items.map(staticCard);
+  return {
+    featured: fallbackFeatured,
+    items: fallbackItems,
+    all: fallbackItems,
+    fromApi: false,
+  };
+}
+
 /* ---------- Thumbnail artworks (inline SVG, no raster assets needed) ---------- */
 
-/**
- * Featured: dark futuristic banner with abstract diagonal lines and
- * a faint "CTESP" wordmark in the upper-left, matching the spec.
- */
 function CtespBannerArt({ className = "" }: { className?: string }) {
-  // Deterministic diagonal "circuit" lines — no Math.random() so SSR is stable.
   const lines: { x1: number; y1: number; x2: number; y2: number }[] = [
     { x1: 40, y1: 20, x2: 380, y2: 220 },
     { x1: 0, y1: 80, x2: 320, y2: 260 },
@@ -56,16 +152,15 @@ function CtespBannerArt({ className = "" }: { className?: string }) {
       <rect width="480" height="270" fill="url(#ctespBg)" />
       <rect width="480" height="270" fill="url(#ctespGlow)" />
       <g stroke="rgba(186,230,253,0.35)" strokeWidth="1">
-        {lines.map((l, i) => (
-          <line key={i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+        {lines.map((line, i) => (
+          <line key={i} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} />
         ))}
       </g>
       <g fill="rgba(186,230,253,0.9)">
-        {dots.map((d, i) => (
-          <circle key={i} cx={d.x} cy={d.y} r={2} />
+        {dots.map((dot, i) => (
+          <circle key={i} cx={dot.x} cy={dot.y} r={2} />
         ))}
       </g>
-      {/* Faint "CTESP" wordmark, upper-left */}
       <text
         x="20"
         y="38"
@@ -81,61 +176,101 @@ function CtespBannerArt({ className = "" }: { className?: string }) {
   );
 }
 
-/* ---------- Small card ---------- */
-
-function formatDate(isoLike: string): string {
-  const date = new Date(isoLike.replace(/-/g, "/"));
-  if (Number.isNaN(date.getTime())) return isoLike;
-  const d = date.getDate().toString().padStart(2, "0");
-  const m = (date.getMonth() + 1).toString().padStart(2, "0");
-  const y = date.getFullYear();
-  return `${d} ${m} ${y}`;
+function resolvedImage(item: NewsCardItem): string | undefined {
+  if (!item.image) return undefined;
+  const numericId = Number(item.id);
+  return Number.isFinite(numericId)
+    ? resolveNewsImage(numericId, item.image)
+    : item.image;
 }
 
-function SmallNewsCard({ item }: { item: ArticleListItem }) {
-  const href = `/news/${item.id}`;
-  const image = resolveNewsImage(item.id, item.image);
+export function SmallNewsCard({ item }: { item: NewsCardItem }) {
+  const image = resolvedImage(item);
   return (
     <Link
-      href={href}
+      href={item.href}
       className="group flex flex-col overflow-hidden rounded-lg bg-white ring-1 ring-slate-200 transition-shadow hover:shadow-md"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
-        <Image
-          src={image}
-          alt={item.title}
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        {image ? (
+          <Image
+            src={image}
+            alt={item.title}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <CtespBannerArt className="absolute inset-0 h-full w-full opacity-80" />
+        )}
       </div>
       <div className="flex flex-1 flex-col p-4">
         <h3 className="line-clamp-2 text-sm font-bold leading-snug text-[#0b2545] group-hover:text-[#1e4ba8]">
           {item.title}
         </h3>
         <p className="mt-auto pt-3 text-xs text-slate-500">
-          {news.publishedDateLabel} {formatDate(item.create_time)}
+          {news.publishedDateLabel} {formatDate(item.date)}
         </p>
       </div>
     </Link>
   );
 }
 
-/* ---------- Section ---------- */
+export function FeaturedNewsCard({ item }: { item: NewsCardItem }) {
+  const image = resolvedImage(item);
+  const dates = item.dates ?? [formatDate(item.date)];
+
+  return (
+    <article className="relative isolate flex flex-col overflow-hidden rounded-lg bg-[#2a2a2e] text-white shadow-lg">
+      <Link href={item.href} className="flex flex-1 flex-col">
+        <div className="relative aspect-[16/9] w-full overflow-hidden">
+          {image ? (
+            <Image
+              src={image}
+              alt={item.title}
+              fill
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <CtespBannerArt className="absolute inset-0 h-full w-full" />
+          )}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10 p-5">
+            <p className="text-center text-base font-extrabold leading-tight text-white drop-shadow-md sm:text-lg">
+              {item.bannerHeadline ?? item.title}
+            </p>
+          </div>
+          <div className="absolute bottom-3 left-4 space-y-0.5 text-[11px] leading-tight text-white/90">
+            {dates.map((date, i) => (
+              <p key={i}>{date}</p>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col px-6 pb-4 pt-5">
+          <h3 className="text-base font-bold leading-snug text-white sm:text-lg">
+            {item.title}
+          </h3>
+          {item.excerpt && (
+            <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-white/85">
+              {item.excerpt}
+            </p>
+          )}
+          <p className="mt-auto pt-6 text-xs text-white/55">
+            {news.publishedDateLabel} {formatDate(item.date)}
+          </p>
+        </div>
+      </Link>
+    </article>
+  );
+}
 
 export default async function News() {
-  let items: ArticleListItem[] = [];
-  try {
-    const data = await getArticleList({ pageNo: 1, pageSize: 5, sort: "new" });
-    items = data.lists;
-  } catch (err) {
-    console.error("[News] failed to load article list:", err);
-  }
+  const data = await loadNews();
 
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-6">
-        {/* Header */}
         <div className="flex items-end justify-between">
           <h2 className="text-4xl font-extrabold tracking-tight text-[#0b2545] sm:text-5xl">
             {news.title}
@@ -148,55 +283,29 @@ export default async function News() {
           </Link>
         </div>
 
-        {/* Grid: featured (left, ~40%) + 2x3 (right) */}
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-5">
-          {/* Featured */}
-          <article className="relative isolate flex flex-col overflow-hidden rounded-lg bg-[#2a2a2e] text-white shadow-lg lg:col-span-2">
-            <Link href={news.featured.href} className="flex flex-1 flex-col">
-              {/* Banner */}
-              <div className="relative aspect-[16/9] w-full overflow-hidden">
-                <CtespBannerArt className="absolute inset-0 h-full w-full" />
-                {/* Headline overlay */}
-                <div className="absolute inset-0 flex items-center justify-center p-5">
-                  <p className="text-center text-base font-extrabold leading-tight text-white drop-shadow-md sm:text-lg">
-                    {news.featured.bannerHeadline}
-                  </p>
-                </div>
-                {/* Date overlay, bottom-left */}
-                <div className="absolute bottom-3 left-4 space-y-0.5 text-[11px] leading-tight text-white/90">
-                  {news.featured.dates.map((d, i) => (
-                    <p key={i}>{d}</p>
-                  ))}
-                </div>
-              </div>
-
-              {/* Body */}
-              <div className="flex flex-1 flex-col px-6 pt-5 pb-4">
-                <h3 className="text-base font-bold leading-snug text-white sm:text-lg">
-                  {news.featured.headline}
-                </h3>
-                <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-white/85">
-                  {news.featured.excerpt}
-                </p>
-                <p className="mt-auto pt-6 text-xs text-white/55">
-                  {news.publishedDateLabel} {news.featured.date}
-                </p>
-              </div>
-            </Link>
-          </article>
-
-          {/* 2x3 grid */}
+          <div className="lg:col-span-2">
+            <FeaturedNewsCard item={data.featured} />
+          </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:col-span-3">
-            {items.length === 0 ? (
-              <p className="text-sm text-slate-500">No news available.</p>
-            ) : (
-              items.map((item) => (
-                <SmallNewsCard key={item.id} item={item} />
-              ))
-            )}
+            {data.items.map((item) => (
+              <SmallNewsCard key={item.id} item={item} />
+            ))}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+export async function NewsArchiveList() {
+  const data = await loadNews();
+
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {data.all.map((item) => (
+        <SmallNewsCard key={item.id} item={item} />
+      ))}
+    </div>
   );
 }

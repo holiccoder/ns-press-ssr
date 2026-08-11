@@ -96,6 +96,10 @@ export type JournalContentDetail = {
   content?: string;
   create_time?: string;
   update_time?: string;
+  accesses?: number;
+  downloads?: number;
+  click?: number;
+  download?: number;
   Journal?: {
     id: number;
     title: string;
@@ -422,14 +426,35 @@ export function parseIssn(
   raw: string,
 ): Array<{ label: string; value: string }> {
   if (!raw) return [];
-  const parts = raw
-    .split(/;|\s{2,}/)
-    .map((s) => s.trim())
-    .filter(Boolean);
 
-  return parts.map((part) => {
-    const match = part.match(/^([\dA-Z-]+)\s*\(([^)]+)\)/i);
-    if (match) return { label: match[2], value: match[1] };
-    return { label: "ISSN", value: part };
-  });
+  const entries: Array<{ label: string; value: string }> = [];
+  const seen = new Set<string>();
+  const add = (label: string, value: string) => {
+    const normalizedLabel = label.trim() || "ISSN";
+    const normalizedValue = value.trim();
+    if (!normalizedValue) return;
+    const key = `${normalizedLabel.toLowerCase()}|${normalizedValue.toUpperCase()}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    entries.push({ label: normalizedLabel, value: normalizedValue });
+  };
+
+  const labeledMatches = Array.from(
+    raw.matchAll(/([\dA-Z]{4}-[\dA-Z]{4})\s*\(([^)]+)\)/gi),
+  );
+  for (const match of labeledMatches) add(match[2], match[1]);
+
+  if (entries.length > 0) return entries;
+
+  raw
+    .split(/[;,|\n]+|\s{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .forEach((part) => {
+      const match = part.match(/^([\dA-Z]{4}-[\dA-Z]{4})\s*\(([^)]+)\)/i);
+      if (match) add(match[2], match[1]);
+      else add("ISSN", part);
+    });
+
+  return entries;
 }

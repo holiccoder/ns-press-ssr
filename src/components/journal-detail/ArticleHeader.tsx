@@ -1,10 +1,5 @@
 import Link from "next/link";
-import {
-  CiteIcon,
-  DownloadIcon,
-  ExpandIcon,
-  ShareIcon,
-} from "./icons";
+import { DownloadIcon } from "./icons";
 
 type ArticleHeaderProps = {
   journalSlug: string;
@@ -80,8 +75,8 @@ export default function ArticleHeader({
         </ol>
       </nav>
 
-      {/* Type / Open Access / Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* Type / Open Access */}
+      <div className="flex flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
           <span className="font-semibold text-[#0b2545]">{articleType}</span>
           <span className="text-slate-300">|</span>
@@ -90,12 +85,6 @@ export default function ArticleHeader({
               OPEN ACCESS
             </span>
           )}
-        </div>
-
-        <div className="flex items-center gap-1">
-          <ActionButton icon={CiteIcon} label="Cite" />
-          <ActionButton icon={ShareIcon} label="Share" />
-          <ActionButton icon={ExpandIcon} label="Expand" />
         </div>
       </div>
 
@@ -113,23 +102,5 @@ export default function ArticleHeader({
         DOWNLOAD PDF
       </a>
     </div>
-  );
-}
-
-function ActionButton({
-  icon: Icon,
-  label,
-}: {
-  icon: React.FC<{ className?: string }>;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      className="inline-flex flex-col items-center gap-0.5 rounded-sm px-2 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#0b2545] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
-    >
-      <Icon className="h-5 w-5" />
-      {label}
-    </button>
   );
 }

@@ -120,7 +120,7 @@ export default async function NewsDetailPage({
             </li>
             <li>
               <Link
-                href="/"
+                href="/news"
                 className="hover:text-[#0b2545] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
               >
                 News

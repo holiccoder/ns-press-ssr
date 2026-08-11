@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import {
   getJournalDetail,
   getJournalContents,
+  getPolicyInfo,
   ApiError,
   normalizeJournalYears,
   normalizeJournalPeriods,
@@ -10,6 +11,7 @@ import {
   type JournalContentSummary,
   type JournalDetail,
 } from "@/lib/api";
+import guideData from "@/data/guide.json";
 import {
   getEnrichedSlugs,
   type Contact,
@@ -57,6 +59,7 @@ function buildStaticJournal(slug: string): JournalDetail {
     introduction: enrichment.scope,
     scope: enrichment.scope,
     policy: "",
+    author_notice: "",
   };
 }
 
@@ -264,6 +267,7 @@ export default async function JournalDetailPage({
 
   let journal: JournalDetail;
   let apiArticles: JournalContentSummary[] | undefined;
+  let homeArticles: JournalContentSummary[] | undefined;
   let enrichment: JournalEnrichment | undefined;
   let coverSlot: React.ReactNode | undefined;
   let years: string[] = [];
@@ -291,9 +295,9 @@ export default async function JournalDetailPage({
 
     years = normalizeJournalYears(journal.year);
     periodsMap = normalizeJournalPeriods(journal.periods, years);
+    enrichment = getJournalEnrichment(journal.title);
 
-    // Only fetch the article list for the Articles tab; the Home tab uses
-    // enrichment data (top downloaded) and does not need the API list.
+    // Fetch the paginated list for the Articles tab.
     if (activeTab === "articles") {
       const contents = await getJournalContents({
         journalId: numericId,
@@ -310,10 +314,41 @@ export default async function JournalDetailPage({
       articlesCount = contents?.count ?? 0;
     }
 
-    enrichment = getJournalEnrichment(journal.title);
+    // The API does not expose a ranked Top Downloaded list. Use the latest
+    // three articles as the visible home fallback when no enrichment data is
+    // available.
+    if (activeTab === "home" && !enrichment?.topDownloaded?.length) {
+      const contents = await getJournalContents({
+        journalId: numericId,
+        pageNo: 1,
+        pageSize: 3,
+        lang,
+      }).catch((err) => {
+        console.error("[journals/[id]] home contents failed:", err);
+        return null;
+      });
+      homeArticles = contents?.lists;
+    }
   }
 
   const scope = journal.scope ?? journal.introduction ?? enrichment?.scope ?? "";
+  let policyInfo:
+    | Awaited<ReturnType<typeof getPolicyInfo>>
+    | undefined;
+  if (activeTab === "about" && (!journal.policy || !journal.author_notice)) {
+    policyInfo = await getPolicyInfo(lang).catch((err) => {
+      console.error("[journals/[id]] policy info failed:", err);
+      return undefined;
+    });
+  }
+  const policy =
+    journal.policy?.trim() ||
+    policyInfo?.open_policy?.trim() ||
+    guideData.fallback.open_policy;
+  const authorNotice =
+    journal.author_notice?.trim() ||
+    policyInfo?.author_guide?.trim() ||
+    guideData.fallback.author_guide;
   const editorialTeam = extractEditorialTeam(journal.team);
   const chiefEditors = dedupeByNameAndRole([
     ...(enrichment?.editorInChief ? [enrichment.editorInChief] : []),
@@ -357,7 +392,11 @@ export default async function JournalDetailPage({
         coverSlot={coverSlot}
       />
 
-      <JournalNavTabs journalId={journal.id} activeTab={activeTab} />
+      <JournalNavTabs
+        journalId={journal.id}
+        activeTab={activeTab}
+        hasEditorialBoard={chiefEditors.length > 0 || boardMembers.length > 0}
+      />
 
       <section className="mx-auto w-full max-w-7xl px-6 py-8 sm:py-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr]">
@@ -376,10 +415,13 @@ export default async function JournalDetailPage({
             scope={scope}
             latestArticles={enrichment?.latestArticles}
             topDownloaded={enrichment?.topDownloaded}
+            homeArticles={homeArticles}
+            homeArticlesTitle="Latest Articles"
             apiArticles={apiArticles}
             journalId={journal.id}
             activeTab={activeTab}
-            policy={journal.policy}
+            policy={policy}
+            authorNotice={authorNotice}
             chiefEditors={chiefEditors.length > 0 ? chiefEditors : undefined}
             boardMembers={boardMembers.length > 0 ? boardMembers : undefined}
             lang={lang}

@@ -4,7 +4,7 @@ import type { ArticleSpecialIssue } from "@/lib/article-slugs";
 type ArticleMetadataProps = {
   volumeHref?: string;
   volumeLabel: string;
-  citation: string;
+  articleHref: string;
   doi: string;
   copyright: string;
   specialIssue?: ArticleSpecialIssue;
@@ -13,7 +13,7 @@ type ArticleMetadataProps = {
 export default function ArticleMetadata({
   volumeHref,
   volumeLabel,
-  citation,
+  articleHref,
   doi,
   copyright,
   specialIssue,
@@ -33,20 +33,24 @@ export default function ArticleMetadata({
       ),
     },
     {
-      label: "Citation",
+      label: "Link",
       value: (
-        <span className="text-slate-700">
-          {citation}{" "}
-          <a
-            href={`https://doi.org/${doi}`}
-            className="text-[#1d4ed8] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
-          >
-            https://doi.org/{doi}
-          </a>
-        </span>
+        <Link
+          href={articleHref}
+          className="text-[#1d4ed8] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
+        >
+          {articleHref}
+        </Link>
       ),
     },
     {
+      label: "Copyright",
+      value: <span className="text-slate-700">{copyright}</span>,
+    },
+  ];
+
+  if (doi) {
+    rows.splice(rows.length - 1, 0, {
       label: "DOI",
       value: (
         <a
@@ -56,12 +60,8 @@ export default function ArticleMetadata({
           {doi}
         </a>
       ),
-    },
-    {
-      label: "Copyright",
-      value: <span className="text-slate-700">{copyright}</span>,
-    },
-  ];
+    });
+  }
 
   if (specialIssue) {
     rows.push({

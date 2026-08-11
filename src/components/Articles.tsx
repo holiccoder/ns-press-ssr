@@ -64,7 +64,11 @@ function ArticleRow({ article }: { article: ArticleItem }) {
   );
 }
 
-export default async function Articles() {
+export default async function Articles({
+  showMore = true,
+}: {
+  showMore?: boolean;
+} = {}) {
   let items: ArticleItem[] = [];
 
   try {
@@ -100,12 +104,14 @@ export default async function Articles() {
               {articles.subtitle}
             </p>
           </div>
-          <Link
-            href={articles.moreHref}
-            className="inline-flex items-center gap-1 self-start rounded-sm bg-[#0b2545] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1e3a8a] sm:mt-6"
-          >
-            {articles.moreLabel} <span aria-hidden>&gt;</span>
-          </Link>
+          {showMore && (
+            <Link
+              href={articles.moreHref}
+              className="inline-flex items-center gap-1 self-start rounded-sm bg-[#0b2545] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1e3a8a] sm:mt-6"
+            >
+              {articles.moreLabel} <span aria-hidden>&gt;</span>
+            </Link>
+          )}
         </div>
 
         {/* List */}

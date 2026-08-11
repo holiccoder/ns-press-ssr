@@ -14,9 +14,9 @@ export type CarouselItem = {
 };
 
 export default function OurJournalsCarousel({
-  rows,
+  items,
 }: {
-  rows: CarouselItem[][];
+  items: CarouselItem[];
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
 
@@ -73,18 +73,14 @@ export default function OurJournalsCarousel({
 
       <div
         ref={scrollerRef}
-        className="hide-scrollbar flex snap-x snap-mandatory flex-col gap-y-10 overflow-x-auto scroll-smooth pb-2"
+        className="hide-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2"
       >
-        {rows.map((row, ri) => (
+        {items.map((item) => (
           <div
-            key={ri}
-            className="grid auto-cols-[calc((100%-1.25rem*5)/6)] grid-flow-col gap-5 max-md:auto-cols-[45%] max-sm:auto-cols-[70%]"
+            key={item.id}
+            className="w-[calc((100%-2.5rem)/3)] min-w-[calc((100%-2.5rem)/3)] snap-start max-md:w-[45%] max-md:min-w-[45%] max-sm:w-[70%] max-sm:min-w-[70%]"
           >
-            {row.map((item) => (
-              <div key={item.id} className="snap-start">
-                <JournalCard item={item} />
-              </div>
-            ))}
+            <JournalCard item={item} />
           </div>
         ))}
       </div>
