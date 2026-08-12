@@ -17,7 +17,7 @@ export default async function OurJournals() {
   const lang = await getServerApiLang();
   let lists: JournalListItem[] = [];
   try {
-    const data = await getJournalList({ page: 1, pageSize: 12, lang });
+    const data = await getJournalList({ page: 1, pageSize: 50, lang });
     lists = data?.lists || [];
   } catch (err) {
     // Upstream API hiccup — log it and render an empty section rather than
@@ -38,8 +38,7 @@ export default async function OurJournals() {
         href: toHref(j.id ?? 0),
       };
     })
-    .filter((x): x is CarouselItem => x !== null)
-    .slice(0, 12);
+    .filter((x): x is CarouselItem => x !== null);
 
   // Keep a small fallback set when the API returns fewer journals.
   if (items.length < 4) {

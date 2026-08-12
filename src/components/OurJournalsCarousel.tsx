@@ -19,10 +19,9 @@ export default function OurJournalsCarousel({
   items: CarouselItem[];
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const visibleItems = items.slice(0, 12);
-  const half = Math.ceil(visibleItems.length / 2);
+  const half = Math.ceil(items.length / 2);
   const columns = Array.from({ length: half }, (_, columnIndex) =>
-    [visibleItems[columnIndex], visibleItems[columnIndex + half]].filter(
+    [items[columnIndex], items[columnIndex + half]].filter(
       (item): item is CarouselItem => Boolean(item),
     ),
   );

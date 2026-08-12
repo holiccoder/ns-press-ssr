@@ -29,8 +29,30 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Continuous deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Every push to `master` is built and deployed to Vercel by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which runs [`scripts/deploy.sh`](scripts/deploy.sh). You can also start a deployment manually from the repository's **Actions** tab.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Configure these GitHub repository secrets once:
+
+- `VERCEL_TOKEN` — a Vercel access token.
+- `VERCEL_ORG_ID` — the `orgId` from `.vercel/project.json` after linking the project.
+- `VERCEL_PROJECT_ID` — the `projectId` from `.vercel/project.json` after linking the project.
+
+To link the project locally and retrieve those IDs:
+
+```bash
+npm install --global vercel@latest
+vercel login
+vercel link
+```
+
+After setting the secrets, deploy from Bash, WSL, or Git Bash with:
+
+```bash
+bash scripts/deploy.sh
+```
+
+Set the app's `NEXT_PUBLIC_*` values in the Vercel project settings. After the secrets are configured, pushing to `master` is enough to trigger a production deployment; no repeated Vercel CLI command is needed.
+
+If this repository is already connected to Vercel's Git integration, use only one automatic deployment path to avoid duplicate builds.
