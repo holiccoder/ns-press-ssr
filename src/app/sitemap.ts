@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 import {
   getArticleList,
   getJournalList,
+  getJournalContents,
   getBookList,
   type ArticleListItem,
+  type JournalContentSummary,
   type JournalListItem,
   type BookListItem,
 } from "@/lib/api";
@@ -76,10 +78,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: safeUrl("/journals"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
       { url: safeUrl("/news"), lastModified: now, changeFrequency: "weekly", priority: 0.7 },
       { url: safeUrl("/articles"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+      { url: safeUrl("/guide"), lastModified: now, changeFrequency: "yearly", priority: 0.6 },
+      { url: safeUrl("/apc"), lastModified: now, changeFrequency: "yearly", priority: 0.5 },
+      { url: safeUrl("/copyright"), lastModified: now, changeFrequency: "yearly", priority: 0.5 },
+      { url: safeUrl("/author-contribution"), lastModified: now, changeFrequency: "yearly", priority: 0.5 },
+      { url: safeUrl("/submission"), lastModified: now, changeFrequency: "yearly", priority: 0.6 },
     ] satisfies SitemapEntry[]
   ).filter((e) => !PRIVATE_ROUTES.has(new URL(e.url).pathname));
 
-  const [apiJournals, apiArticles, apiBooks] = await Promise.all([
+  const [apiJournals, apiNews, apiBooks, apiArticles] = await Promise.all([
     fetchAllPaged<JournalListItem>((pageNo, pageSize) =>
       getJournalList({ page: pageNo, pageSize }).then((p) => ({
         lists: p.lists,
@@ -94,6 +101,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
     fetchAllPaged<BookListItem>((pageNo, pageSize) =>
       getBookList({ page: pageNo, pageSize }).then((p) => ({
+        lists: p.lists,
+        count: p.count,
+      })),
+    ),
+    fetchAllPaged<JournalContentSummary>((pageNo, pageSize) =>
+      getJournalContents({ pageNo, pageSize }).then((p) => ({
         lists: p.lists,
         count: p.count,
       })),
@@ -116,7 +129,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-  const newsEntries: SitemapEntry[] = apiArticles.map((a) => ({
+  const newsEntries: SitemapEntry[] = apiNews.map((a) => ({
     url: safeUrl(`/news/${a.id}`),
     lastModified: toDate(a.create_time) ?? now,
     changeFrequency: "monthly",
@@ -126,6 +139,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const bookEntries: SitemapEntry[] = apiBooks.map((b) => ({
     url: safeUrl(`/books/${b.id}`),
     lastModified: toDate(b.publication_time) ?? now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  const articleEntries: SitemapEntry[] = apiArticles.map((a) => ({
+    url: safeUrl(`/articles/${a.id}`),
+    lastModified: now,
     changeFrequency: "monthly",
     priority: 0.6,
   }));
@@ -148,6 +168,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...journalEntries,
     ...enrichedJournalEntries,
     ...newsEntries,
+    ...articleEntries,
     ...bookEntries,
     ...enrichedArticleEntries,
   ];
