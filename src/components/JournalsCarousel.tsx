@@ -126,7 +126,7 @@ export default async function JournalsCarousel() {
   }
 
   return (
-    <section className="bg-white pb-16 pt-8 sm:pb-20">
+    <section className="bg-white pb-8 pt-8 sm:pb-10">
       <div className="mx-auto max-w-7xl px-6">
         {/* Top row: breadcrumb + search bar */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

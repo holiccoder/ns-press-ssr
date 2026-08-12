@@ -33,7 +33,7 @@ export default async function JournalsList() {
   }
 
   return (
-    <section className="bg-white py-12 sm:py-16">
+    <section className="bg-white pb-12 pt-0 sm:pb-16 sm:pt-0">
       <div className="mx-auto max-w-7xl px-6">
         <div>
           {lists.length === 0 ? (

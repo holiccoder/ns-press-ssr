@@ -18,20 +18,72 @@ export default async function OurJournals() {
   let lists: JournalListItem[] = [];
   try {
     const data = await getJournalList({ page: 1, pageSize: 12, lang });
-    lists = data.lists;
+    lists = data?.lists || [];
   } catch (err) {
     // Upstream API hiccup — log it and render an empty section rather than
     // crashing the whole homepage. Next's revalidation will refresh later.
     console.error("[OurJournals] failed to load journalList:", err);
   }
 
-  const items: CarouselItem[] = lists.map((j) => ({
-    id: j.id,
-    title: j.title,
-    coverImage: resolveJournalCover(j.id, j.cover_image),
-    issn: j.issn,
-    href: toHref(j.id),
-  }));
+  const listsArray = Array.isArray(lists) ? lists : [];
+
+  const items: CarouselItem[] = listsArray
+    .map((j) => {
+      if (!j) return null;
+      return {
+        id: j.id ?? 0,
+        title: j.title || "Untitled Journal",
+        coverImage: resolveJournalCover(j.id ?? 0, j.cover_image || ""),
+        issn: j.issn || "",
+        href: toHref(j.id ?? 0),
+      };
+    })
+    .filter((x): x is CarouselItem => x !== null);
+
+  // Ensure there are at least 4 items so that the 4-card layout looks complete on desktop
+  if (items.length < 4) {
+    const existingIds = new Set(items.map((i) => i.id));
+    const mockOptions = [
+      {
+        id: 4,
+        title: "Smart Construction",
+        coverImage: resolveJournalCover(4, "/images/journals/covers/4.jpg"),
+        issn: "3007-5114(Print); 3007-5122(Online)",
+        href: toHref(4),
+      },
+      {
+        id: 5,
+        title: "Biofunctional Materials",
+        coverImage: resolveJournalCover(5, "/images/journals/covers/5.png"),
+        issn: "3106-3322(Print); 3106-3330(Online)",
+        href: toHref(5),
+      },
+      {
+        id: 6,
+        title: "Research on Educational Theory",
+        coverImage: resolveJournalCover(6, "/images/journals/covers/6.jpg"),
+        issn: "3106-3349(Print); 3106-3357(Online)",
+        href: toHref(6),
+      },
+      {
+        id: 7,
+        title: "Humanities and Social Sciences",
+        coverImage: resolveJournalCover(7, "/images/journals/covers/7.jpg"),
+        issn: "3106-3365(Print); 3106-3373(Online)",
+        href: toHref(7),
+      },
+    ];
+
+    for (const opt of mockOptions) {
+      if (!existingIds.has(opt.id)) {
+        items.push(opt);
+        existingIds.add(opt.id);
+      }
+      if (items.length >= 4) {
+        break;
+      }
+    }
+  }
 
   return (
     <section className="bg-white py-16 sm:py-20">

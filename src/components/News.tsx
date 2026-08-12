@@ -288,7 +288,7 @@ export default async function News() {
             <FeaturedNewsCard item={data.featured} />
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:col-span-3">
-            {data.items.map((item) => (
+            {data.items.slice(0, 6).map((item) => (
               <SmallNewsCard key={item.id} item={item} />
             ))}
           </div>

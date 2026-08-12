@@ -78,7 +78,7 @@ export default function OurJournalsCarousel({
         {items.map((item) => (
           <div
             key={item.id}
-            className="w-[calc((100%-2.5rem)/3)] min-w-[calc((100%-2.5rem)/3)] snap-start max-md:w-[45%] max-md:min-w-[45%] max-sm:w-[70%] max-sm:min-w-[70%]"
+            className="w-[calc((100%-3.75rem)/4)] min-w-[calc((100%-3.75rem)/4)] snap-start max-lg:w-[calc((100%-2.5rem)/3)] max-lg:min-w-[calc((100%-2.5rem)/3)] max-md:w-[45%] max-md:min-w-[45%] max-sm:w-[70%] max-sm:min-w-[70%]"
           >
             <JournalCard item={item} />
           </div>
