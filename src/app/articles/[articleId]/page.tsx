@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { resolveArticle } from "@/lib/article-detail";
+import { getScholarArticleMetadata } from "@/lib/scholar-metadata";
 import { resolveJournalCover } from "@/lib/images";
 import { getServerApiLang } from "@/lib/lang.server";
 import ArticleHeader from "@/components/journal-detail/ArticleHeader";
@@ -23,10 +24,13 @@ export async function generateMetadata({
     const lang = await getServerApiLang();
     const { article } = await resolveArticle(articleId, lang);
     const description = article.abstract?.slice(0, 200);
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
     return {
       title: article.title,
       description,
       alternates: { canonical },
+      other: getScholarArticleMetadata(article, siteUrl),
       openGraph: {
         title: article.title,
         description,
@@ -168,11 +172,11 @@ export default async function ArticleDetailPage({
                 <h2 className="text-sm font-bold uppercase tracking-wider text-[#0b2545]">
                   References
                 </h2>
-                <ul className="mt-3 list-none space-y-2 text-sm leading-relaxed text-slate-700">
+                <ol className="mt-3 list-inside list-decimal space-y-2 text-sm leading-relaxed text-slate-700">
                   {article.references.map((ref, i) => (
                     <li key={i}>{ref}</li>
                   ))}
-                </ul>
+                </ol>
               </section>
             )}
           </article>

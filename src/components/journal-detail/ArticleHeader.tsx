@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DownloadIcon } from "./icons";
+import { isUsableArticleAssetUrl } from "@/lib/article-links";
 
 type ArticleHeaderProps = {
   journalSlug: string;
@@ -20,7 +21,7 @@ export default function ArticleHeader({
   articleType,
   openAccess,
   title,
-  pdfUrl = "#pdf",
+  pdfUrl,
 }: ArticleHeaderProps) {
   return (
     <div className="space-y-4">
@@ -94,13 +95,15 @@ export default function ArticleHeader({
       </h1>
 
       {/* Download PDF */}
-      <a
-        href={pdfUrl}
-        className="inline-flex items-center gap-2 rounded-sm bg-[#0b2545] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] focus-visible:ring-offset-2"
-      >
-        <DownloadIcon className="h-4 w-4" />
-        DOWNLOAD PDF
-      </a>
+      {isUsableArticleAssetUrl(pdfUrl) && (
+        <a
+          href={pdfUrl}
+          className="inline-flex items-center gap-2 rounded-sm bg-[#0b2545] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] focus-visible:ring-offset-2"
+        >
+          <DownloadIcon className="h-4 w-4" />
+          DOWNLOAD PDF
+        </a>
+      )}
     </div>
   );
 }

@@ -59,6 +59,7 @@ export type ArticleEnrichment = {
   id: string;
   journalSlug: string;
   journalTitle: string;
+  journalIssn?: string;
   title: string;
   articleType: string;
   openAccess: boolean;

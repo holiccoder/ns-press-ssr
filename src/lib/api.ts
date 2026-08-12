@@ -103,6 +103,7 @@ export type JournalContentDetail = {
   Journal?: {
     id: number;
     title: string;
+    issn?: string;
   };
 };
 

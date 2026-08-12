@@ -11,6 +11,13 @@ export type ResolvedArticle = {
   volumeHref: string;
 };
 
+export function splitArticleAuthors(value: string): string[] {
+  return value
+    .split(/[;；、，\n]|\u3000+|\s{2,}/)
+    .map((author) => author.trim())
+    .filter(Boolean);
+}
+
 /**
  * Build an ArticleEnrichment object from the API's journalContentDetail
  * response. Fills in sensible defaults for fields the API does not expose.
@@ -29,23 +36,22 @@ export function buildArticleFromApi(
     id: String(apiArticle.id),
     journalSlug: String(apiArticle.journal_id),
     journalTitle: apiArticle.Journal?.title ?? "Journal",
+    journalIssn: apiArticle.Journal?.issn,
     title: apiArticle.title,
     articleType: "Article",
     openAccess: true,
     authors: apiArticle.author
-      ? [
-          {
-            name: apiArticle.author,
-            affiliation: apiArticle.address,
-          },
-        ]
+      ? splitArticleAuthors(apiArticle.author).map((name) => ({
+          name,
+          affiliation: apiArticle.address,
+        }))
       : [],
     abstract: apiArticle.abstract,
     keywords: keywordChips,
     references: apiArticle.references,
     year: Number(apiArticle.year) || 0,
-    volume: Number(apiArticle.periods) || 0,
-    issue: 0,
+    volume: 0,
+    issue: Number(apiArticle.periods) || 0,
     volumeLabel:
       apiArticle.year || apiArticle.periods
         ? `Volume ${apiArticle.year}${apiArticle.periods ? ` Issue ${apiArticle.periods}` : ""}`

@@ -1,10 +1,13 @@
 import { EyeIcon, PdfIcon } from "./icons";
+import { isUsableArticleAssetUrl } from "@/lib/article-links";
 
 type PdfPreviewCardProps = {
   pdfUrl?: string;
 };
 
-export default function PdfPreviewCard({ pdfUrl = "#pdf" }: PdfPreviewCardProps) {
+export default function PdfPreviewCard({ pdfUrl }: PdfPreviewCardProps) {
+  if (!isUsableArticleAssetUrl(pdfUrl)) return null;
+
   return (
     <div className="rounded-sm border border-slate-200 bg-white p-6 sm:p-8">
       <h2 className="text-sm font-bold uppercase tracking-wider text-[#0b2545]">
