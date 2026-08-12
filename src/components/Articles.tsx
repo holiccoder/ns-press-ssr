@@ -1,8 +1,11 @@
 import Link from "next/link";
 import home from "@/data/home.json";
-import { getLatestSubmissions } from "@/lib/api";
+import { getJournalContents, getJournalContentDetail } from "@/lib/api";
+import { getServerApiLang } from "@/lib/lang.server";
+import Pagination from "./journal-detail/Pagination";
 
 const { articles } = home;
+const ARTICLES_PAGE_SIZE = 10;
 
 type ArticleItem = {
   id: string;
@@ -66,30 +69,62 @@ function ArticleRow({ article }: { article: ArticleItem }) {
 
 export default async function Articles({
   showMore = true,
+  page,
 }: {
   showMore?: boolean;
+  page?: number;
 } = {}) {
   let items: ArticleItem[] = [];
+  const lang = await getServerApiLang();
 
   try {
-    const submissions = await getLatestSubmissions();
+    const contentsData = await getJournalContents({
+      pageSize: showMore ? 10 : 100,
+      lang,
+    });
 
-    items = submissions.map((s) => ({
-      id: String(s.id),
-      type: s.journal_name,
-      date: formatDate(s.create_time),
-      title: s.paper_title,
-      authors: s.author_list,
-      href: `/articles/${s.id}`,
-    }));
+    const lists = contentsData?.lists || [];
+
+    const detailedArticles = await Promise.all(
+      lists.map(async (item) => {
+        try {
+          const detail = await getJournalContentDetail(item.id, lang);
+          return detail;
+        } catch (err) {
+          console.error(`[Articles] failed to load journal content detail for ${item.id}:`, err);
+          return null;
+        }
+      })
+    );
+
+    items = detailedArticles
+      .filter((d): d is NonNullable<typeof d> => d !== null)
+      .map((d) => ({
+        id: String(d.id),
+        type: d.Journal?.title || "Article",
+        date: formatDate(d.create_time || ""),
+        title: d.title,
+        doi: d.doi || undefined,
+        authors: d.author || "",
+        href: `/articles/${d.id}`,
+      }));
   } catch (err) {
-    console.error("[Articles] failed to load latest submissions:", err);
+    console.error("[Articles] failed to load latest published articles:", err);
     // Fallback to static data if the API is unreachable.
     items = articles.items.map((a) => ({
       ...a,
       doi: a.doi,
     }));
   }
+
+  const totalPages = Math.max(1, Math.ceil(items.length / ARTICLES_PAGE_SIZE));
+  const currentPage = Math.min(Math.max(page ?? 1, 1), totalPages);
+  const visibleItems = showMore
+    ? items
+    : items.slice(
+        (currentPage - 1) * ARTICLES_PAGE_SIZE,
+        currentPage * ARTICLES_PAGE_SIZE,
+      );
 
   return (
     <section className="bg-white py-16 sm:py-20">
@@ -119,9 +154,18 @@ export default async function Articles({
           {items.length === 0 ? (
             <p className="text-sm text-slate-500">No articles available.</p>
           ) : (
-            items.map((a) => <ArticleRow key={a.id} article={a} />)
+            visibleItems.map((a) => <ArticleRow key={a.id} article={a} />)
           )}
         </div>
+
+        {!showMore && items.length > 0 && (
+          <Pagination
+            base="/articles"
+            params={{}}
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
+        )}
       </div>
     </section>
   );

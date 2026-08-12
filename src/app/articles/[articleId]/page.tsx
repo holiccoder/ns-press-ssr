@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { resolveArticle } from "@/lib/article-detail";
+import { resolveJournalCover } from "@/lib/images";
 import { getServerApiLang } from "@/lib/lang.server";
 import ArticleHeader from "@/components/journal-detail/ArticleHeader";
 import AuthorBlock from "@/components/journal-detail/AuthorBlock";
@@ -180,6 +181,8 @@ export default async function ArticleDetailPage({
             metrics={article.metrics}
             dates={article.dates}
             recommendedArticles={article.recommendedArticles}
+            journalCoverImage={resolveJournalCover(Number(article.journalSlug), "")}
+            journalTitle={article.journalTitle}
           />
         </div>
       </div>

@@ -19,22 +19,30 @@ export default function OurJournalsCarousel({
   items: CarouselItem[];
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const visibleItems = items.slice(0, 12);
+  const half = Math.ceil(visibleItems.length / 2);
+  const columns = Array.from({ length: half }, (_, columnIndex) =>
+    [visibleItems[columnIndex], visibleItems[columnIndex + half]].filter(
+      (item): item is CarouselItem => Boolean(item),
+    ),
+  );
 
-  const scrollBy = useCallback((dir: 1 | -1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const amount = Math.max(el.clientWidth * 0.8, 240);
-    el.scrollBy({ left: dir * amount, behavior: "smooth" });
+  const scrollBy = useCallback((direction: 1 | -1) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    scroller.scrollBy({
+      left: direction * scroller.clientWidth,
+      behavior: "smooth",
+    });
   }, []);
 
   return (
-    <div className="relative mt-10">
-      {/* Left arrow */}
+    <div className="relative mt-8 px-8 sm:px-10">
       <button
         type="button"
         onClick={() => scrollBy(-1)}
         aria-label="Previous journals"
-        className="absolute -left-12 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0b2545] text-white shadow-md transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] md:inline-flex"
+        className="absolute left-0 top-1/2 z-10 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#0b2545] text-white shadow-md transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] sm:h-10 sm:w-10"
       >
         <svg
           viewBox="0 0 24 24"
@@ -44,18 +52,17 @@ export default function OurJournalsCarousel({
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden="true"
-          className="h-5 w-5"
+          className="h-4 w-4 sm:h-5 sm:w-5"
         >
           <polyline points="15 6 9 12 15 18" />
         </svg>
       </button>
 
-      {/* Right arrow */}
       <button
         type="button"
         onClick={() => scrollBy(1)}
         aria-label="Next journals"
-        className="absolute -right-12 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#0b2545] text-white shadow-md transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] md:inline-flex"
+        className="absolute right-0 top-1/2 z-10 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#0b2545] text-white shadow-md transition-colors hover:bg-[#1e3a8a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] sm:h-10 sm:w-10"
       >
         <svg
           viewBox="0 0 24 24"
@@ -65,7 +72,7 @@ export default function OurJournalsCarousel({
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden="true"
-          className="h-5 w-5"
+          className="h-4 w-4 sm:h-5 sm:w-5"
         >
           <polyline points="9 6 15 12 9 18" />
         </svg>
@@ -73,14 +80,16 @@ export default function OurJournalsCarousel({
 
       <div
         ref={scrollerRef}
-        className="hide-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2"
+        className="hide-scrollbar flex gap-x-5 overflow-x-auto scroll-smooth pb-2 snap-x snap-mandatory"
       >
-        {items.map((item) => (
+        {columns.map((column, columnIndex) => (
           <div
-            key={item.id}
-            className="w-[calc((100%-3.75rem)/4)] min-w-[calc((100%-3.75rem)/4)] snap-start max-lg:w-[calc((100%-2.5rem)/3)] max-lg:min-w-[calc((100%-2.5rem)/3)] max-md:w-[45%] max-md:min-w-[45%] max-sm:w-[70%] max-sm:min-w-[70%]"
+            key={columnIndex}
+            className="grid w-[calc((100%-5rem)/5)] min-w-[calc((100%-5rem)/5)] shrink-0 snap-start grid-rows-2 gap-y-8 max-lg:w-[calc((100%-2.5rem)/3)] max-lg:min-w-[calc((100%-2.5rem)/3)] max-md:w-[calc((100%-1rem)/2)] max-md:min-w-[calc((100%-1rem)/2)]"
           >
-            <JournalCard item={item} />
+            {column.map((item) => (
+              <JournalCard key={item.id} item={item} />
+            ))}
           </div>
         ))}
       </div>
@@ -99,22 +108,22 @@ function JournalCard({ item }: { item: CarouselItem }) {
   return (
     <Link
       href={item.href}
-      className="group flex w-full flex-col gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] focus-visible:ring-offset-2"
+      className="group flex w-full flex-col gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] focus-visible:ring-offset-2"
     >
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm shadow-md ring-1 ring-black/5 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm transition-transform duration-300 group-hover:-translate-y-1">
         <Image
           src={item.coverImage}
           alt={item.title}
           fill
-          sizes="(min-width: 1024px) 200px, (min-width: 640px) 25vw, 70vw"
+          sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw"
           className="object-cover"
         />
       </div>
-      <p className="text-center text-sm font-semibold leading-snug text-slate-900 group-hover:text-[#1d4ed8] line-clamp-1">
+      <p className="line-clamp-2 text-center text-xs font-semibold leading-snug text-slate-900 group-hover:text-[#1d4ed8] sm:text-sm">
         {item.title}
       </p>
       {issns.length > 0 && (
-        <div className="text-center text-[11px] leading-relaxed text-slate-500 font-medium space-y-0.5">
+        <div className="space-y-0.5 text-center text-[10px] font-medium leading-relaxed text-slate-500 sm:text-[11px]">
           {issns.map((m, i) => {
             const isPrint = m.label.toLowerCase() === "print";
             const isOnline = m.label.toLowerCase() === "online";

@@ -38,9 +38,10 @@ export default async function OurJournals() {
         href: toHref(j.id ?? 0),
       };
     })
-    .filter((x): x is CarouselItem => x !== null);
+    .filter((x): x is CarouselItem => x !== null)
+    .slice(0, 12);
 
-  // Ensure there are at least 4 items so that the 4-card layout looks complete on desktop
+  // Keep a small fallback set when the API returns fewer journals.
   if (items.length < 4) {
     const existingIds = new Set(items.map((i) => i.id));
     const mockOptions = [

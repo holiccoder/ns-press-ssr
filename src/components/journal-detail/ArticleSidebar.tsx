@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import AsymmetryCover from "./AsymmetryCover";
 import { ArrowRightIcon } from "./icons";
 import type {
@@ -11,18 +12,34 @@ type ArticleSidebarProps = {
   metrics: ArticleMetrics;
   dates: ArticleDates;
   recommendedArticles: RecommendedArticle[];
+  journalCoverImage?: string;
+  journalTitle?: string;
 };
 
 export default function ArticleSidebar({
   metrics,
   dates,
   recommendedArticles,
+  journalCoverImage,
+  journalTitle = "Journal Cover",
 }: ArticleSidebarProps) {
   return (
     <aside className="space-y-6">
       {/* Cover */}
       <div className="overflow-hidden rounded-sm shadow-sm ring-1 ring-slate-200">
-        <AsymmetryCover className="h-auto w-full" />
+        {journalCoverImage ? (
+          <div className="relative aspect-[3/4] w-full bg-slate-100">
+            <Image
+              src={journalCoverImage}
+              alt={journalTitle}
+              fill
+              sizes="(min-width: 1024px) 300px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <AsymmetryCover className="h-auto w-full" />
+        )}
       </div>
 
       {/* Submit */}
