@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import DashboardShell from "@/components/DashboardShell";
 import { useLang } from "@/components/LanguageSwitcher";
+import { getProfileApi, getUserProfile, setUserProfile } from "@/lib/auth";
 import {
+  appendSubmissionContactFields,
   getSubmissionCaptcha,
   getSubmissionJournals,
+  normalizeSubmissionContact,
   submitArticle,
   uploadSubmissionFile,
   type SubmissionJournal,
@@ -114,11 +117,32 @@ export default function NewSubmissionPage() {
 
     setLoading(true);
     try {
-      const profile = JSON.parse(window.localStorage.getItem("userProfile") ?? "{}") as Record<string, unknown>;
+      const cachedProfile = getUserProfile() ?? {};
+      const profile = { ...cachedProfile } as Record<string, unknown>;
+      try {
+        const latestProfile = await getProfileApi();
+        for (const [key, value] of Object.entries(latestProfile)) {
+          if (value !== undefined && value !== null && String(value).trim() !== "") {
+            profile[key] = value;
+          }
+        }
+        setUserProfile(profile);
+      } catch {
+        // Keep the cached profile as a fallback when the profile request is unavailable.
+      }
+
+      const contact = normalizeSubmissionContact(profile);
+      if (!contact.name || !contact.mobile || !contact.email) {
+        setMessage(
+          lang === "zh"
+            ? "请先在账户信息中完善姓名、手机号和邮箱。"
+            : "Please complete your name, phone number, and email in Account Info.",
+        );
+        return;
+      }
+
       const data = new FormData();
-      data.append("name", String(profile.real_name ?? ""));
-      data.append("email", String(profile.account ?? profile.email ?? ""));
-      data.append("mobile", String(profile.phone ?? ""));
+      appendSubmissionContactFields(data, contact);
       data.append("Introduction", String(profile.intro ?? ""));
       data.append("journal", form.journal);
       data.append("journal_id", form.journal);

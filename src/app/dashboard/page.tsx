@@ -47,6 +47,9 @@ const panels = {
       paperId: { en: "Paper ID", zh: "论文编号" },
       paperTitle: { en: "Paper Title", zh: "论文标题" },
       journal: { en: "Journal", zh: "期刊" },
+      name: { en: "Name", zh: "姓名" },
+      phone: { en: "Phone", zh: "手机号" },
+      email: { en: "Email", zh: "邮箱" },
       status: { en: "Status", zh: "状态" },
       submissionDate: { en: "Submission Date", zh: "投稿日期" },
     },
@@ -393,6 +396,9 @@ function DashboardContent() {
                       <th className="px-4 py-3">{panels.submission.columns.paperId[language]}</th>
                       <th className="px-4 py-3">{panels.submission.columns.paperTitle[language]}</th>
                       <th className="px-4 py-3">{panels.submission.columns.journal[language]}</th>
+                      <th className="px-4 py-3">{panels.submission.columns.name[language]}</th>
+                      <th className="px-4 py-3">{panels.submission.columns.phone[language]}</th>
+                      <th className="px-4 py-3">{panels.submission.columns.email[language]}</th>
                       <th className="px-4 py-3">{panels.submission.columns.status[language]}</th>
                       <th className="px-4 py-3">
                         {panels.submission.columns.submissionDate[language]}
@@ -402,14 +408,14 @@ function DashboardContent() {
                   <tbody className="divide-y divide-slate-200">
                     {submissionLoading && (
                       <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                        <td colSpan={8} className="px-4 py-8 text-center text-slate-500">
                           {loadingSubmissionText}
                         </td>
                       </tr>
                     )}
                     {!submissionLoading && submissionError && (
                       <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                        <td colSpan={8} className="px-4 py-8 text-center text-slate-500">
                           {errorSubmissionText}
                         </td>
                       </tr>
@@ -418,7 +424,7 @@ function DashboardContent() {
                       !submissionError &&
                       visibleSubmissionList.length === 0 && (
                         <tr>
-                          <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                          <td colSpan={8} className="px-4 py-8 text-center text-slate-500">
                             {emptySubmissionText}
                           </td>
                         </tr>
@@ -453,6 +459,15 @@ function DashboardContent() {
                             </td>
                             <td className="px-4 py-3">
                               {getValue(item, ["journal_name", "journal", "journalName"])}
+                            </td>
+                            <td className="px-4 py-3">
+                              {getValue(item, ["real_name", "realName", "name"])}
+                            </td>
+                            <td className="px-4 py-3">
+                              {getValue(item, ["mobile", "phone", "telephone"])}
+                            </td>
+                            <td className="px-4 py-3">
+                              {getValue(item, ["email", "account", "user_email"])}
                             </td>
                             <td className="px-4 py-3">{getDisplayStatus(item)}</td>
                             <td className="px-4 py-3">

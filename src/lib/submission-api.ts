@@ -16,6 +16,42 @@ export type SubmissionJournal = {
   name?: string;
   label?: string;
 };
+export type SubmissionContact = {
+  name: string;
+  mobile: string;
+  email: string;
+};
+
+function firstNonEmptyValue(source: Record<string, unknown>, keys: string[]): string {
+  for (const key of keys) {
+    const value = source[key];
+    if (value !== undefined && value !== null && String(value).trim() !== "") {
+      return String(value).trim();
+    }
+  }
+  return "";
+}
+
+export function normalizeSubmissionContact(source: object): SubmissionContact {
+  const values = source as Record<string, unknown>;
+  return {
+    name: firstNonEmptyValue(values, ["real_name", "name", "realName"]),
+    mobile: firstNonEmptyValue(values, ["mobile", "phone", "telephone"]),
+    email: firstNonEmptyValue(values, ["email", "account", "user_email"]),
+  };
+}
+
+export function appendSubmissionContactFields(
+  formData: FormData,
+  contact: SubmissionContact,
+): void {
+  formData.append("name", contact.name);
+  formData.append("real_name", contact.name);
+  formData.append("mobile", contact.mobile);
+  formData.append("phone", contact.mobile);
+  formData.append("email", contact.email);
+  formData.append("account", contact.email);
+}
 
 function token(): string {
   if (typeof window === "undefined") return "";

@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useLang } from "@/components/LanguageSwitcher";
 import {
+  appendSubmissionContactFields,
   getSubmissionCaptcha,
   getSubmissionGuidelines,
   getSubmissionJournals,
+  normalizeSubmissionContact,
   submitArticle,
   uploadSubmissionFile,
   type SubmissionJournal,
@@ -61,9 +63,7 @@ export default function SubmissionPage() {
       const data = new FormData();
       data.append("journal", form.journal);
       data.append("journal_id", form.journal);
-      data.append("name", form.name);
-      data.append("mobile", form.mobile);
-      data.append("email", form.email);
+      appendSubmissionContactFields(data, normalizeSubmissionContact(form));
       data.append("file", filePath);
       data.append("article", filePath);
       data.append("Introduction", form.introduction);

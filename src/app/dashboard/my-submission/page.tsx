@@ -80,14 +80,17 @@ function MySubmissionContent() {
               <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">{lang === "zh" ? "论文标题" : "Paper Title"}</th>
               <th className="px-4 py-3">{lang === "zh" ? "期刊" : "Journal"}</th>
+              <th className="px-4 py-3">{lang === "zh" ? "姓名" : "Name"}</th>
+              <th className="px-4 py-3">{lang === "zh" ? "手机号" : "Phone"}</th>
+              <th className="px-4 py-3">{lang === "zh" ? "邮箱" : "Email"}</th>
               <th className="px-4 py-3">{lang === "zh" ? "状态" : "Status"}</th>
               <th className="px-4 py-3">{lang === "zh" ? "投稿日期" : "Submission Date"}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
-            {loading && <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-500">Loading...</td></tr>}
-            {!loading && error && <tr><td colSpan={5} className="px-4 py-8 text-center text-red-600">{lang === "zh" ? "加载失败" : "Failed to load"}</td></tr>}
-            {!loading && !error && visibleItems.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-500">{lang === "zh" ? "暂无投稿记录" : "No submissions yet."}</td></tr>}
+            {loading && <tr><td colSpan={8} className="px-4 py-8 text-center text-slate-500">Loading...</td></tr>}
+            {!loading && error && <tr><td colSpan={8} className="px-4 py-8 text-center text-red-600">{lang === "zh" ? "加载失败" : "Failed to load"}</td></tr>}
+            {!loading && !error && visibleItems.length === 0 && <tr><td colSpan={8} className="px-4 py-8 text-center text-slate-500">{lang === "zh" ? "暂无投稿记录" : "No submissions yet."}</td></tr>}
             {!loading && !error && visibleItems.map((item, index) => {
               const status = Number(item.status);
               const statusText = statusLabels[status]?.[lang] ?? value(item, ["status_text", "statusText", "status"]);
@@ -96,6 +99,9 @@ function MySubmissionContent() {
                   <td className="px-4 py-3">{value(item, ["paper_id", "paperId", "contribution_id", "id"])}</td>
                   <td className="max-w-sm px-4 py-3">{value(item, ["paper_title", "paperTitle", "title"])}</td>
                   <td className="px-4 py-3">{value(item, ["journal_name", "journal", "journalName"])}</td>
+                  <td className="px-4 py-3">{value(item, ["real_name", "realName", "name"])}</td>
+                  <td className="px-4 py-3">{value(item, ["mobile", "phone", "telephone"])}</td>
+                  <td className="px-4 py-3">{value(item, ["email", "account", "user_email"])}</td>
                   <td className="px-4 py-3">{statusText}</td>
                   <td className="px-4 py-3">{formatDate(value(item, ["create_time", "submission_date", "submissionDate", "created_at"]), lang)}</td>
                 </tr>

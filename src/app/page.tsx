@@ -5,6 +5,7 @@ import News from "@/components/News";
 import OurJournals from "@/components/OurJournals";
 import Partners from "@/components/Partners";
 import Services from "@/components/Services";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Natural Science Press",
@@ -23,24 +24,29 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col overflow-hidden">
-      <div className="animate-fade-in-up">
+      <ScrollReveal duration={1200}>
         <Hero />
-      </div>
-      <div className="animate-fade-in-up delay-100">
+      </ScrollReveal>
+      
+      <ScrollReveal delay={120} duration={1200}>
         <Services />
-      </div>
-      <div className="animate-fade-in-up delay-200">
+      </ScrollReveal>
+      
+      <ScrollReveal>
         <OurJournals />
-      </div>
-      <div className="animate-fade-in-up delay-300">
+      </ScrollReveal>
+      
+      <ScrollReveal>
         <Articles />
-      </div>
-      <div className="animate-fade-in-up delay-400">
+      </ScrollReveal>
+      
+      <ScrollReveal>
         <Partners />
-      </div>
-      <div className="animate-fade-in-up delay-500">
+      </ScrollReveal>
+      
+      <ScrollReveal>
         <News />
-      </div>
+      </ScrollReveal>
     </main>
   );
 }
