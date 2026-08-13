@@ -159,6 +159,7 @@ export default function NewSubmissionPage() {
       data.append("code", form.code);
       data.append("user_id", String(profile.user_id ?? "0"));
       await submitArticle(data, lang);
+      router.refresh();
       router.push("/dashboard/my-submission");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : lang === "zh" ? "投稿失败" : "Submission failed.");

@@ -161,7 +161,7 @@ export default function JournalMainColumn({
   const renderAbout = activeTab === "about";
   const renderPublish = activeTab === "publish";
   const renderEditorial = activeTab === "editorial";
-  const isZh = lang === "中文" || lang === "涓枃";
+  const isZh = lang === "中文";
 
   const articlesFilterLabel = issueSelection?.year
     ? issueSelection.periods != null

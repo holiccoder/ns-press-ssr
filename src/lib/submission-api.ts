@@ -75,7 +75,7 @@ function token(): string {
 }
 
 function languageValue(lang: "en" | "zh"): string {
-  return lang === "zh" ? "涓枃" : "English";
+  return lang === "zh" ? "中文" : "English";
 }
 
 async function readResponse<T>(response: Response): Promise<T> {
