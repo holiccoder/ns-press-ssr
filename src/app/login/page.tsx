@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   getToken,
   loginApi,
+  normalizeUserProfile,
   setToken,
   setUserProfile,
   AuthApiError,
@@ -54,7 +55,7 @@ export default function LoginPage() {
 
       setToken(data.token);
 
-      const sessionSource = data.user ?? {};
+      const sessionSource = normalizeUserProfile(data);
       setUserProfile({
         user_id: sessionSource.user_id,
         real_name: sessionSource.real_name ?? sessionSource.account ?? form.email,

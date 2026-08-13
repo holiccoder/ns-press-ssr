@@ -18,24 +18,8 @@ type ApiEnvelope<T> = {
   data: T;
 };
 
-export type LoginData = {
-  token: string;
-  user: {
-    user_id?: number;
-    real_name?: string;
-    title?: string;
-    degree?: string;
-    affiliation?: string;
-    city?: string;
-    country?: string;
-    address?: string;
-    intro?: string;
-    account?: string;
-    mobile?: string;
-  };
-};
-
 export type UserProfile = {
+  id?: number | string;
   user_id?: number;
   real_name?: string;
   name?: string;
@@ -50,6 +34,10 @@ export type UserProfile = {
   email?: string;
   mobile?: string;
   phone?: string;
+};
+
+export type LoginData = UserProfile & {
+  token: string;
 };
 
 export type LoginPayload = {
@@ -103,6 +91,29 @@ function notifyAuthChanged(): void {
   }
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function positiveInteger(value: unknown): number | null {
+  if (typeof value === "string" && value.trim() === "") return null;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
+export function getUserId(profile: unknown): number | null {
+  if (!isRecord(profile)) return null;
+  return positiveInteger(profile.user_id) ?? positiveInteger(profile.id);
+}
+
+export function normalizeUserProfile(profile: unknown): UserProfile {
+  if (!isRecord(profile)) return {};
+  const normalized = { ...profile } as UserProfile;
+  const userId = getUserId(profile);
+  if (userId !== null) normalized.user_id = userId;
+  return normalized;
+}
+
 async function profileRequest<T>(
   path: string,
   init?: RequestInit,
@@ -152,12 +163,13 @@ export function removeToken(): void {
 }
 
 // User profile management
-export function getUserProfile(): Record<string, unknown> | null {
+export function getUserProfile(): UserProfile | null {
   if (typeof window === "undefined") return null;
   const raw = localStorage.getItem("userProfile");
   if (!raw) return null;
   try {
-    return JSON.parse(raw) as Record<string, unknown>;
+    const profile = normalizeUserProfile(JSON.parse(raw) as unknown);
+    return Object.keys(profile).length > 0 ? profile : null;
   } catch {
     return null;
   }
@@ -165,7 +177,7 @@ export function getUserProfile(): Record<string, unknown> | null {
 
 export function setUserProfile(profile: UserProfile | Record<string, unknown>): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem("userProfile", JSON.stringify(profile));
+  localStorage.setItem("userProfile", JSON.stringify(normalizeUserProfile(profile)));
   notifyAuthChanged();
 }
 
@@ -176,17 +188,18 @@ export function removeUserProfile(): void {
 }
 
 export async function getProfileApi(): Promise<UserProfile> {
-  return profileRequest<UserProfile>("user/info");
+  const profile = await profileRequest<unknown>("user/info");
+  return normalizeUserProfile(profile);
 }
 
 export async function updateProfileApi(
   profile: Record<string, unknown>,
 ): Promise<UserProfile | void> {
-  const updated = await profileRequest<UserProfile>("user/setInfo", {
+  const updated = await profileRequest<unknown>("user/setInfo", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(profile),
   });
-  setUserProfile(updated);
-  return updated;
+  if (!isRecord(updated)) return;
+  return normalizeUserProfile(updated);
 }

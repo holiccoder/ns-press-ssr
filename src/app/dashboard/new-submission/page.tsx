@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
 import { useLang } from "@/components/LanguageSwitcher";
-import { getProfileApi, getUserProfile, setUserProfile } from "@/lib/auth";
+import {
+  getProfileApi,
+  getUserId,
+  getUserProfile,
+  normalizeUserProfile,
+  setUserProfile,
+} from "@/lib/auth";
 import {
   appendSubmissionContactFields,
   getSubmissionCaptcha,
@@ -12,6 +19,7 @@ import {
   normalizeSubmissionContact,
   submitArticle,
   uploadSubmissionFile,
+  type SubmissionContact,
   type SubmissionJournal,
 } from "@/lib/submission-api";
 
@@ -63,6 +71,29 @@ const initialForm: FormState = {
   code: "",
 };
 
+type SubmissionContactField = keyof SubmissionContact;
+
+const submissionContactFields: SubmissionContactField[] = [
+  "name",
+  "mobile",
+  "email",
+];
+
+const submissionContactLabels: Record<
+  SubmissionContactField,
+  { en: string; zh: string }
+> = {
+  name: { en: "Name", zh: "姓名" },
+  mobile: { en: "Phone", zh: "手机号" },
+  email: { en: "Email", zh: "邮箱" },
+};
+
+function getMissingContactFields(
+  contact: SubmissionContact,
+): SubmissionContactField[] {
+  return submissionContactFields.filter((field) => !contact[field].trim());
+}
+
 export default function NewSubmissionPage() {
   const lang = useLang();
   const router = useRouter();
@@ -73,6 +104,9 @@ export default function NewSubmissionPage() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [missingContactFields, setMissingContactFields] = useState<
+    SubmissionContactField[]
+  >([]);
 
   async function refreshCaptcha() {
     try {
@@ -112,6 +146,7 @@ export default function NewSubmissionPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
+    setMissingContactFields([]);
     if (!paperFile) {
       setMessage(lang === "zh" ? "请先上传论文文件" : "Please upload the paper file first.");
       return;
@@ -119,27 +154,34 @@ export default function NewSubmissionPage() {
 
     setLoading(true);
     try {
-      const cachedProfile = getUserProfile() ?? {};
-      const profile = { ...cachedProfile } as Record<string, unknown>;
+      let profile = normalizeUserProfile(getUserProfile() ?? {});
       try {
         const latestProfile = await getProfileApi();
         for (const [key, value] of Object.entries(latestProfile)) {
           if (value !== undefined && value !== null && String(value).trim() !== "") {
-            profile[key] = value;
+            (profile as Record<string, unknown>)[key] = value;
           }
         }
+        profile = normalizeUserProfile(profile);
         setUserProfile(profile);
       } catch {
         // Keep the cached profile as a fallback when the profile request is unavailable.
       }
 
-      const contact = normalizeSubmissionContact(profile);
-      if (!contact.name || !contact.mobile || !contact.email) {
+      const userId = getUserId(profile);
+      if (userId === null) {
         setMessage(
           lang === "zh"
-            ? "请先在账户信息中完善姓名、手机号和邮箱。"
-            : "Please complete your name, phone number, and email in Account Info.",
+            ? "无法识别您的账户，请重新登录后再投稿。"
+            : "We could not identify your account. Please sign in again before submitting.",
         );
+        return;
+      }
+
+      const contact = normalizeSubmissionContact(profile);
+      const missingFields = getMissingContactFields(contact);
+      if (missingFields.length > 0) {
+        setMissingContactFields(missingFields);
         return;
       }
 
@@ -157,7 +199,7 @@ export default function NewSubmissionPage() {
       data.append("paper_fields", form.fields);
       data.append("file", paperFile);
       data.append("code", form.code);
-      data.append("user_id", String(profile.user_id ?? "0"));
+      data.append("user_id", String(userId));
       await submitArticle(data, lang);
       router.refresh();
       router.push("/dashboard/my-submission");
@@ -211,6 +253,19 @@ export default function NewSubmissionPage() {
               {captcha ? <img src={captcha} alt="captcha" className="h-8 w-24 object-contain" /> : "Refresh"}
             </button>
           </div>
+          {missingContactFields.length > 0 && (
+            <p className="text-sm text-red-600">
+              {lang === "zh"
+                ? `请先完善以下账户信息：${missingContactFields.map((field) => submissionContactLabels[field].zh).join("、")}。`
+                : `Please complete the following account information: ${missingContactFields.map((field) => submissionContactLabels[field].en).join(", ")}. `}
+              <Link
+                href="/dashboard/account-info"
+                className="font-semibold underline underline-offset-2 hover:text-red-700"
+              >
+                {lang === "zh" ? "前往账户信息" : "Open Account Info"}
+              </Link>
+            </p>
+          )}
           {message && <p className={`text-sm ${message.toLowerCase().includes("success") || message.includes("成功") ? "text-green-600" : "text-red-600"}`}>{message}</p>}
           <button type="submit" disabled={loading || uploading} className="rounded-sm bg-[#0b2545] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1e3a8a] disabled:opacity-60">{loading ? "Submitting..." : lang === "zh" ? "提交" : "Submit"}</button>
         </form>
