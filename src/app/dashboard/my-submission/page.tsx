@@ -4,7 +4,18 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
 import { useLang } from "@/components/LanguageSwitcher";
-import { getMySubmissions, type SubmissionRecord } from "@/lib/submission-api";
+import {
+  getProfileApi,
+  getUserProfile,
+  normalizeUserProfile,
+  setUserProfile,
+} from "@/lib/auth";
+import {
+  getMySubmissions,
+  normalizeSubmissionContact,
+  type SubmissionContact,
+  type SubmissionRecord,
+} from "@/lib/submission-api";
 
 const statusLabels: Record<number, { en: string; zh: string }> = {
   0: { en: "Under Review", zh: "审稿中" },
@@ -12,6 +23,12 @@ const statusLabels: Record<number, { en: string; zh: string }> = {
   2: { en: "Accepted", zh: "已录用" },
   3: { en: "Rejected", zh: "已拒稿" },
   4: { en: "Published", zh: "已发表" },
+};
+
+const emptySubmissionContact: SubmissionContact = {
+  name: "",
+  mobile: "",
+  email: "",
 };
 
 function value(item: SubmissionRecord, keys: string[], fallback = "--") {
@@ -41,12 +58,34 @@ function MySubmissionContent() {
   const [items, setItems] = useState<SubmissionRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [submissionContact, setSubmissionContact] = useState<SubmissionContact>(
+    emptySubmissionContact,
+  );
   const rawStatusFilter = searchParams.get("status");
   const statusFilter =
     rawStatusFilter === null || rawStatusFilter === "" ? null : Number(rawStatusFilter);
 
   useEffect(() => {
     let mounted = true;
+
+    async function fetchSubmissionContact() {
+      let profile = normalizeUserProfile(getUserProfile() ?? {});
+      try {
+        const latestProfile = await getProfileApi();
+        for (const [key, value] of Object.entries(latestProfile)) {
+          if (value !== undefined && value !== null && String(value).trim() !== "") {
+            (profile as Record<string, unknown>)[key] = value;
+          }
+        }
+        profile = normalizeUserProfile(profile);
+        setUserProfile(profile);
+      } catch {
+        // Use the cached profile when the profile endpoint is unavailable.
+      }
+      if (mounted) setSubmissionContact(normalizeSubmissionContact(profile));
+    }
+
+    fetchSubmissionContact();
     getMySubmissions(lang)
       .then((result) => mounted && setItems(result))
       .catch(() => mounted && setError(true))
@@ -96,14 +135,15 @@ function MySubmissionContent() {
             {!loading && !error && visibleItems.map((item, index) => {
               const status = Number(item.status);
               const statusText = statusLabels[status]?.[lang] ?? value(item, ["status_text", "statusText", "status"]);
+              const itemContact = normalizeSubmissionContact(item);
               return (
                 <tr key={value(item, ["id", "paper_id", "contribution_id"], `submission-${index}`)}>
                   <td className="px-4 py-3">{value(item, ["paper_id", "paperId", "contribution_id", "id"])}</td>
                   <td className="max-w-sm px-4 py-3">{value(item, ["paper_title", "paperTitle", "title"])}</td>
                   <td className="px-4 py-3">{value(item, ["journal_name", "journal", "journalName"])}</td>
-                  <td className="px-4 py-3">{value(item, ["real_name", "realName", "name"])}</td>
-                  <td className="px-4 py-3">{value(item, ["mobile", "phone", "telephone"])}</td>
-                  <td className="px-4 py-3">{value(item, ["email", "account", "user_email"])}</td>
+                  <td className="px-4 py-3">{itemContact.name || submissionContact.name || "--"}</td>
+                  <td className="px-4 py-3">{itemContact.mobile || submissionContact.mobile || "--"}</td>
+                  <td className="px-4 py-3">{itemContact.email || submissionContact.email || "--"}</td>
                   <td className="px-4 py-3">{statusText}</td>
                   <td className="px-4 py-3">{formatDate(value(item, ["create_time", "submission_date", "submissionDate", "created_at"]), lang)}</td>
                 </tr>

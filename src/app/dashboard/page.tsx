@@ -2,14 +2,31 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { removeToken, removeUserProfile } from "@/lib/auth";
-import { extractSubmissionList } from "@/lib/submission-api";
+import {
+  getProfileApi,
+  getUserProfile,
+  normalizeUserProfile,
+  removeToken,
+  removeUserProfile,
+  setUserProfile,
+} from "@/lib/auth";
+import {
+  extractSubmissionList,
+  normalizeSubmissionContact,
+  type SubmissionContact,
+} from "@/lib/submission-api";
 
 type Lang = "en" | "zh";
 type NavLabel = { en: string; zh: string };
 type NavChild = { key: string; label: NavLabel };
 type NavItem = { key: string; label: NavLabel; children?: NavChild[] };
 type SubmissionRecord = Record<string, unknown>;
+
+const emptySubmissionContact: SubmissionContact = {
+  name: "",
+  mobile: "",
+  email: "",
+};
 
 const dashboardNavItems: NavItem[] = [
   {
@@ -104,6 +121,9 @@ function DashboardContent() {
   const [submissionList, setSubmissionList] = useState<SubmissionRecord[]>([]);
   const [submissionLoading, setSubmissionLoading] = useState(true);
   const [submissionError, setSubmissionError] = useState(false);
+  const [submissionContact, setSubmissionContact] = useState<SubmissionContact>(
+    emptySubmissionContact,
+  );
 
   const loadingSubmissionText = language === "zh" ? "加载中..." : "Loading...";
   const errorSubmissionText = language === "zh" ? "加载失败" : "Failed to load";
@@ -274,6 +294,23 @@ function DashboardContent() {
   useEffect(() => {
     let isMounted = true;
 
+    async function fetchSubmissionContact() {
+      let profile = normalizeUserProfile(getUserProfile() ?? {});
+      try {
+        const latestProfile = await getProfileApi();
+        for (const [key, value] of Object.entries(latestProfile)) {
+          if (value !== undefined && value !== null && String(value).trim() !== "") {
+            (profile as Record<string, unknown>)[key] = value;
+          }
+        }
+        profile = normalizeUserProfile(profile);
+        setUserProfile(profile);
+      } catch {
+        // Use the cached profile when the profile endpoint is unavailable.
+      }
+      if (isMounted) setSubmissionContact(normalizeSubmissionContact(profile));
+    }
+
     async function fetchMyContribution() {
       setSubmissionLoading(true);
       setSubmissionError(false);
@@ -323,6 +360,7 @@ function DashboardContent() {
       }
     }
 
+    fetchSubmissionContact();
     fetchMyContribution();
     return () => {
       isMounted = false;
@@ -434,6 +472,7 @@ function DashboardContent() {
                           item.paper_id ??
                           item.paperId ??
                           `submission-${index}`;
+                        const itemContact = normalizeSubmissionContact(item);
 
                         return (
                           <tr key={String(rowKey)}>
@@ -454,13 +493,13 @@ function DashboardContent() {
                               {getValue(item, ["journal_name", "journal", "journalName"])}
                             </td>
                             <td className="px-4 py-3">
-                              {getValue(item, ["real_name", "realName", "name"])}
+                              {itemContact.name || submissionContact.name || "--"}
                             </td>
                             <td className="px-4 py-3">
-                              {getValue(item, ["mobile", "phone", "telephone"])}
+                              {itemContact.mobile || submissionContact.mobile || "--"}
                             </td>
                             <td className="px-4 py-3">
-                              {getValue(item, ["email", "account", "user_email"])}
+                              {itemContact.email || submissionContact.email || "--"}
                             </td>
                             <td className="px-4 py-3">{getDisplayStatus(item)}</td>
                             <td className="px-4 py-3">
