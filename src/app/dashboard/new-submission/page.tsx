@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
 import { useLang } from "@/components/LanguageSwitcher";
 import { getProfileApi, getUserProfile, setUserProfile } from "@/lib/auth";
@@ -64,6 +65,7 @@ const initialForm: FormState = {
 
 export default function NewSubmissionPage() {
   const lang = useLang();
+  const router = useRouter();
   const [form, setForm] = useState(initialForm);
   const [journals, setJournals] = useState<SubmissionJournal[]>([]);
   const [captcha, setCaptcha] = useState("");
@@ -157,10 +159,7 @@ export default function NewSubmissionPage() {
       data.append("code", form.code);
       data.append("user_id", String(profile.user_id ?? "0"));
       await submitArticle(data, lang);
-      setMessage(lang === "zh" ? "投稿成功" : "Submission successful.");
-      setForm(initialForm);
-      setPaperFile("");
-      await refreshCaptcha();
+      router.push("/dashboard/my-submission");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : lang === "zh" ? "投稿失败" : "Submission failed.");
       await refreshCaptcha();

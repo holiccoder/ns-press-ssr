@@ -53,6 +53,22 @@ export function appendSubmissionContactFields(
   formData.append("account", contact.email);
 }
 
+function isRecord(value: unknown): value is SubmissionRecord {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+export function extractSubmissionList(body: unknown, depth = 0): SubmissionRecord[] {
+  if (Array.isArray(body)) return body.filter(isRecord);
+  if (!isRecord(body) || depth > 3) return [];
+
+  for (const key of ["data", "list", "rows", "lists", "records", "result"]) {
+    const list = extractSubmissionList(body[key], depth + 1);
+    if (list.length > 0 || Array.isArray(body[key])) return list;
+  }
+
+  return [];
+}
+
 function token(): string {
   if (typeof window === "undefined") return "";
   return window.localStorage.getItem("authToken") ?? "";
@@ -90,15 +106,8 @@ export async function getMySubmissions(lang: "en" | "zh") {
       headers: authToken ? { token: authToken } : undefined,
     },
   );
-  const body = await readResponse<
-    SubmissionRecord[] | { data?: SubmissionRecord[]; list?: SubmissionRecord[]; rows?: SubmissionRecord[] }
-  >(response);
-
-  if (Array.isArray(body)) return body;
-  if (Array.isArray(body.data)) return body.data;
-  if (Array.isArray(body.list)) return body.list;
-  if (Array.isArray(body.rows)) return body.rows;
-  return [];
+  const body = await readResponse<unknown>(response);
+  return extractSubmissionList(body);
 }
 
 export async function getSubmissionJournals(lang: "en" | "zh") {

@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { removeToken, removeUserProfile } from "@/lib/auth";
+import { extractSubmissionList } from "@/lib/submission-api";
 
 type Lang = "en" | "zh";
 type NavLabel = { en: string; zh: string };
@@ -305,18 +306,10 @@ function DashboardContent() {
           throw new Error("myContributions returned code=0");
         }
 
-        const list = Array.isArray(payload)
-          ? payload
-          : Array.isArray(payload.data)
-            ? payload.data
-            : Array.isArray(payload.list)
-              ? payload.list
-              : Array.isArray(payload.rows)
-                ? payload.rows
-                : [];
+        const list = extractSubmissionList(payload);
 
         if (isMounted) {
-          setSubmissionList(list as SubmissionRecord[]);
+          setSubmissionList(list);
         }
       } catch {
         if (isMounted) {

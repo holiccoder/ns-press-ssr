@@ -41,7 +41,9 @@ function MySubmissionContent() {
   const [items, setItems] = useState<SubmissionRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const statusFilter = Number(searchParams.get("status"));
+  const rawStatusFilter = searchParams.get("status");
+  const statusFilter =
+    rawStatusFilter === null || rawStatusFilter === "" ? null : Number(rawStatusFilter);
 
   useEffect(() => {
     let mounted = true;
@@ -55,7 +57,7 @@ function MySubmissionContent() {
   }, [lang]);
 
   const visibleItems = useMemo(() => {
-    if (Number.isNaN(statusFilter)) return items;
+    if (statusFilter === null || Number.isNaN(statusFilter)) return items;
     return items.filter((item) => {
       const numeric = Number(item.status);
       if (!Number.isNaN(numeric)) return numeric === statusFilter;
