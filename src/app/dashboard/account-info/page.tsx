@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import DashboardShell from "@/components/DashboardShell";
-import { useLang } from "@/components/LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 import {
+  AuthExpiredError,
   getProfileApi,
   getUserProfile,
+  handleAuthExpired,
   setUserProfile,
+  subscribeToAuthChange,
   updateProfileApi,
 } from "@/lib/auth";
 import { countryOptions } from "@/data/countries";
@@ -50,9 +53,19 @@ function formFromProfile(profile: Record<string, unknown> | null): AccountForm {
 
 export default function AccountInfoPage() {
   const lang = useLang();
-  const [form, setForm] = useState<AccountForm>(() =>
-    formFromProfile(getUserProfile()),
+  const cachedProfile = useSyncExternalStore(
+    subscribeToAuthChange,
+    getUserProfile,
+    () => null,
   );
+  // Start empty so SSR and hydration match; the cached profile from
+  // localStorage is applied during the post-hydration render below.
+  const [form, setForm] = useState<AccountForm>(() => formFromProfile(null));
+  const [formInitialized, setFormInitialized] = useState(false);
+  if (!formInitialized && cachedProfile) {
+    setForm(formFromProfile(cachedProfile));
+    setFormInitialized(true);
+  }
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -65,7 +78,11 @@ export default function AccountInfoPage() {
         setUserProfile(merged);
         setForm(formFromProfile(merged));
       })
-      .catch(() => {
+      .catch((fetchError) => {
+        if (fetchError instanceof AuthExpiredError) {
+          handleAuthExpired();
+          return;
+        }
         // Cached profile data remains available when the profile endpoint is unavailable.
       });
     return () => {

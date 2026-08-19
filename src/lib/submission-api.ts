@@ -1,3 +1,5 @@
+import { AuthExpiredError } from "./auth";
+
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.ns-press.com/api";
 
@@ -86,10 +88,11 @@ async function readResponse<T>(response: Response): Promise<T> {
     body &&
     typeof body === "object" &&
     "code" in body &&
-    typeof (body as ApiEnvelope<T>).code === "number" &&
-    (body as ApiEnvelope<T>).code !== 1
+    typeof (body as ApiEnvelope<T>).code === "number"
   ) {
-    throw new Error((body as ApiEnvelope<T>).msg || "Request failed");
+    const { code, msg } = body as ApiEnvelope<T>;
+    if (code === -1) throw new AuthExpiredError(msg || "Login expired");
+    if (code !== 1) throw new Error(msg || "Request failed");
   }
 
   return body as T;

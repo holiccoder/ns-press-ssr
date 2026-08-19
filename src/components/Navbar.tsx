@@ -11,7 +11,7 @@ import {
   removeToken,
   removeUserProfile,
 } from "@/lib/auth";
-import LanguageSwitcher, { useLang } from "./LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 
 function formatPublisherName(name: string, lang: string): React.ReactNode {
   if (lang === "zh") return name;
@@ -401,7 +401,6 @@ export default function Navbar() {
                 </Link>
               </>
             )}
-            <LanguageSwitcher />
           </div>
 
           {/* Hamburger button (Mobile Only) */}
@@ -529,10 +528,6 @@ export default function Navbar() {
                     </Link>
                   </div>
                 )}
-
-                <div className="pt-2">
-                  <LanguageSwitcher className="inline-flex" />
-                </div>
               </li>
             </ul>
           </div>

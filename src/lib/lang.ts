@@ -14,3 +14,7 @@ export function toApiLang(uiLang: UiLang): ApiLang {
 export function toUiLang(apiLang: ApiLang): UiLang {
   return apiLang === "中文" ? "zh" : "en";
 }
+
+export function useLang(): UiLang {
+  return "en";
+}

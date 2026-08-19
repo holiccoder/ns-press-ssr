@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLang } from "@/components/LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 import {
   appendSubmissionContactFields,
   getSubmissionCaptcha,

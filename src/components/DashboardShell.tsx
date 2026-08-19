@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { removeToken, removeUserProfile } from "@/lib/auth";
-import { useLang } from "@/components/LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 
 const statusLinks = [
   ["Under Review", 0],

@@ -12,6 +12,14 @@ export class AuthApiError extends Error {
   }
 }
 
+// Thrown when the backend reports the session as expired (code === -1).
+export class AuthExpiredError extends AuthApiError {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthExpiredError";
+  }
+}
+
 type ApiEnvelope<T> = {
   code: number;
   msg: string;
@@ -78,6 +86,9 @@ async function authPost<T>(
   }
 
   const envelope = (await res.json()) as ApiEnvelope<T>;
+  if (envelope.code === -1) {
+    throw new AuthExpiredError(envelope.msg || "Login expired");
+  }
   if (envelope.code !== 1) {
     throw new AuthApiError(envelope.msg || "Operation failed");
   }
@@ -130,6 +141,9 @@ async function profileRequest<T>(
     throw new AuthApiError(`Request failed: ${response.status} ${response.statusText}`);
   }
   const envelope = (await response.json()) as ApiEnvelope<T>;
+  if (envelope.code === -1) {
+    throw new AuthExpiredError(envelope.msg || "Login expired");
+  }
   if (envelope.code !== 1) {
     throw new AuthApiError(envelope.msg || "Operation failed");
   }
@@ -163,16 +177,40 @@ export function removeToken(): void {
 }
 
 // User profile management
+// Cached snapshot so getUserProfile can serve as a stable
+// useSyncExternalStore getSnapshot (same raw value → same object identity).
+let profileSnapshotRaw: string | null = null;
+let profileSnapshot: UserProfile | null = null;
+let profileSnapshotReady = false;
+
 export function getUserProfile(): UserProfile | null {
   if (typeof window === "undefined") return null;
   const raw = localStorage.getItem("userProfile");
-  if (!raw) return null;
-  try {
-    const profile = normalizeUserProfile(JSON.parse(raw) as unknown);
-    return Object.keys(profile).length > 0 ? profile : null;
-  } catch {
+  if (profileSnapshotReady && raw === profileSnapshotRaw) return profileSnapshot;
+  profileSnapshotReady = true;
+  profileSnapshotRaw = raw;
+  if (!raw) {
+    profileSnapshot = null;
     return null;
   }
+  try {
+    const profile = normalizeUserProfile(JSON.parse(raw) as unknown);
+    profileSnapshot = Object.keys(profile).length > 0 ? profile : null;
+  } catch {
+    profileSnapshot = null;
+  }
+  return profileSnapshot;
+}
+
+// Subscribe for useSyncExternalStore: fires on same-tab auth updates and
+// cross-tab localStorage changes.
+export function subscribeToAuthChange(listener: () => void): () => void {
+  window.addEventListener("storage", listener);
+  window.addEventListener("ns-press:auth-change", listener);
+  return () => {
+    window.removeEventListener("storage", listener);
+    window.removeEventListener("ns-press:auth-change", listener);
+  };
 }
 
 export function setUserProfile(profile: UserProfile | Record<string, unknown>): void {
@@ -185,6 +223,15 @@ export function removeUserProfile(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem("userProfile");
   notifyAuthChanged();
+}
+
+// Clear the local session and send the user back to the login page.
+export function handleAuthExpired(): void {
+  removeToken();
+  removeUserProfile();
+  if (typeof window !== "undefined") {
+    window.location.href = "/login";
+  }
 }
 
 export async function getProfileApi(): Promise<UserProfile> {

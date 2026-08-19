@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
-import { useLang } from "@/components/LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 import {
   getProfileApi,
   getUserId,

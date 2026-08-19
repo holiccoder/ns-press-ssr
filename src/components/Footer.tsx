@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import layout from "@/data/layout.json";
-import { useLang } from "./LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 
 const PUBLISHER_EN = process.env.NEXT_PUBLIC_PUBLISHER_ENGLISH ?? "";
 const PUBLISHER_ZH = process.env.NEXT_PUBLIC_PUBLISHER_CHINESE ?? "";

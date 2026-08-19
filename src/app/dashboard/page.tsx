@@ -3,8 +3,10 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
+  AuthExpiredError,
   getProfileApi,
   getUserProfile,
+  handleAuthExpired,
   normalizeUserProfile,
   removeToken,
   removeUserProfile,
@@ -15,8 +17,8 @@ import {
   normalizeSubmissionContact,
   type SubmissionContact,
 } from "@/lib/submission-api";
+import { useLang } from "@/lib/lang";
 
-type Lang = "en" | "zh";
 type NavLabel = { en: string; zh: string };
 type NavChild = { key: string; label: NavLabel };
 type NavItem = { key: string; label: NavLabel; children?: NavChild[] };
@@ -100,20 +102,10 @@ const panels = {
 const isValidIdentifier = (value: unknown): boolean =>
   value !== undefined && value !== null && value !== "";
 
-function resolveDashboardLanguage(): Lang {
-  if (typeof window === "undefined") return "en";
-  const legacy = window.localStorage.getItem("language");
-  if (legacy === "zh" || legacy === "en") return legacy;
-  const current = window.localStorage.getItem("ns-press:lang");
-  if (current === "zh" || current === "en") return current;
-  const nav = window.navigator.language?.toLowerCase() ?? "";
-  return nav.startsWith("zh") ? "zh" : "en";
-}
-
 function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [language] = useState<Lang>(resolveDashboardLanguage);
+  const language = useLang();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
     "Quick Submission": true,
     "My Submission": true,
@@ -305,7 +297,11 @@ function DashboardContent() {
         }
         profile = normalizeUserProfile(profile);
         setUserProfile(profile);
-      } catch {
+      } catch (fetchError) {
+        if (fetchError instanceof AuthExpiredError) {
+          handleAuthExpired();
+          return;
+        }
         // Use the cached profile when the profile endpoint is unavailable.
       }
       if (isMounted) setSubmissionContact(normalizeSubmissionContact(profile));
@@ -338,6 +334,11 @@ function DashboardContent() {
           list?: unknown;
           rows?: unknown;
         };
+
+        if (payload.code === -1) {
+          handleAuthExpired();
+          return;
+        }
 
         if (payload.code === 0) {
           throw new Error("myContributions returned code=0");

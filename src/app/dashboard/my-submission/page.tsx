@@ -3,10 +3,12 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
-import { useLang } from "@/components/LanguageSwitcher";
+import { useLang } from "@/lib/lang";
 import {
+  AuthExpiredError,
   getProfileApi,
   getUserProfile,
+  handleAuthExpired,
   normalizeUserProfile,
   setUserProfile,
 } from "@/lib/auth";
@@ -88,7 +90,13 @@ function MySubmissionContent() {
     fetchSubmissionContact();
     getMySubmissions(lang)
       .then((result) => mounted && setItems(result))
-      .catch(() => mounted && setError(true))
+      .catch((fetchError) => {
+        if (fetchError instanceof AuthExpiredError) {
+          handleAuthExpired();
+          return;
+        }
+        if (mounted) setError(true);
+      })
       .finally(() => mounted && setLoading(false));
     return () => {
       mounted = false;

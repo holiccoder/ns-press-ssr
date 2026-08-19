@@ -1,15 +1,9 @@
-import { cookies } from "next/headers";
-import { COOKIE_NAME, type ApiLang, type UiLang, toApiLang } from "./lang";
+import { type ApiLang, type UiLang, toApiLang } from "./lang";
 
 /**
- * Read the user's language preference from the `lang` cookie on the server.
- * Falls back to "en" so it matches the client-side default in
- * LanguageSwitcher.
+ * Site is English-only; the language switcher has been removed.
  */
 export async function getServerUiLang(): Promise<UiLang> {
-  const cookieStore = await cookies();
-  const value = cookieStore.get(COOKIE_NAME)?.value;
-  if (value === "en" || value === "zh") return value;
   return "en";
 }
 
