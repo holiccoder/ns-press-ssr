@@ -11,6 +11,7 @@ import {
 } from "@/lib/api";
 import { resolveJournalCover, resolveBookCover, resolveNewsImage } from "@/lib/images";
 import { getEnrichedArticleIds, getArticleEnrichment } from "@/lib/article-slugs";
+import { getCanonicalArticlePath } from "@/lib/article-links";
 import { getServerUiLang } from "@/lib/lang.server";
 
 // Dynamic search page metadata
@@ -242,7 +243,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       className="rounded-sm border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow"
                     >
                       <Link
-                        href={`/articles/${art!.id}`}
+                        href={getCanonicalArticlePath(art!.journalSlug, art!.id)}
                         className="text-base font-bold text-slate-900 hover:text-[#1d4ed8]"
                       >
                         {art!.title}
@@ -259,7 +260,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       )}
                       <div className="mt-4 flex items-center justify-between">
                         <Link
-                          href={`/articles/${art!.id}`}
+                          href={getCanonicalArticlePath(art!.journalSlug, art!.id)}
                           className="text-xs font-semibold text-[#0b2545] hover:underline"
                         >
                           {isZh ? "阅读全文 →" : "Read Full Paper →"}

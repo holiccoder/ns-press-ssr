@@ -45,6 +45,7 @@ export type ArticleDates = {
   received: string;
   accepted: string;
   published: string;
+  modified?: string;
 };
 
 export type RecommendedArticle = {
@@ -76,6 +77,11 @@ export type ArticleEnrichment = {
   copyright: string;
   specialIssue?: ArticleSpecialIssue;
   pdfUrl?: string;
+  /** Original upstream PDF URL, retained for the same-host PDF proxy. */
+  sourcePdfUrl?: string;
+  firstPage?: string;
+  lastPage?: string;
+  language?: string;
   metrics: ArticleMetrics;
   dates: ArticleDates;
   recommendedArticles: RecommendedArticle[];

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import type { ArticleEnrichment } from "./article-slugs";
-import { resolveArticleAssetUrl } from "./article-links";
+import {
+  getCanonicalArticleUrl,
+  resolveArticleAssetUrl,
+} from "./article-links";
 import { getJournalEnrichmentBySlug } from "./journal-slugs";
 
 type ScholarMetadata = NonNullable<Metadata["other"]>;
@@ -30,7 +33,7 @@ function citationDate(value: string | undefined, fallbackYear: number): string |
 
 function citationIssns(value: string | undefined): string[] {
   return (value ?? "")
-    .split(/[;,]/)
+    .split(/[;,；，|\n]+/)
     .map((issn) => issn.replace(/\s*\([^)]*\)/g, "").trim())
     .filter(Boolean);
 }
@@ -46,6 +49,9 @@ export function getScholarArticleMetadata(
   const metadata: ScholarMetadata = {
     citation_title: article.title,
   };
+
+  const articleUrl = getCanonicalArticleUrl(siteUrl, article.journalSlug, article.id);
+  metadata.citation_fulltext_html_url = articleUrl;
 
   const authors = article.authors
     .map((author) => author.name.trim())
@@ -68,6 +74,13 @@ export function getScholarArticleMetadata(
 
   const doi = article.doi.trim();
   if (doi) metadata.citation_doi = doi;
+
+  const abstract = article.abstract.trim();
+  if (abstract) metadata.citation_abstract = abstract;
+
+  if (article.firstPage) metadata.citation_firstpage = article.firstPage;
+  if (article.lastPage) metadata.citation_lastpage = article.lastPage;
+  if (article.language) metadata.citation_language = article.language;
 
   const pdfUrl = resolveArticleAssetUrl(article.pdfUrl, siteUrl);
   if (pdfUrl) metadata.citation_pdf_url = pdfUrl;

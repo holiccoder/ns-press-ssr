@@ -2,6 +2,7 @@ import Link from "next/link";
 import ArticleRow from "./ArticleRow";
 import type { EnrichedArticle } from "@/lib/journal-slugs";
 import type { JournalContentSummary } from "@/lib/api";
+import { getCanonicalArticlePath } from "@/lib/article-links";
 
 export default function ArticleListSection({
   title,
@@ -55,7 +56,7 @@ export default function ArticleListSection({
           {apiArticles.map((article) => (
             <li key={article.id} className="py-4">
               <Link
-                href={`/journals/${journalId}/articles/${article.id}`}
+                href={getCanonicalArticlePath(journalId, article.id)}
                 className="group block text-sm font-semibold text-[#0b2545] hover:text-[#1d4ed8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545] sm:text-base"
               >
                 {article.title}

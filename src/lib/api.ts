@@ -85,6 +85,7 @@ export type JournalContentDetail = {
   id: number;
   journal_id: number;
   year: string;
+  volume?: string | number;
   periods: number;
   title: string;
   author: string;
@@ -100,6 +101,10 @@ export type JournalContentDetail = {
   downloads?: number;
   click?: number;
   download?: number;
+  status?: number;
+  description?: string;
+  first_page?: string | number;
+  last_page?: string | number;
   Journal?: {
     id: number;
     title: string;

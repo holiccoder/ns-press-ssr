@@ -2,6 +2,7 @@ import Link from "next/link";
 import home from "@/data/home.json";
 import { getJournalContents, getJournalContentDetail } from "@/lib/api";
 import { getServerApiLang } from "@/lib/lang.server";
+import { getCanonicalArticlePath } from "@/lib/article-links";
 import Pagination from "./journal-detail/Pagination";
 
 const { articles } = home;
@@ -106,7 +107,7 @@ export default async function Articles({
         title: d.title,
         doi: d.doi || undefined,
         authors: d.author || "",
-        href: `/articles/${d.id}`,
+        href: getCanonicalArticlePath(d.journal_id, d.id),
       }));
   } catch (err) {
     console.error("[Articles] failed to load latest published articles:", err);

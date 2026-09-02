@@ -1,4 +1,13 @@
-import { getJournalContentDetail, ApiError, type Lang } from "@/lib/api";
+import {
+  getJournalContentDetail,
+  getJournalDetail,
+  ApiError,
+  type Lang,
+} from "@/lib/api";
+import {
+  getArticlePdfPath,
+  isUsableArticleAssetUrl,
+} from "@/lib/article-links";
 import {
   getArticleEnrichment,
   isEnrichedArticleId,
@@ -24,7 +33,26 @@ export function splitArticleAuthors(value: string): string[] {
  */
 export function buildArticleFromApi(
   apiArticle: Awaited<ReturnType<typeof getJournalContentDetail>>,
+  journal?: { title?: string; issn?: string },
 ): ArticleEnrichment {
+  const year = Number(apiArticle.year) || 0;
+  const volume = Number(apiArticle.volume) || 0;
+  const issue = Number(apiArticle.periods) || 0;
+  const journalTitle =
+    apiArticle.Journal?.title ?? journal?.title ?? "Journal";
+  const sourcePdfUrl = apiArticle.content;
+  const doi = apiArticle.doi?.trim() ?? "";
+  const citation = [
+    apiArticle.author?.trim(),
+    apiArticle.title ? `${apiArticle.title}.` : undefined,
+    journalTitle,
+    year ? String(year) : undefined,
+    volume ? `Volume ${volume}` : undefined,
+    issue ? `Issue ${issue}` : undefined,
+    doi ? `DOI: ${doi}` : undefined,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const keywordChips = apiArticle.keywords
     ? apiArticle.keywords
         .split(/[;,]/)
@@ -35,8 +63,8 @@ export function buildArticleFromApi(
   return {
     id: String(apiArticle.id),
     journalSlug: String(apiArticle.journal_id),
-    journalTitle: apiArticle.Journal?.title ?? "Journal",
-    journalIssn: apiArticle.Journal?.issn,
+    journalTitle,
+    journalIssn: apiArticle.Journal?.issn ?? journal?.issn,
     title: apiArticle.title,
     articleType: "Article",
     openAccess: true,
@@ -49,17 +77,23 @@ export function buildArticleFromApi(
     abstract: apiArticle.abstract,
     keywords: keywordChips,
     references: apiArticle.references,
-    year: Number(apiArticle.year) || 0,
-    volume: 0,
-    issue: Number(apiArticle.periods) || 0,
-    volumeLabel:
-      apiArticle.year || apiArticle.periods
-        ? `Volume ${apiArticle.year}${apiArticle.periods ? ` Issue ${apiArticle.periods}` : ""}`
+    year,
+    volume,
+    issue,
+    volumeLabel: volume
+      ? `Volume ${volume}${issue ? ` Issue ${issue}` : ""}${year ? `, ${year}` : ""}`
+      : year
+        ? `Volume ${year}${issue ? ` Issue ${issue}` : ""}`
         : "Article",
-    citation: "",
-    doi: apiArticle.doi ?? "",
+    citation,
+    doi,
     copyright: "Published by NSP.",
-    pdfUrl: apiArticle.content,
+    pdfUrl: sourcePdfUrl,
+    sourcePdfUrl,
+    firstPage:
+      apiArticle.first_page != null ? String(apiArticle.first_page) : undefined,
+    lastPage:
+      apiArticle.last_page != null ? String(apiArticle.last_page) : undefined,
     metrics: resolveArticleMetrics(String(apiArticle.id), {
       accesses: apiArticle.accesses ?? apiArticle.click,
       downloads: apiArticle.downloads ?? apiArticle.download,
@@ -68,16 +102,22 @@ export function buildArticleFromApi(
       received: "",
       accepted: "",
       published: apiArticle.create_time ?? "",
+      modified: apiArticle.update_time ?? apiArticle.create_time ?? "",
     },
     recommendedArticles: [],
   };
 }
 
 function normalizeArticle(article: ArticleEnrichment): ArticleEnrichment {
+  const sourcePdfUrl = article.sourcePdfUrl ?? article.pdfUrl;
   return {
     ...article,
     copyright: "Published by NSP.",
     metrics: resolveArticleMetrics(article.id, article.metrics),
+    sourcePdfUrl,
+    pdfUrl: isUsableArticleAssetUrl(sourcePdfUrl)
+      ? getArticlePdfPath(article.journalSlug, article.id)
+      : article.pdfUrl,
   };
 }
 
@@ -109,8 +149,11 @@ export async function resolveArticle(
   try {
     const apiArticle = await getJournalContentDetail(numericArticleId, lang);
     const enrichment = getArticleEnrichment(String(apiArticle.id));
+    const journal = enrichment
+      ? undefined
+      : await getJournalDetail(apiArticle.journal_id, lang).catch(() => undefined);
     const article = normalizeArticle(
-      enrichment ?? buildArticleFromApi(apiArticle),
+      enrichment ?? buildArticleFromApi(apiArticle, journal),
     );
     const journalId = apiArticle.journal_id ?? article.journalSlug;
     return {

@@ -17,6 +17,40 @@ export function isUsableArticleAssetUrl(value?: string): value is string {
   }
 }
 
+/**
+ * Return the single public URL used for an article detail page.
+ *
+ * Keep this in one place so pages, redirects, Sitemap entries, and links all
+ * agree on the same canonical route.
+ */
+export function getCanonicalArticlePath(
+  journalSlug: string | number,
+  articleId: string | number,
+): string {
+  return `/journals/${encodeURIComponent(String(journalSlug))}/articles/${encodeURIComponent(String(articleId))}`;
+}
+
+/**
+ * Return the same-host PDF proxy path for an article.
+ */
+export function getArticlePdfPath(
+  journalSlug: string | number,
+  articleId: string | number,
+): string {
+  return `${getCanonicalArticlePath(journalSlug, articleId)}/pdf`;
+}
+
+export function getCanonicalArticleUrl(
+  siteUrl: string,
+  journalSlug: string | number,
+  articleId: string | number,
+): string {
+  return new URL(
+    getCanonicalArticlePath(journalSlug, articleId),
+    siteUrl,
+  ).toString();
+}
+
 export function resolveArticleAssetUrl(
   value: string | undefined,
   siteUrl: string,

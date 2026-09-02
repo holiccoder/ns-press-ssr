@@ -17,6 +17,7 @@ import {
   getEnrichedSlugs,
   getJournalEnrichmentBySlug,
 } from "@/lib/journal-slugs";
+import { getCanonicalArticlePath } from "@/lib/article-links";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
@@ -26,7 +27,7 @@ const PRIVATE_ROUTES = new Set(["/dashboard", "/login", "/register"]);
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
 function safeUrl(path: string): string {
-  return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  return `${SITE_URL.replace(/\/+$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 function toDate(value: unknown): Date | undefined {
@@ -86,7 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ] satisfies SitemapEntry[]
   ).filter((e) => !PRIVATE_ROUTES.has(new URL(e.url).pathname));
 
-  const [apiJournals, apiNews, apiBooks, apiArticles] = await Promise.all([
+  const [apiJournals, apiNews, apiBooks] = await Promise.all([
     fetchAllPaged<JournalListItem>((pageNo, pageSize) =>
       getJournalList({ page: pageNo, pageSize }).then((p) => ({
         lists: p.lists,
@@ -101,12 +102,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
     fetchAllPaged<BookListItem>((pageNo, pageSize) =>
       getBookList({ page: pageNo, pageSize }).then((p) => ({
-        lists: p.lists,
-        count: p.count,
-      })),
-    ),
-    fetchAllPaged<JournalContentSummary>((pageNo, pageSize) =>
-      getJournalContents({ pageNo, pageSize }).then((p) => ({
         lists: p.lists,
         count: p.count,
       })),
@@ -143,19 +138,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const articleEntries: SitemapEntry[] = apiArticles.map((a) => ({
-    url: safeUrl(`/articles/${a.id}`),
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
+  // The article-list API does not include journal_id. Fetch each journal's
+  // own list so every Sitemap URL can carry the same journal-scoped path used
+  // by the canonical article page.
+  const articleEntries: SitemapEntry[] = (
+    await Promise.all(
+      apiJournals.map(async (journal) => {
+        const articles = await fetchAllPaged<JournalContentSummary>(
+          (pageNo, pageSize) =>
+            getJournalContents({
+              journalId: journal.id,
+              pageNo,
+              pageSize,
+              lang: "English",
+            }).then((p) => ({
+              lists: p.lists,
+              count: p.count,
+            })),
+        );
+
+        return articles.map((article) => ({
+          url: safeUrl(getCanonicalArticlePath(journal.id, article.id)),
+          lastModified: now,
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        }));
+      }),
+    )
+  ).flat();
 
   const enrichedArticleEntries: SitemapEntry[] = getEnrichedArticleIds()
     .map((id): SitemapEntry | null => {
       const article = getArticleEnrichment(id);
       if (!article) return null;
       return {
-        url: safeUrl(`/articles/${id}`),
+        url: safeUrl(getCanonicalArticlePath(article.journalSlug, article.id)),
         lastModified: toDate(article.dates?.published) ?? now,
         changeFrequency: "yearly",
         priority: 0.6,

@@ -4,6 +4,11 @@ import { resolveArticle } from "@/lib/article-detail";
 import { getScholarArticleMetadata } from "@/lib/scholar-metadata";
 import { resolveJournalCover } from "@/lib/images";
 import { getServerApiLang } from "@/lib/lang.server";
+import {
+  getCanonicalArticlePath,
+  getCanonicalArticleUrl,
+  resolveArticleAssetUrl,
+} from "@/lib/article-links";
 import ArticleHeader from "@/components/journal-detail/ArticleHeader";
 import AuthorBlock from "@/components/journal-detail/AuthorBlock";
 import ArticleMetadata from "@/components/journal-detail/ArticleMetadata";
@@ -18,7 +23,7 @@ export async function generateMetadata({
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { id, articleId } = await params;
-  const canonical = `/journals/${id}/articles/${articleId}`;
+  const requestedCanonical = getCanonicalArticlePath(id, articleId);
 
   try {
     const lang = await getServerApiLang();
@@ -26,6 +31,12 @@ export async function generateMetadata({
     const description = article.abstract?.slice(0, 200);
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
+    const canonical = getCanonicalArticlePath(article.journalSlug, article.id);
+    const canonicalUrl = getCanonicalArticleUrl(
+      siteUrl,
+      article.journalSlug,
+      article.id,
+    );
     return {
       title: article.title,
       description,
@@ -34,7 +45,7 @@ export async function generateMetadata({
       openGraph: {
         title: article.title,
         description,
-        url: canonical,
+        url: canonicalUrl,
         type: "article",
         authors: article.authors.map((a) => a.name),
         publishedTime: article.dates?.published || undefined,
@@ -46,7 +57,10 @@ export async function generateMetadata({
       },
     };
   } catch {
-    return { title: "Article", alternates: { canonical } };
+    return {
+      title: "Article",
+      alternates: { canonical: requestedCanonical },
+    };
   }
 }
 
@@ -55,9 +69,8 @@ export default async function ArticleDetailPage({
 }: {
   params: Promise<RouteParams>;
 }) {
-  const { id, articleId } = await params;
+  const { articleId } = await params;
   const lang = await getServerApiLang();
-  const articleHref = `/journals/${id}/articles/${articleId}`;
 
   let article;
   let volumeHref;
@@ -71,6 +84,13 @@ export default async function ArticleDetailPage({
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com";
+  const articleHref = getCanonicalArticlePath(article.journalSlug, article.id);
+  const articleUrl = getCanonicalArticleUrl(
+    siteUrl,
+    article.journalSlug,
+    article.id,
+  );
+  const articlePdfUrl = resolveArticleAssetUrl(article.pdfUrl, siteUrl);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ScholarlyArticle",
@@ -78,9 +98,13 @@ export default async function ArticleDetailPage({
     name: article.title,
     abstract: article.abstract || undefined,
     keywords: article.keywords.length ? article.keywords.join(", ") : undefined,
-    inLanguage: "en",
-    url: `${siteUrl}${articleHref}`,
+    inLanguage: article.language ?? "en",
+    url: articleUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
     datePublished: article.dates?.published || undefined,
+    dateModified:
+      article.dates?.modified || article.dates?.published || undefined,
+    isAccessibleForFree: article.openAccess,
     author: article.authors.map((a) => ({
       "@type": "Person",
       name: a.name,
@@ -97,6 +121,14 @@ export default async function ArticleDetailPage({
       : undefined,
     identifier: article.doi
       ? { "@type": "PropertyValue", propertyID: "DOI", value: article.doi }
+      : undefined,
+    citation: article.references?.length ? article.references : undefined,
+    encoding: articlePdfUrl
+      ? {
+          "@type": "MediaObject",
+          contentUrl: articlePdfUrl,
+          encodingFormat: "application/pdf",
+        }
       : undefined,
     publisher: {
       "@type": "Organization",

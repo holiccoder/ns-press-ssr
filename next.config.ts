@@ -10,6 +10,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/journals/:id/article/:articleId",
+        destination: "/journals/:id/articles/:articleId",
+        statusCode: 301,
+      },
+      {
+        source: "/journal/:id/article/:articleId",
+        destination: "/journals/:id/articles/:articleId",
+        statusCode: 301,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
