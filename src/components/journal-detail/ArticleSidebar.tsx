@@ -3,13 +3,11 @@ import Image from "next/image";
 import AsymmetryCover from "./AsymmetryCover";
 import { ArrowRightIcon } from "./icons";
 import type {
-  ArticleMetrics,
   ArticleDates,
   RecommendedArticle,
 } from "@/lib/article-slugs";
 
 type ArticleSidebarProps = {
-  metrics: ArticleMetrics;
   dates: ArticleDates;
   recommendedArticles: RecommendedArticle[];
   journalCoverImage?: string;
@@ -17,7 +15,6 @@ type ArticleSidebarProps = {
 };
 
 export default function ArticleSidebar({
-  metrics,
   dates,
   recommendedArticles,
   journalCoverImage,
@@ -50,12 +47,6 @@ export default function ArticleSidebar({
         SUBMIT
         <ArrowRightIcon className="h-4 w-4" />
       </a>
-
-      {/* Metrics */}
-      <div className="grid grid-cols-2 gap-4 rounded-sm border border-slate-200 p-4">
-        <MetricItem value={metrics.accesses} label="Accesses" />
-        <MetricItem value={metrics.downloads} label="Downloads" />
-      </div>
 
       {/* Dates */}
       <div className="rounded-sm border border-slate-200 p-4">
@@ -95,15 +86,6 @@ export default function ArticleSidebar({
         </Link>
       </div>
     </aside>
-  );
-}
-
-function MetricItem({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="text-center">
-      <p className="text-2xl font-bold text-[#0b2545]">{value}</p>
-      <p className="text-xs text-slate-500">{label}</p>
-    </div>
   );
 }
 

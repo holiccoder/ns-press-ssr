@@ -172,17 +172,16 @@ export default async function ArticleDetailPage({
                 <h2 className="text-sm font-bold uppercase tracking-wider text-[#0b2545]">
                   References
                 </h2>
-                <ol className="mt-3 list-inside list-decimal space-y-2 text-sm leading-relaxed text-slate-700">
+                <ul className="mt-3 list-none space-y-2 text-sm leading-relaxed text-slate-700">
                   {article.references.map((ref, i) => (
                     <li key={i}>{ref}</li>
                   ))}
-                </ol>
+                </ul>
               </section>
             )}
           </article>
 
           <ArticleSidebar
-            metrics={article.metrics}
             dates={article.dates}
             recommendedArticles={article.recommendedArticles}
             journalCoverImage={resolveJournalCover(Number(article.journalSlug), "")}
