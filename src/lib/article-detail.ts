@@ -20,10 +20,16 @@ export type ResolvedArticle = {
   volumeHref: string;
 };
 
+function normalizeAuthorName(value: string): string {
+  return value
+    .replace(/[\s*＊†‡¹²³⁴⁵⁶⁷⁸⁹⁰]+$/u, "")
+    .trim();
+}
+
 export function splitArticleAuthors(value: string): string[] {
   return value
     .split(/[;；、，\n]|\u3000+|\s{2,}/)
-    .map((author) => author.trim())
+    .map(normalizeAuthorName)
     .filter(Boolean);
 }
 
@@ -42,8 +48,11 @@ export function buildArticleFromApi(
     apiArticle.Journal?.title ?? journal?.title ?? "Journal";
   const sourcePdfUrl = apiArticle.content;
   const doi = apiArticle.doi?.trim() ?? "";
+  const authors = apiArticle.author
+    ? splitArticleAuthors(apiArticle.author)
+    : [];
   const citation = [
-    apiArticle.author?.trim(),
+    authors.length > 0 ? authors.join(", ") : undefined,
     apiArticle.title ? `${apiArticle.title}.` : undefined,
     journalTitle,
     year ? String(year) : undefined,
@@ -68,12 +77,10 @@ export function buildArticleFromApi(
     title: apiArticle.title,
     articleType: "Article",
     openAccess: true,
-    authors: apiArticle.author
-      ? splitArticleAuthors(apiArticle.author).map((name) => ({
-          name,
-          affiliation: apiArticle.address,
-        }))
-      : [],
+    authors: authors.map((name) => ({
+      name,
+      affiliation: apiArticle.address,
+    })),
     abstract: apiArticle.abstract,
     keywords: keywordChips,
     references: apiArticle.references,
@@ -112,6 +119,12 @@ function normalizeArticle(article: ArticleEnrichment): ArticleEnrichment {
   const sourcePdfUrl = article.sourcePdfUrl ?? article.pdfUrl;
   return {
     ...article,
+    authors: article.authors
+      .map((author) => ({
+        ...author,
+        name: normalizeAuthorName(author.name),
+      }))
+      .filter((author) => author.name),
     copyright: "Published by NSP.",
     metrics: resolveArticleMetrics(article.id, article.metrics),
     sourcePdfUrl,

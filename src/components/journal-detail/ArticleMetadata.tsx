@@ -18,6 +18,11 @@ export default function ArticleMetadata({
   copyright,
   specialIssue,
 }: ArticleMetadataProps) {
+  const articleUrl = new URL(
+    articleHref,
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ns-press.com",
+  ).toString();
+
   const rows: { label: string; value: React.ReactNode }[] = [
     {
       label: "Volume",
@@ -36,10 +41,10 @@ export default function ArticleMetadata({
       label: "Link",
       value: (
         <Link
-          href={articleHref}
+          href={articleUrl}
           className="text-[#1d4ed8] hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2545]"
         >
-          {articleHref}
+          {articleUrl}
         </Link>
       ),
     },

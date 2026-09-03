@@ -36,7 +36,7 @@ export async function GET(
   if (String(id) !== article.journalSlug) {
     const destination = new URL(
       getArticlePdfPath(article.journalSlug, article.id),
-      request.url,
+      SITE_URL,
     );
     return new Response(null, {
       status: 301,

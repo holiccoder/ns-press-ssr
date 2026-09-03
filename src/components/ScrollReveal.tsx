@@ -17,34 +17,45 @@ export default function ScrollReveal({
   duration = 1000,
   threshold = 0.1,
 }: ScrollRevealProps) {
-  const [hasEntered, setHasEntered] = useState(false);
+  // Keep server-rendered content visible by default.  Hiding the wrapper
+  // before the observer has reported its first entry makes the whole page
+  // blank when client JavaScript is delayed, disabled, or interrupted.
+  const [hasEntered, setHasEntered] = useState(true);
   const elementRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // Falls back gracefully if IntersectionObserver is not supported
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-      setHasEntered(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          // Disconnect after entering once to lock in the visible state (premium, clean look)
-          observer.disconnect();
-        }
-      },
-      {
-        threshold,
-        // Trigger slightly before the component enters to ensure a smooth transition
-        rootMargin: "0px 0px -40px 0px",
-      }
-    );
-
     const currentElement = elementRef.current;
-    if (currentElement) {
+    if (!currentElement) return;
+
+    let observer: IntersectionObserver;
+    try {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry) return;
+
+          setHasEntered(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            // Disconnect after entering once to lock in the visible state
+            // (premium, clean look).
+            observer.disconnect();
+          }
+        },
+        {
+          threshold,
+          // Trigger slightly before the component enters to ensure a smooth transition
+          rootMargin: "0px 0px -40px 0px",
+        },
+      );
+
       observer.observe(currentElement);
+    } catch {
+      // A partially supported or broken observer must never hide content.
+      return;
     }
 
     return () => {

@@ -159,7 +159,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         return articles.map((article) => ({
           url: safeUrl(getCanonicalArticlePath(journal.id, article.id)),
-          lastModified: now,
           changeFrequency: "monthly" as const,
           priority: 0.6,
         }));
